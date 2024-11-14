@@ -1,0 +1,704 @@
+
+
+/*---==================
+    02. Elements  
+    
+        # 07 Food Menu CSS
+=================----*/
+
+
+.menu-item{
+    &.style-one{
+        padding: 40px;
+        text-align: center;
+        border-radius: 16px;
+        background-color: $white-color;
+        box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+        &:hover{
+            &:after{
+                @extend %primary-bg;
+                top: -49%;
+            }
+        }
+        &:after{
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            content: '';
+            width: 495px;
+            height: 495px;
+            border-radius: 50%;
+            z-index: -1;
+            background-color: #F5F5F5;
+            transform: translateX(-50%);
+            z-index: -1;
+            @include transition(.35s);
+        }
+        & .menu-thumbnail{
+            width: 230px;
+            height: 230px;
+            border-radius: 50%;
+            background-color: $white-color;
+            padding: 15px;
+            box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.08);
+            margin: 0 auto 20px;
+            overflow: hidden;
+            & img{
+                width: 100%;
+                border-radius: 50%;
+            }
+        }
+        & .menu-info{
+            & h4{
+                margin-bottom: 15px;
+                &:hover{
+                    @extend %primary-color;
+                }
+            }
+            & > p{
+                font-weight: 500;
+                margin-bottom: 20px;
+            }
+            & p.price{
+                font: 700 24px $heading-font;
+                @extend %primary-color;
+            }
+            & .theme-btn{
+                width: 100%;
+                &.style-two{
+                    border-color: $secondary-color;
+                    @extend %secondary-color;
+                    &:hover{
+                        border-color: transparent;
+                        @extend %primary-bg;
+                        @extend %white-color;
+                    }
+                }
+            }
+        }
+    }
+    &.style-two{
+        padding-bottom: 20px;
+        border-bottom: 1px dashed rgba(18, 22, 25, 0.60);
+        & .menu-info{
+            & h4{
+                margin-bottom: 15px;
+                & span.price{
+                    float: right;
+                    @extend %primary-color;
+                }
+            }
+            & p{
+                max-width: 500px
+            }
+        }
+    }
+    &.style-three{
+        display: flex;
+        align-items: center;
+        border: 1px solid rgba(191, 17, 9, 0.10);
+        @extend %white-bg;
+        @media #{$xs}{
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        & .menu-thumbnail{
+            flex: 0 0 auto;
+            width: 200px;
+            height: 200px;
+            & img{
+                width: 100%;
+                height: 100%;
+            }
+            @media #{$lp}{
+                height: 170px;
+            }
+            @media #{$xs}{
+                padding: 20px;
+            }
+        }
+        & .menu-info{
+            padding: 20px;
+            @media #{$lp}{
+                padding: 15px 20px;
+            }
+            & h4.title{
+                margin-bottom: 7px;
+                &:hover{
+                    @extend %primary-color;
+                }
+            }
+            & p{
+                font-size: 18px;
+                margin-bottom: 25px;
+                @media #{$lp}{
+                    margin-bottom: 15px;
+                }
+            }
+            & p.price{
+                margin-bottom: 0;
+                font: 700 32px $heading-font;
+                @extend %primary-color;
+                @media #{$lp}{
+                    font-size: 22px;
+                }
+            }
+        }
+
+    }
+    &.style-four{
+        & .menu-thumbnail{
+            position: relative;
+            & img{
+                width: 100%;
+                border-radius: 20px 20px 0 0;
+            }
+            & .wishlist-btn{
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                & button{
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    @extend %flex-center;
+                    background-color: rgba(255, 255, 255, 0.30);
+                    backdrop-filter: blur(2px);
+                    @extend %white-color;
+                    @include transition(.3s);
+                    &:hover{
+                        @extend %primary-bg;
+                        @extend %white-color;
+                    }
+                }
+            }
+        }
+        & .menu-info{
+            @extend %white-bg;
+            padding: 25px 30px 30px;
+            border-radius: 0 0 20px 20px;
+            &  .menu-meta{
+                padding-bottom: 20px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+                margin-bottom: 20px;
+                display: flex;
+                justify-content: space-between;
+                & span{
+                    
+                    &.price{
+                        font: 600 24px $heading-font;
+                        @extend %primary-color;
+                    }
+                    &.rating{
+                        font: 500 18px $body-font;
+                        & i{
+                            color: #FEA400;
+                            margin-right: 10px;
+                        }
+                    }
+                }
+            }
+            & h4.title{
+                margin-bottom: 15px;
+                font-weight: 600;
+                &:hover{
+                    @extend %primary-color;
+                }
+            }
+            & ul.check-list{
+                margin-bottom: 23px;
+                &.style-one{
+                    & li{
+                        font-weight: 500;
+                        color: rgba(0, 0, 0, 0.60);
+                        & i{
+                            margin-right: 10px;
+                            @extend %primary-color;
+                        }
+                    }
+                }
+            }
+            & .theme-btn{
+                width: 100%;
+                &.style-two{
+                    border-color: rgba(0, 0, 0, 0.10);
+                    & i{
+                        margin-right: 10px;
+                    }
+                    &:hover{
+                        border-color: $primary-color;
+                    }
+                }
+            }
+        }
+    }
+    &.style-five{
+        padding: 20px;
+        @extend %white-bg;
+        filter: drop-shadow(0px 0px 25px rgba(0, 0, 0, 0.08));
+        @include border-radius(10px);
+        &:hover{
+            & .menu-thumbnail{
+                @extend %secondary-bg;
+            }
+        }
+        & .menu-thumbnail{
+            background-color: #F7F1E1;
+            padding: 20px 35px;
+            @include border-radius(10px);
+            text-align: center;
+            min-height: 270px;
+            @extend %flex-center;
+            @include transition(.35s);
+            & img{
+                @include border-radius(10px);
+            }
+        }
+        & .menu-info{
+            padding-top: 20px;
+            & h4.title{
+                margin-bottom: 10px;
+                text-transform: capitalize;
+                &:hover{
+                    @extend %secondary-color;
+                }
+            }
+            & ul.ratings{
+                margin-bottom: 12px;
+                & li{
+                    & a{
+                        font: 500 18px $body-font;
+                        @extend %heading-color;
+                    }
+                }
+            }
+            & .menu-bottom{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                & p.price{
+                    font: 700 24px $heading-font;
+                    @extend %primary-color;
+                }
+                & .cart-icon{
+                    width: 50px;
+                    height: 50px;
+                    @extend %flex-center;
+                    @extend %secondary-bg;
+                    @include border-radius(10px);
+                    @extend %white-color;
+                }
+            }
+        }
+    }
+    &.style-six{
+        background-color: #F7F1E1;
+        padding: 30px;
+        border: 5px solid transparent;
+        @include border-radius(10px);
+        @include transition(.3s);
+        &:hover{
+            border-color: $secondary-color;
+        }
+        & .menu-thumbnail{
+            margin-bottom: 40px;
+            & img{
+                min-height: 250px;
+                max-height: 250px;
+            }
+        }
+        & .menu-info{
+            & h3.title{
+                margin-bottom: 15px;
+                text-transform: capitalize;
+            }
+            & p{
+                font-size: 18px;
+                margin-bottom: 30px;
+            }
+            & .price{
+                font-size: 32px;
+                @extend %primary-color;
+                font-weight: 700;
+            }
+        }
+    }
+    &.style-seven{
+        &:hover{
+            & .menu-thumbnail{
+                & .hover-img{
+                    transform: scale(1.2);
+                    @media #{$lp}{
+                        transform: scale(1.15);
+                    }
+                    @media #{$xm}{
+                        transform: scale(1.15);
+                    }
+                    @media #{$xss}{
+                        transform: scale(1.15);
+                    }
+                }
+            }
+        }
+        & .menu-thumbnail{
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            width: 390px;
+            height: 390px;
+            @include border-radius(50%);
+            @media #{$lp}{
+                width: 350px;
+                height: 350px;
+            }
+            @media #{$xm}{
+                width: 320px;
+                height: 320px;
+            }
+            @media #{$xss}{
+                width: 320px;
+                height: 320px;
+            }
+            & .hover-img{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                transform: scale(.9);
+                z-index: -1;
+                @include transition(.4s);
+            }
+            & > img{
+                width: 100%;
+                height: 100%;
+                border: 15px solid $white-color;
+                @include border-radius(50%);
+                box-shadow: 0px 5px 90px 0px rgba(131, 13, 7, 0.50);
+                @media #{$xss}{
+                    box-shadow: 0px 5px 20px 0px rgba(131, 13, 7, 0.50);
+                }
+            }
+        }
+        & .menu-info{
+            padding: 25px 70px 0;
+            & h3.title{
+                font-size: 32px;
+                margin-bottom: 15px;
+            }
+            & > p{
+                color: rgba(0, 0, 0, 0.60);
+                font-size: 18px;
+                line-height: 30px;
+                margin-bottom: 20px;
+            }
+            & p.price{
+                font: 700 32px $body-font;
+                @extend %primary-color;
+                margin-bottom: 0;
+            }
+        }
+    }
+    &.style-eight{
+        @extend %gray-light-bg;
+        display: flex;
+        align-items: center;
+        border: 1px dashed rgba(0, 0, 0, 0.10);
+        padding: 20px 30px;
+        @include transition(.3s);
+        @media #{$xss}{
+            align-items: flex-start;
+            flex-direction: column;
+        }
+        &:hover{
+            @extend %secondary-bg;
+            border-color: transparent;
+            & .content{
+                & h4.title{
+                    @extend %white-color;
+                }
+                & p{
+                    color: rgba(255, 255, 255, 0.70);
+                }
+            }
+            & .price-box{
+                & p.price{
+                    @extend %white-color;
+                }
+            }
+        }
+        & .menu-thumbmail{
+            flex: 0 0 auto;
+            width: 70px;
+            height: 70px;
+            margin-right: 15px;
+            @media #{$xss}{
+                margin-bottom: 15px;
+            }
+            & img{
+                width: 100%;
+                border-radius: 50%;
+            }
+        }
+        & .content{
+            & h4.title{
+                margin-bottom: 5px;
+            }
+        }
+        & .price-box{
+            margin-left: auto;
+            & p.price{
+                @extend %primary-color;
+                font: 700 24px $heading-font;
+            }
+        }
+        & .menu-content-wrap{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            & .price-box{
+                margin-left: auto;
+                & p.price{
+                    @extend %primary-color;
+                    font: 700 24px $heading-font;
+                }
+            }
+        }
+    }
+    &.related-menu-item{
+        padding: 0 20px;
+        & .menu-info{
+            padding: 30px;
+            & h4{
+                margin-bottom: 10px;
+                text-transform: uppercase;
+            }
+            & p{
+                color: rgba(0, 0, 0, 0.60);
+                font: 400 18px $body-font;
+                line-height: 27px;
+            }
+        }
+    }
+    &.top-menu-item{
+        & .menu-image{
+            & img{
+                width: 100%;
+            }
+        }
+        & .menu-info{
+            text-align: center;
+            padding: 20px 30px;
+            @extend %primary-bg;
+            & h4.title{
+                @extend %white-color;
+                margin-bottom: 10px;
+            }
+            & p{
+                font-weight: 700;
+                @extend %white-color;
+                font-size: 22px;
+                & span.currency{
+                    margin-right: 2px;
+                }
+            }
+        }
+    }
+}
+
+
+.foodix-banner-item{
+    &.style-one{
+        & .banner-inner-wrap{
+            position: relative;
+            overflow: hidden;
+            padding: 76px 100px 90px 50px;
+            @media #{$xm}{
+                padding: 35px 30px 50px;
+            }
+        }
+        & .banner-img{
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            @media #{$xm}{
+                width: 60%;
+            }
+        }
+        & .banner-content{
+            max-width: 430px;
+            & h2{
+                text-transform: uppercase;
+                @extend %white-color;
+                margin-bottom: 25px;
+                @media #{$xs}{
+                    font-size: 36px;
+                    line-height: 45px;
+                }
+            }
+            & p{
+                @extend %white-color;
+                margin-bottom: 10px;
+            }
+            & p.price{
+                font: 700 32px $heading-font;
+                color: var(--orange-color);
+                margin-bottom: 25px;
+            }
+        }
+    }
+    &.style-three{
+        & .banner-inner-wrap{
+            position: relative;
+            z-index: 1;
+            padding: 45px 170px 55px 50px;
+            border-radius: 10px;
+            @extend %white-color;
+            overflow: hidden;
+            @media #{$xs}{
+                padding: 50px 30px;
+            }
+            & .banner-img{
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                @media #{$xm}{
+                    width: 50%;
+                    text-align: right;
+                }
+                @media #{$xs}{
+                    display: none;
+                }
+            }
+            & .banner-content{
+                & span{
+                    font-size: 18px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                }
+                & h3{
+                    font-size: 60px;
+                    text-transform: uppercase;
+                    margin-bottom: 15px;
+                    @extend %white-color;
+                    @media #{$lp}{
+                        font-size: 38px;
+                    }
+                    @media #{$xs}{
+                        font-size: 32px;
+                        line-height: 40px;
+                    }
+                }
+                & p{
+                    max-width: 365px;
+                }
+                & .theme-btn{
+                    margin-top: 30px;
+                    &.style-one{
+                        @extend %white-bg;
+                        @extend %primary-color;
+                        &:hover{
+                            @extend %primary-bg;
+                            @extend %white-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Menu Details Wrapper */ 
+
+.menu-details-wrapper{
+    & .menu-image{
+        & img{
+            border-radius: 16px;
+        }
+    }
+    & .menu-info-content{
+        & h4.title{
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            @media #{$xss}{
+                font-size: 27px;
+                line-height: 35px;
+            }
+        }
+        & > p{
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 36px;
+            margin-bottom: 30px;
+            max-width: 570px;
+        }
+        & span.price{
+            @extend %primary-color;
+            font: 500 32px $heading-font;
+            & span.pre-price{
+                text-decoration: line-through;
+                color: rgba(0, 0, 0, 0.40);
+                margin-left: 10px;
+            }
+            margin-bottom: 40px;
+        }
+        & .product-cart-variation{
+            & > ul{
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                & > li{
+                    margin-bottom: 40px;
+                    &:not(:last-child){
+                        margin-right: 30px;
+                    }
+                }
+            }
+            & .nice-select{
+                @extend %primary-dark-bg;
+                @extend %white-color;
+                width: 200px;
+                padding: 9px 20px;
+                border-radius: 10px;
+                font-weight: 500;
+                & ul.list{
+                    @extend %heading-color;
+                }
+                &:after{
+                    float: right;
+                    margin-left: auto;
+                }
+            }
+        }
+    }
+}
+
+
+.description-content-wrapper{
+    & .content-box{
+        & p{
+            margin-bottom: 30px;
+        }
+        & h4{
+            margin-bottom: 20px;
+        }
+        & ul.check-list{
+            & li{
+                display: flex;
+                align-items: center;
+                &:before{
+                    flex: 0 0 auto;
+                    margin-right: 10px;
+                    content: '';
+                    width: 5px;
+                    height: 5px;
+                    @extend %primary-dark-bg;
+                }
+            }
+        }
+    }
+}

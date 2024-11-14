@@ -1,0 +1,232 @@
+﻿@using FastFood.Areas.Admin.Models;
+@{
+    var dsKhachHang = ViewBag.KhachHang as IEnumerable<FastFood_KhachHang_DanhSachKhachHang>;
+    int khachDaDat = FastFood_DonHang.demKhachDaDatHang();
+    int tongDonHang = FastFood_DonHang.demTongDonHang();
+    int tongDoanhThuDonHang = FastFood_DonHang.tongDoanhThuDonHang();
+    double trungBinhDonHang = FastFood_DonHang.trungBinhDonHang();
+}
+
+<!-- Start Container Fluid -->
+<div class="container-xxl">
+
+    <div class="row">
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                            <iconify-icon icon="solar:users-group-two-rounded-bold-duotone" class="fs-32 text-primary avatar-title"></iconify-icon>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">Khách đã đặt hàng</h4>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <p class="text-muted fw-medium fs-22 mb-0">@khachDaDat</p>
+                        <div>
+                            <span class="badge text-success bg-success-subtle fs-12"><i class="bx bx-up-arrow-alt"></i>34.4%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                            <iconify-icon icon="solar:box-bold-duotone" class="fs-32 text-primary avatar-title"></iconify-icon>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">Đơn đặt hàng</h4>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <p class="text-muted fw-medium fs-22 mb-0">@tongDonHang</p>
+                        <div>
+                            <span class="badge text-danger bg-danger-subtle fs-12"><i class="bx bx-down-arrow-alt"></i>8.1%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                            <iconify-icon icon="solar:headphones-round-sound-bold-duotone" class="fs-32 text-primary avatar-title"></iconify-icon>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">Giá trị trung bình mỗi đơn hàng</h4>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <p class="text-muted fw-medium fs-22 mb-0">@trungBinhDonHang vnđ</p>
+                        <div>
+                            <span class="badge text-success bg-success-subtle fs-12"><i class="bx bx-up-arrow-alt"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                            <iconify-icon icon="solar:bill-list-bold-duotone" class="fs-32 text-primary avatar-title"></iconify-icon>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">Tổng doanh thu</h4>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <p class="text-muted fw-medium fs-22 mb-0">@tongDoanhThuDonHang vnđ</p>
+                        <div>
+                            <span class="badge text-success bg-success-subtle fs-12"><i class="bx bx-up-arrow-alt"></i>45.9%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="d-flex card-header justify-content-between align-items-center">
+                    <div>
+                        <h4 class="card-title">@ViewBag.Title</h4>
+                    </div>
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle btn btn-sm btn-outline-light rounded" data-bs-toggle="dropdown" aria-expanded="false">
+                            This Month
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <!-- item-->
+                            <a href="#!" class="dropdown-item">Download</a>
+                            <!-- item-->
+                            <a href="#!" class="dropdown-item">Export</a>
+                            <!-- item-->
+                            <a href="#!" class="dropdown-item">Import</a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover table-centered">
+                            <thead class="bg-light-subtle">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ và tên</th>
+                                    <th>Ngày sinh</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Thời gian gắn bó</th>
+                                    <th>Tổng số lần mua</th>
+                                    <th>Lần mua gần nhất</th>
+                                    <th>Lần truy cập gần nhất</th>
+                                    <th>Tổng chi tiêu (vnđ)</th>
+                                    <th>Lần chi tiêu lớn nhất (vnđ)</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var kh in dsKhachHang)
+                                {
+                                    <tr>
+                                        <td><a href="@Url.Action("Detail", "Customer", new {area = "Admin", id = kh.MaKhachHang, return_url = Request.Url.AbsoluteUri })">@kh.MaKhachHang</a></td>
+                                        <td>@kh.HoTenKhachHang</td>
+                                        <td>@kh.NgaySinh.Value.ToString("dd/MM/yyyy")</td>
+                                        <td>@kh.NgayTao</td>
+                                        @{ 
+                                            if (kh.ThoiGianGanBo < 1000)
+                                            {
+                                                <td>@kh.ThoiGianGanBo ngày</td>
+                                            } else
+                                            {
+                                                <td><box-icon name='infinite'></box-icon></td>
+                                            }
+                                        }
+                                        <td>@kh.SoLanMua</td>
+                                        <td> @kh.LanMuaGanNhat </td>
+                                        <td>@kh.LanTruyCapCuoi</td>
+                                        <td class="text-danger fw-bold">@kh.TongHoaDon</td>
+                                        <td class="text-danger fw-bold">@kh.HoaDonLonNhat</td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="@Url.Action("Detail", "Customer", new {area = "Admin", id = kh.MaKhachHang, return_url = Request.Url.AbsoluteUri })" class="btn btn-light btn-sm"><iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table-responsive -->
+                </div>
+                <div class="card-footer border-top">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end mb-0">
+                            <!-- Previous Page Link -->
+                            @if (ViewBag.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Potential", "Customer", new { area = "Admin", page = ViewBag.CurrentPage - 1 })">
+                                        Trước đây
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Trước đây</span>
+                                </li>
+                            }
+
+                            <!-- Page Numbers -->
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@i</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Potential", "Customer", new { area = "Admin", page = i })">@i</a>
+                                    </li>
+                                }
+                            }
+
+                            <!-- Next Page Link -->
+                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Potential", "Customer", new { area = "Admin", page = ViewBag.CurrentPage + 1 })">
+                                        Tiếp theo
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Tiếp theo</span>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- End Container Fluid -->

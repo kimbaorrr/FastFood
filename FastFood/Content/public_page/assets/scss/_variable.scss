@@ -1,0 +1,59 @@
+
+// Font Family
+
+$heading-font: var(--heading-font);
+
+$body-font: var(--body-font);
+
+// colors
+
+$primary-color: var(--primary-color);
+
+$secondary-color: var(--secondary-color);
+
+$heading-color: var(--primary-dark-color);
+
+$white-color: var(--white-color);
+
+$orange-color: var(--orange-color);
+
+$gray-color: var(--gray-color);
+
+$gray-light-color: var(--gray-light-color);
+
+$text-color: var(--text-color);
+
+// Font Size
+
+$h1-font: 75px;
+
+$h2-font: 45px;
+
+$h3-font: 27px;
+
+$h4-font: 24px;
+
+$h5-font: 20px;
+
+$h6-font: 18px;
+
+
+// Responsive Variables
+
+$xl: 'only screen and (min-width: 1200px)';
+
+$lp: 'only screen and (min-width: 1200px) and (max-width: 1600px)';
+
+$lm : '(max-width: 1199px)';
+
+$lg : 'only screen and (min-width: 992px) and (max-width: 1199px)';
+
+$xm:'(max-width: 991px)';
+
+$md:'only screen and (min-width: 768px) and (max-width: 991px)';
+
+$xs:'(max-width: 767px)';
+
+$xss:'(max-width: 575px)';
+
+$sm: 'only screen and (min-width: 576px) and (max-width: 767px)';

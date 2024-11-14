@@ -1,0 +1,122 @@
+﻿<!--====== Start Page Section ======-->
+<section class="page-banner">
+    <div class="page-bg-wrapper p-r z-1 bg_cover pt-100 pb-110" style="background-image: url(/Content/public_page/assets/images/bg/page-bg.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--=== Page Banner Content ===-->
+                    <div class="page-banner-content text-center">
+                        <h1 class="page-title">@ViewBag.Title</h1>
+                        <ul class="breadcrumb-link">
+                            <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                            <li class="active">@ViewBag.Title</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--====== End Page Section ======-->
+<!--====== Start Cart Section ======-->
+<section class="cart-section pt-130 pb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="cart-wrapper wow fadeInUp">
+                    <div class="cart-table table-responsive">
+                        <table class="table">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="cart-middle mt-40 wow fadeInUp">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="coupon-box mb-30">
+                                <form>
+                                    <div class="form_group">
+                                        <input type="text" class="form_control" name="couponCode" placeholder="Mã khuyến mãi">
+                                        <button type="button" id="sendCoupon" class="theme-btn style-one">Áp dụng</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="shopping-cart-total mb-30 wow fadeInUp">
+                    <h4 class="title">Thanh toán giỏ hàng</h4>
+                    <table class="table mb-25">
+                        <tbody>
+                            <tr>
+                                <td>Tổng tiền sản phẩm</td>
+                                <td class="price cart-total-product"></td>
+                            </tr>
+                            <tr>
+                                <td>Phí vận chuyển</td>
+                                <td class="price cart-shipping-fee"></td>
+                            </tr>
+                            <tr>
+                                <td>Mã khuyến mãi</td>
+                                <td class="price cart-coupon-code"></td>
+                            </tr>
+                            <tr>
+                                <td class="total"><span>Tổng thanh toán</span></td>
+                                <td class="total price cart-total-pay fw-bold text-danger"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button id="paymentPage" class="theme-btn style-one">Đến trang thanh toán</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--====== End Cart Section ======-->
+
+<script>
+    $(document).ready(() => {
+        updateToCartPage();
+
+        $("#sendCoupon").on("click", () => {
+            summaryCheckout($("input[name='couponCode']").val());
+        });
+
+        const debounce = (func, delay) => {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        };
+
+        const debouncedUpdateToCartPage = debounce(updateToCartPage, 200);
+
+        $(document).on('click', '.quantity-down', function () {
+            const productId = $(this).data('product-id');
+            const quantityInput = $(this).siblings("input[name='quantity']");
+            let quantity = parseInt(quantityInput.val());
+
+            if (quantity > 1) {
+                quantity -= 1;
+                quantityInput.val(quantity);
+                decreaseQuantity(productId);
+                debouncedUpdateToCartPage();
+            }
+        });
+
+        $(document).on('click', '.quantity-up', function () {
+            const productId = $(this).data('product-id');
+            const quantityInput = $(this).siblings("input[name='quantity']");
+            let quantity = parseInt(quantityInput.val());
+
+            quantity += 1;
+            quantityInput.val(quantity);
+            addToCart(productId, 1);
+            debouncedUpdateToCartPage();
+        });
+
+
+
+    });
+</script>

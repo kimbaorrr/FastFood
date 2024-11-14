@@ -1,0 +1,173 @@
+
+/*---==================
+    02. Elements  
+    
+        # 05 Pricing CSS
+=================----*/
+
+.pricing-item{
+    &.style-one{
+        position: relative;
+        z-index: 1;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.08);
+        background-color: $white-color;
+        border: 5px solid transparent;
+        transition: all .3s;
+        &:after{
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: '';
+            width: 100%;
+            height: 100%;
+            @extend %primary-dark-bg;
+            border-radius: 30px;
+            z-index: -1;
+            visibility: hidden;
+            opacity: 0;
+            transition: all .4s;
+        }
+        &:hover{
+            border-color: $heading-color;
+            &::after{
+                top: 20px;
+                right: -20px;
+            }
+        }
+        & .pricing-head{
+            padding-bottom: 35px;
+            border-bottom: 1px solid #e1e1e1;
+            & span.title{
+                font: 700 18px $body-font;
+                @extend %heading-color;
+            }
+            & h2{
+                &.price{
+                    & span.duration{
+                        font: 500 18px $body-font;
+                    }
+                }
+            }
+        }
+        & .pricing-body{
+            padding-top: 20px;
+            & ul{
+                margin-bottom: 35px;
+                & li{
+                    display: flex;
+                    align-items: center;
+                    font: 500 18px $body-font;
+                    @extend %heading-color;
+                    &:not(:last-child){
+                        margin-bottom: 20px;
+                    }
+                    &:before{
+                        flex: 0 0 auto;
+                        content: '';
+                        width: 5px;
+                        height: 5px;
+                        border-radius: 50%;
+                        @extend %primary-dark-bg;
+                        margin-right: 20px;
+                    }
+                }
+            }
+            & .theme-btn{
+                &.style-two{
+                    width: 100%;
+                    border-color: $secondary-color;
+                    @extend %secondary-color;
+                    &:hover{
+                        @extend %primary-bg;
+                        border-color: transparent;
+                        @extend %white-color;
+                    }
+                }
+            }
+        }
+    }
+    &.style-two{
+        @extend %white-bg;
+        padding: 30px 40px 40px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        @include transition(.3s);
+        &:hover{
+            @extend %primary-bg;
+            border-color: transparent;
+            & .pricing-head{
+                & span.title,
+                & p,
+                & h2{
+                    @extend %white-color;
+                }
+            }
+            & .pricing-body{
+                & ul{
+                    & li{
+                        @extend %white-color;
+                        &:before{
+                            @extend %white-bg;
+                        }
+                    }
+                }
+                & .theme-btn{
+                    &.style-two{
+                        @extend %white-bg;
+                        @extend %primary-color;
+                        border-color: transparent;
+                    }
+                }
+            }
+        }
+        & .pricing-head{
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e1e1e1;
+            & span.title{
+                font: 700 18px $body-font;
+                @extend %heading-color;
+            }
+            & h2{
+                margin-bottom: 15px;
+                &.price{
+                    & span.duration{
+                        font: 500 18px $body-font;
+                    }
+                }
+            }
+        }
+        & .pricing-body{
+            padding-top: 35px;
+            & ul{
+                margin-bottom: 35px;
+                & li{
+                    display: flex;
+                    align-items: center;
+                    font: 500 18px $body-font;
+                    @extend %heading-color;
+                    &:not(:last-child){
+                        margin-bottom: 20px;
+                    }
+                    &:before{
+                        flex: 0 0 auto;
+                        content: '';
+                        width: 5px;
+                        height: 5px;
+                        border-radius: 50%;
+                        @extend %primary-dark-bg;
+                        margin-right: 20px;
+                        @include transition(.33s)
+                    }
+                }
+            }
+            & .theme-btn{
+                &.style-two{
+                    width: 100%;
+                    border-color: $primary-color;
+                    @extend %primary-color;
+                }
+            }
+        }
+    }
+}

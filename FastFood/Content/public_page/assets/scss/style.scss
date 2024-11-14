@@ -1,0 +1,99 @@
+/*----------------------------------------------------------------------------------- 
+Template Name: Foodix - Fast Foods & Restaurants HTML Template
+URI: site.com 
+Description: Foodix is a versatile and innovative website template tailored for a wide range of food-related businesses including restaurants, cafes, pubs, fast food outlets, bistros, bakeries, and more. Whether you specialize in pizzas, burgers, coffees, or offer food booking services, Foodix is designed to meet your needs with its clean and creative layout.This is highly customizable and looks awesome on tablets and mobile devices. We have included best practices of web development and you can create a great website layout based on Bootstrap or Grid 1320px.
+Author: Pixelfit
+Author URI: https://themeforest.net/user/pixelfit
+Version: 1.0 
+
+
+------------------------------------------------------
+   CSS INDEX
+-----------------------------------------------------
+
+    01. Base css 
+
+    02. Elements CSS
+        # Common CSS
+        # Header CSS
+        # Hero CSS
+        # Iconic Box CSS
+        # Pricing CSS
+        # Tabs CSS
+        # Food Menu CSS
+        # Accordion CSS
+        # Team CSS
+        # Testimonial CSS
+        # Gallery CSS
+        # Cart CSS
+        # Checkout CSS
+    
+    03. Post css
+        # Post CSS
+        # Sidebar CSS
+
+    04. Sections CSS
+        # Sliders CSS
+        # Section CSS
+        # Wrapper CSS
+        # Footer CSS
+-------------------------------------------------------    */
+
+
+
+
+
+
+// Import All SASS Directory Files
+
+// Global Version
+
+@import 'variable';
+
+@import 'mixin';
+
+// Base Directions
+
+@import 'extend';
+
+@import 'base';
+
+// All sections CSS
+
+@import 'elements/common';
+
+@import 'elements/header';
+
+@import 'elements/hero';
+
+@import 'elements/iconic-box';
+
+@import 'elements/pricing';
+
+@import 'elements/tabs';
+
+@import 'elements/menu';
+
+@import 'elements/accordion';
+
+@import 'elements/team';
+
+@import 'elements/testimonial';
+
+@import 'elements/gallery';
+
+@import 'elements/cart';
+
+@import 'elements/checkout';
+
+@import 'post/post';
+
+@import 'post/sidebar';
+
+@import 'sections/sliders';
+
+@import 'sections/wrapper';
+
+@import 'sections/sections';
+
+@import 'sections/footer';

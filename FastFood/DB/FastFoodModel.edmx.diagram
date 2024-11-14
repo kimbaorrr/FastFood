@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="78aa690415474652965709d21685e36b" Name="Diagram1">
+        <EntityTypeShape EntityType="FastFoodModel.BaiViet" Width="1.5" PointX="3" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.ChiTietDonHang" Width="1.5" PointX="10.25" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.DanhGiaSanPham" Width="1.5" PointX="10.5" PointY="17.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.DanhMuc" Width="1.5" PointX="3" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.DonHang" Width="1.5" PointX="8" PointY="12.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.GioLamViecCuaHang" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.KhachHang" Width="1.5" PointX="5.75" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.KhachHangDangNhap" Width="1.5" PointX="8" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.LichSuTruyCap" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.MaKhuyenMai" Width="1.5" PointX="5.75" PointY="18.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.NguyenLieu" Width="1.5" PointX="5.25" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.NhanVien" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.NhanVienDangNhap" Width="1.5" PointX="3" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.NhapKho" Width="1.5" PointX="3" PointY="17.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.QuyenHanNhanVien" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.SanPham" Width="1.5" PointX="5.25" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.SanPham_NguyenLieu" Width="1.5" PointX="7.5" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.sysdiagram" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.ThanhToan" Width="1.5" PointX="10.25" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.ThongTinCuaHang" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FastFoodModel.TrangThaiDonHang" Width="1.5" PointX="5.75" PointY="21.375" IsExpanded="true" />
+        <AssociationConnector Association="FastFoodModel.FK__BaiViet__NguoiDu__24E777C3" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__BaiViet__NguoiTa__23F3538A" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__ChiTietDo__MaDon__59FA5E80" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__ChiTietDo__MaSan__5AEE82B9" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__DanhGiaSa__MaKha__31B762FC" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__DanhGiaSa__MaSan__32AB8735" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__DanhMuc__NguoiTa__3F115E1A" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__SanPham__MaDanhM__3A81B327" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__DonHang__NguoiBa__55009F39" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__DonHang__NguoiGi__540C7B00" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__DonHang__NguoiMu__55F4C372" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__DonHang__TrangTh__531856C7" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__ThanhToan__MaDon__72C60C4A" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK_MaKhuyenMai_MaKhuyenMai" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__KhachHang__MaKha__48CFD27E" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__NhapKho__MaNguye__3429BB53" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__SanPham_N__MaNgu__1DB06A4F" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__NhanVienD__MaNha__5070F446" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__NhapKho__NguoiNh__351DDF8C" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__SanPham__NguoiDu__22751F6C" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__SanPham__NguoiTa__208CD6FA" ManuallyRouted="false" />
+        <AssociationConnector Association="FastFoodModel.FK__SanPham_N__MaSan__1CBC4616" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

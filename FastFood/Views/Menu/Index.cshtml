@@ -1,0 +1,117 @@
+﻿@using FastFood.Models;
+@{
+    var dsDanhMuc = FastFood_SanPham.getDanhMuc().ToList();
+}
+
+<!--====== Start Page Section ======-->
+<section class="page-banner">
+    <div class="page-bg-wrapper p-r z-1 bg_cover pt-100 pb-110" style="background-image: url(/Content/public_page/assets/images/bg/page-bg.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--=== Page Banner Content ===-->
+                    <div class="page-banner-content text-center">
+                        <h1 class="page-title">@ViewBag.Title</h1>
+                        <ul class="breadcrumb-link">
+                            <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                            <li class="active">@ViewBag.Title</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--====== End Page Section ======-->
+<!--====== Start Menu Page Section ======-->
+<section class="menu-grid-section gray-bg pt-110 pb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title text-center mb-55">
+                    <h2>Khám Phá Thực Đơn</h2>
+                    <p>Đắm chìm trong những món ăn nhanh hấp dẫn, từ burger ngon miệng đến khoai tây chiên giòn rụm. Mỗi món ăn đều được chuẩn bị với nguyên liệu tươi ngon, mang đến cho bạn trải nghiệm ẩm thực tuyệt vời ngay trong vòng tay!</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="foodix-tabs style-two mb-70">
+                    <ul class="nav nav-tabs wow fadeInDown">
+                        @{
+                            for (byte c = 0; c < dsDanhMuc.Count(); c++)
+                            {
+                                var dm = dsDanhMuc[c];
+                                bool isActive = c == 0;
+                                <li>
+                                    <button class="nav-link @(isActive ? "active" : "")" data-bs-toggle="tab" data-bs-target="#dm_@dm.MaDanhMuc">@dm.TenDanhMuc</button>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tab-content">
+                    @{
+                        for (int k = 0; k < dsDanhMuc.Count(); k++)
+                        {
+                            var dm = dsDanhMuc[k];
+                            <div class="tab-pane fade @(k == 0 ? "show active" : "")" id="dm_@dm.MaDanhMuc" style="max-height: 75vh;overflow-y: scroll; overflow-x: hidden;">
+                                <div class="row">
+                                    @foreach (var product in FastFood_SanPham.getSanPhamTheoDanhMuc(dm.MaDanhMuc, 8))
+                                    {
+                                        string hinhAnh = product.HinhAnh.Split(new char[] { ',' })[0];
+                                        <div class="col-xl-3 col-md-6 col-sm-12">
+                                            <div class="menu-item style-four mb-30">
+                                                <div class="overflow-hidden d-flex justify-content-center align-items-center mx-auto align-content-center" style="width: 220px;height: 200px;">
+                                                    <img src="@hinhAnh" alt="menu image" class="object-fit-fill" width="100%" height="100%">
+                                                </div>
+                                                <div class="menu-info">
+                                                    <div class="menu-meta"\>
+                                                        <span class="price">
+                                                            <span class="currency">$</span>
+                                                            @product.GiaSauKhuyenMai
+                                                            @{
+                                                                if (product.KhuyenMai > 0)
+                                                                {
+                                                                    <span class="ps-1 text-decoration-line-through" style="color:slategray;">@product.GiaGoc</span>
+                                                                }
+                                                            }
+
+                                                        </span>
+                                                        <span class="rating">
+                                                            <i class="fas fa-star"></i>
+                                                            @{
+                                                                if (product.DanhGiaSanPhams.Any())
+                                                                {
+                                                                    <a href="#">
+                                                                        @product.DanhGiaSanPhams.Average(x => x.XepHangSao)
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a href="#">3</a>
+                                                                }
+                                                            }
+                                                        </span>
+                                                    </div>
+                                                    <h4 class="title"><a href="@Url.Action("Detail", "Menu", new {id = product.MaSanPham, return_url = Request.Url.AbsoluteUri})">@product.TenSanPham</a></h4>
+                                                    <p class="text-secondary" style="font-weight: 500;">@product.MoTaNgan</p>
+                                                    <button type="button" class="add-to-cart-btn theme-btn style-two mt-3" style="padding: 12px 0;" data-product-id="@product.MaSanPham" data-quantity="1"><i class="far fa-cart-plus"></i> Thêm vào giỏ</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--====== End Menu Page Section ======-->

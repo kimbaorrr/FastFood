@@ -1,0 +1,326 @@
+﻿
+@{
+    var dsQuyenHan = FastFood.Areas.Admin.Models.FastFood_NhanVienDangNhap.getQuyenHanNhanVien().AsEnumerable();
+    @model FastFood.Areas.Admin.Models.FastFood_NhanVienDangNhap_TaoTaiKhoan
+}
+
+
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-12 col-lg-4">
+            <!-- Form tạo tài khoản nhân viên -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h4 class="m-0 card-title">Tạo tài khoản</h4>
+                        </div>
+                        <div class="card-body">
+                            @using (Html.BeginForm("Create", "Employee", FormMethod.Post, new { area = "Admin", id = "createEmployeeForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="form-group">
+                                    <select id="MaNhanVien" name="MaNhanVien" class="form-control mt-1" required>
+                                        <option value="">Chọn nhân viên</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mt-2">
+                                    @Html.LabelFor(x => x.TenDangNhap, new { @class = "form-label" })
+                                    @Html.TextBoxFor(x => x.TenDangNhap, new { @class = "form-control", @autocomplete = "off", @required = "" })
+                                </div>
+                                <div class="form-group mt-2">
+                                    @Html.LabelFor(x => x.MatKhau, new { @class = "form-label" })
+                                    @Html.PasswordFor(x => x.MatKhau, new { @class = "form-control", @autocomplete = "off", @required = "" })
+                                </div>
+                                <div class="form-group mt-2">
+                                    @Html.LabelFor(x => x.VaiTro, new { @class = "form-label" })
+                                    <select name="VaiTro" class="form-control">
+                                        <option value="true">Quản trị viên</option>
+                                        <option value="false" selected>Người dùng</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label>Chọn Quyền:</label>
+                                    <div class="row mt-1 listPermission"></div>
+                                </div>
+                                <button type="submit" class="btn btn-success mt-3 w-100">Tạo tài khoản</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-12 col-lg-8">
+            <!-- Bảng phân quyền nhân viên -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title flex-grow-1">Danh sách nhân viên đã có tài khoản</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive" style="overflow-y: scroll;max-height: 50vh;">
+                                <table class="table table-bordered align-middle table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Họ tên nhân viên</th>
+                                            <th>Tên đăng nhập</th>
+                                            <th>Quyền hạn</th>
+                                            <th>Vai trò</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Chỉnh sửa tài khoản nhân viên <span name="employeeId"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                @using (Html.BeginForm("Edit", "Employee", FormMethod.Post, new { area = "Admin", id = "editEmployeeForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        @Html.Hidden("employeeId", "")
+                        <div class="form-group mb-2">
+                            @Html.Label("Tên đăng nhập", new { @class = "form-label" })
+                            @Html.TextBox("TenDangNhap", null, new { @class = "form-control", @autocomplete = "off" })
+                        </div>
+                        <div class="form-group mb-2">
+                            @Html.Label("Mật khẩu mới", new { @class = "form-label" })
+                            @Html.Password("MatKhau", null, new { @class = "form-control", @autocomplete = "off" })
+                        </div>
+                        <div class="form-group mb-2">
+                            @Html.LabelFor(x => x.VaiTro, new { @class = "form-label" })
+                            <select name="VaiTro" class="form-control">
+                                <option value="true">Quản trị viên</option>
+                                <option value="false" selected>Người dùng</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="form-label">Chọn quyền:</label>
+                            <div class="row listPermission"></div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadTableData() {
+        $.ajax({
+            url: '@Url.Action("GetList", "Employee", new { area = "Admin" })',
+            type: 'GET',
+            success: function(data) {
+                var tableBody = $('table tbody');
+                tableBody.empty();
+
+                $.each(data, function(index, item) {
+                    var row = $('<tr></tr>');
+                    row.append('<td>' + item.MaNhanVien + '</td>');
+                    row.append('<td>' + item.HoTen + '</td>');
+                    row.append('<td>' + item.TenDangNhap + '</td>');
+                    row.append('<td>' + item.QuyenHan + '</td>');
+                    row.append('<td>' + item.VaiTro + '</td>');
+                    row.append(`
+                    <td>
+                        <button class="btn btn-warning btn-sm editEmployeeLogin"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal"
+                                data-employee-id="${item.MaNhanVien}"
+                                data-user-name="${item.TenDangNhap}"
+                                >
+                            Sửa
+                        </button>
+                        <button class="btn btn-danger btn-sm deleteEmployeeLogin" data-employee-id="${item.MaNhanVien}">Xóa</button>
+                    </td>`);
+
+                    tableBody.append(row);
+                });
+            },
+            error: function(xhr, status, error) {
+                alert("Có lỗi khi tải lại bảng dữ liệu: " + error);
+            }
+        });
+    }
+
+    function loadListPermission() {
+        $.ajax({
+            url: '@Url.Action("GetListPermission", "Employee", new { area = "Admin" })',
+            type: 'GET',
+            success: function(data) {
+                var permission = $('.listPermission');
+                permission.empty();
+
+                $.each(data, function(index, item) {
+                    permission.append(
+                        `
+                        <div class="col-md-4 mb-1">
+                                 <div class="form-check">
+                                     <input class="form-check-input choosePermission" type="checkbox" value="${item.MaQuyenHan}">
+                                     <label class="form-check-label">
+                                         ${item.MoTa}
+                                     </label>
+                                 </div>
+                        </div>
+
+                        `
+                    );
+                });
+            },
+            error: function(xhr, status, error) {
+                alert("Có lỗi khi tải lại bảng dữ liệu: " + error);
+            }
+        });
+    }
+
+    function loadEmployeeData() {
+        $.ajax({
+            url: '@Url.Action("GetNonInfo", "Employee", new { area = "Admin" })',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (Array.isArray(data)) {
+                    var $employeeSelect = $('#createEmployeeForm #MaNhanVien');
+                    $employeeSelect.empty();
+                    $employeeSelect.append('<option value="">Chọn nhân viên</option>');
+
+                    data.forEach(function (employee) {
+                        if (employee.MaNhanVien && employee.HoTen) {
+                            $employeeSelect.append(
+                                $('<option>', {
+                                    value: employee.MaNhanVien,
+                                    text: employee.HoTen
+                                })
+                            );
+                        }
+                    });
+                } else {
+                    console.error("Data is not in the expected array format:", data);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Có lỗi xảy ra khi tải danh sách nhân viên: " + error);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        loadTableData();
+        loadEmployeeData();
+        loadListPermission();
+
+        $('#createEmployeeForm').on('submit', function (e) {
+            e.preventDefault();
+            let selectedPermissions = [];
+            let formData = $(this).serialize();
+            const url = $(this).attr("action");
+
+            $(this).find(".choosePermission:checked").each(function () {
+                selectedPermissions.push($(this).val());
+            });
+
+            formData += '&permissions=' + JSON.stringify(selectedPermissions);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    alertMessage(response.message, response.type);
+                    loadTableData();
+                    loadEmployeeData();
+                    $(this).find("input").val("");
+                    $(this).find('input:first').focus();
+                },
+                error: function (xhr, status, error) {
+                    alert('Đã xảy ra lỗi khi tạo tài khoản.');
+                }
+            });
+        });
+
+        $(document).on("click", "button.deleteEmployeeLogin", function () {
+            const employeeId = $(this).data("employee-id");
+            const token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                url: '@Url.Action("Delete", "Employee", new { area = "Admin" })',
+                type: 'POST',
+                data: {
+                    employeeId: employeeId,
+                    __RequestVerificationToken: token
+                },
+                success: function (response) {
+                    alertMessage(response.message, response.type);
+                    loadTableData();
+                    loadEmployeeData();
+                },
+                error: function (xhr, status, error) {
+                    console.log("Lỗi xóa tài khoản !");
+                }
+            });
+        });
+
+        $(document).on("click", ".editEmployeeLogin", function () {
+            const employeeId = $(this).data("employee-id");
+            const userName = $(this).data("user-name");
+
+            $("#editModal input[name='employeeId']").val(employeeId);
+            $("#editModal span[name='employeeId']").text(employeeId);
+            $("#editModal input[name='TenDangNhap']").val(userName);
+        });
+
+        $('#editEmployeeForm').on('submit', function (e) {
+            e.preventDefault();
+            let formData = $(this).serialize();
+            const url = $(this).attr("action");
+            const role = $(this).find("select").val();
+            let selectedPermissions = [];
+
+            $(this).find(".choosePermission:checked").each(function () {
+                selectedPermissions.push($(this).val());
+            });
+
+            formData += '&permissions=' + JSON.stringify(selectedPermissions);
+            formData += '&role=' + role;
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    alertMessage(response.message, response.type);
+                    loadTableData();
+                    $("#editModal").modal("hide");
+                },
+                error: function (xhr, status, error) {
+                    alert('Đã xảy ra lỗi khi sửa tài khoản.');
+                }
+            });
+        });
+    });
+</script>
+

@@ -1,0 +1,141 @@
+
+
+
+
+/*---==================
+    02. Elements  
+    
+        # 06 Tabs CSS
+=================----*/
+
+.foodix-tabs{
+    &.style-one{
+        padding: 10px;
+        background-color: $white-color;
+        border-radius: 10px;
+        border: 1px solid rgba(191, 17, 9, 0.30);
+        margin: 0 auto 40px;
+        @media #{$xl}{
+            max-width: 1025px;
+        }
+        @media#{$lm}{
+            max-width: 675px;
+        }
+        & .nav-tabs{
+            border-bottom: none;
+            justify-content: center;
+        }
+        & .nav-link{
+            border-radius: 7px;
+            padding: 15px 55px;
+            background-color: transparent;
+            font: 700 24px $heading-font;
+            text-transform: uppercase;
+            @extend %heading-color;
+            border: none;
+            @media #{$lp}{
+                padding: 15px 47px;
+            }
+            @media #{$lm}{
+                font: 700 18px $heading-font;
+                padding: 15px 40px;
+            }
+            @media #{$lm}{
+                font: 700 16px $heading-font;
+                padding: 15px 35px;
+            }
+            &.active{
+                @extend %white-color;
+                @extend %primary-bg;
+            }
+        }
+    }
+    &.style-two{
+        & .nav-tabs{
+            border-bottom: none;
+            gap: 30px;
+            justify-content: center;
+            @media #{$xm}{
+                gap: 15px;
+            }
+            @media #{$xs}{
+                gap: 10px;
+            }
+        }
+        & .nav-link{
+            border-radius: 10px;
+            background: rgba(191, 17, 9, 0.10);
+            margin-bottom: 0;
+            border: none;
+            font: 700 18px $heading-font;
+            @extend %heading-color;
+            padding: 14px 50px;
+            &.active{
+                @extend %primary-bg;
+                @extend %white-color;
+            }
+        }
+    }
+    &.style-three{
+        & .nav-tabs{
+            justify-content: space-between;
+        }
+        & .nav-link{
+            font-size: 20px;
+            font-weight: 500;
+            border: none;
+            border-radius: 0;
+            @extend %heading-color;
+            position: relative;
+            @media #{$xss}{
+                font-size: 16px;
+            }
+            &:after{
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                content: '';
+                width: 100%;
+                height: 2px;
+                @extend %primary-bg;
+                visibility: hidden;
+                opacity: 0;
+                transition: all .3s;
+            }
+            &.active{
+                @extend %primary-color;
+                &:after{
+                    visibility: visible;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+    &.style-four{
+        & .nav-tabs{
+            border-bottom: none;
+            gap: 30px;
+            justify-content: center;
+            @media #{$xm}{
+                gap: 15px;
+            }
+            @media #{$xs}{
+                gap: 10px;
+            }
+        }
+        & .nav-link{
+            border-radius: 6px;
+            @extend %white-bg;
+            margin-bottom: 0;
+            border: none;
+            font: 700 18px $heading-font;
+            @extend %heading-color;
+            padding: 14px 50px;
+            box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.10);
+            &.active{
+                @extend %primary-bg;
+                @extend %white-color;
+            }
+        }
+    }
+}

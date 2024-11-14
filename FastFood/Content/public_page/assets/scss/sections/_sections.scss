@@ -1,0 +1,387 @@
+
+/*---==================
+    04. Sections  
+        # 02 Sections CSs
+=================----*/
+
+
+/* Section Content Box */ 
+
+.section-content-box{
+    & > p{
+        margin-bottom: 25px;
+        max-width: 670px;
+    }
+}
+
+/* Section Image Box */
+ 
+.section-image-box{
+    &.style-one{
+        & .image-box{
+            position: relative;
+            z-index: 1;
+            &  img{
+                margin-left: -115px;
+                @media #{$lm}{
+                    margin-left: 0;
+                }
+            }
+            & .shape-element{
+                position: absolute;
+                & img{
+                    margin-left: 0;
+                }
+                &.element-one{
+                    top: 9%;
+                    right: 21%;
+                    @media #{$lm}{
+                        top: 10%;
+                        right: 30%;
+                    }
+                }
+                &.element-two{
+                    bottom: -70px;
+                    left: 5%;
+                    transform: rotate(45deg);
+                    @media #{$lm}{
+                        bottom: -45px;
+                        left: 5%;
+                    }
+                }
+            }
+        }
+    }
+    &.style-two{
+        & .image-box{
+            & img{
+                width: 100%;
+                @include border-radius(10px);
+            }
+        }
+    }
+}
+
+.order-image-box-two{
+    & img{
+        max-width: 780px;
+        @media #{$lp}{
+            max-width: 100%;
+        }
+        @media #{$lm}{
+            max-width: 100%;
+        }
+    }
+}
+/* Menu Image Box */
+
+.menu-image-box{
+    & img{
+        width: 100%;
+    }
+}
+
+/* Page Banner Content */
+
+.page-banner-content{
+    & h1{
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 18px;
+        @extend %white-color;
+        @media #{$lm}{
+            font-size: 52px;
+            line-height: 60px;
+        }
+    }
+    & ul{
+        &.breadcrumb-link{
+            & li{
+                display: inline-block;
+                @extend %white-color;
+                font-size: 18px;
+                font-weight: 500;
+                &.active{
+                    @extend %white-color;
+                }
+                &:not(:last-child){
+                    &:after{
+                        content: '-';
+                        margin-left: 13px;
+                        margin-right: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Text Box */
+
+.text-box{
+    & p{
+        font: 500 18px $body-font;
+        line-height: 27px;
+    }
+}
+
+/* Nice Select */
+
+.nice-select{
+    padding: 10px 20px;
+    border: 1px solid #e1e1e1;
+    &:after{
+        font-family: 'Font Awesome 5 Pro';
+        content: '\f107';
+        margin-left: 10px;
+    }
+}
+
+/* Filter Catergory */
+
+.filter-category{
+    max-width: 220px;
+    @media #{$xs}{
+        margin: 0 auto;
+    }
+    & .nice-select{
+        font: 500 18px $body-font;
+        @extend %heading-color;
+        @media #{$xs}{
+            margin-bottom: 30px;
+        }
+    }
+}
+
+/* Checkout Faqs */
+
+.checkout-faqs{
+    & .alert{
+        padding: 20px 30px;
+        & form{
+            padding: 20px 0;
+            & p{
+                font-size: 18px;
+                font-weight: 500;
+                margin-bottom: 15px;
+            }
+        }
+    }
+    & .cl-pass{
+        font: 600 18px $heading-font;
+        margin-top: 15px;
+    }
+    & .form-check-input{
+        margin-top: 7px;
+    }
+    & .form-footer{
+        & .theme-btn{
+            margin-right: 30px;
+        }
+        
+    }
+}
+
+/* Foodix Banner V1 */
+
+.foodix-banner-v1{
+    & .container-fluid{
+        padding-left: 70px;
+        padding-right: 70px;
+        @media #{$xm}{
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    }
+}
+
+.contact-image-box{
+    & img{
+        max-height: 820px;
+    }
+}
+
+/* Sidemenu Wrapper */
+
+.sidemenu-wrapper-cart{
+    position: fixed;
+    z-index: 99999;
+    right: 0;
+    top: 0;
+    width: 350px;
+    height: 100%;
+    opacity: 0;
+    @extend %white-bg;
+    transition: transform 0.45s ease-in-out, opacity 0.45s ease-in-out;
+    transform: translateX(calc(100% + 80px));
+    overflow: auto;
+    @media #{$xss}{
+        width: 300px;
+    }
+    &.info-open{    
+        transform: translateX(0);
+        opacity: 1;
+    }
+    & .sidemenu-cart-close{
+        position: absolute;
+        top: 27px;
+        right: 22px;
+        width: 25px;
+        height: 25px;
+        border: 1px solid $primary-color;
+        color: $primary-color;
+        @extend %flex-center;
+        cursor: pointer;
+    }
+    & h4{
+        padding: 25px 20px 30px;
+    }
+    & .cart-mini-total{
+        padding: 25px 20px 30px;
+        margin-top: 100px;
+        & .cart-total{
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+        }
+    }
+    & .cart-button{
+        padding: 25px 20px 30px;
+        & .theme-btn{
+            padding: 17px 30px;
+            &.style-one{
+                width: 100%;
+            }
+        }
+    }
+}
+
+/* Foodix Menu Cart */
+
+.foodix-menu-cart{
+    position: relative;
+    padding: 35px 20px 35px 115px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 0;
+    text-align: left;
+    &:first-child{
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    & a{
+        display: block;
+        font: 700 16px $heading-font;
+        width: 150px;
+        &:hover{
+            @extend %primary-color
+        }
+    }
+    & img{
+        position: absolute;
+        left: 20px;
+        top: 30px;
+        width: 80px;
+        height: 80px;
+        border-radius: 10px;
+    }
+    & .remove-cart{
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        @include transform(translateY(-50%));
+        width: 20px;
+        height: 20px;
+        font-size: 15px;
+        @extend %flex-center;
+        &:hover{
+            @extend %primary-color;
+        }
+    }
+}
+
+/* Offcanvas Overlay */
+
+.offcanvas__overlay {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background: #151515;
+    z-index: 900;
+    top: 0;
+    opacity: 0;
+    visibility: hidden;
+    right: 0;
+    &.overlay-open{
+        opacity: 0.8;
+        visibility: visible;
+    }
+}
+
+/* Animated List Wrap */
+
+.animated-list-wrap{
+    @extend %white-color;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 0.5px;
+    text-transform: uppercase;
+    & .animated-wrap{
+        display: flex;
+        overflow: hidden;
+        white-space: nowrap;
+        & .animated-inner{
+            display: flex;
+            &.left{
+                animation: marquee_left 20s linear infinite;
+            }
+        }
+    }
+    & .animated-list-item{
+        display: flex;
+        align-items: center;
+        & i{
+            @extend %primary-color;
+            margin-left: 25px;
+            margin-right: 25px;
+        }
+        & span{
+            @extend %primary-color;
+        }
+    }
+}
+
+@-webkit-keyframes marquee {
+    100% {
+      -webkit-transform: translate(-100%, 0);
+      transform: translate(-100%, 0); 
+    }
+}
+@keyframes marquee {
+    100% {
+      -webkit-transform: translate(-100%, 0);
+      transform: translate(-100%, 0); 
+    }
+}
+  
+  
+@-webkit-keyframes marquee_left {
+    from {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0); }
+    to {
+      -webkit-transform: translate3d(-100%, 0, 0);
+      transform: translate3d(-100%, 0, 0); 
+    } 
+}
+  
+@keyframes marquee_left {
+    from {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0); 
+    }
+    to {
+      -webkit-transform: translate3d(-100%, 0, 0);
+      transform: translate3d(-100%, 0, 0); 
+    } 
+    
+}
