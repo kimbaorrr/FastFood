@@ -1,7 +1,7 @@
 ﻿@using FastFood.Areas.Admin.Models;
-@{ 
+@{
     string anhDD = Session["AnhDD"] as string;
-    int maNV = Convert.ToInt32(Session["MaNhanVien"] as string);
+    string maNV = Session["MaNhanVien"] as string;
     string hoTen = FastFood_NhanVien.getHoTen(maNV);
 }
 <!DOCTYPE html>
@@ -45,7 +45,7 @@
 </head>
 
 <body>
-@Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
     <!-- START Wrapper -->
     <div class="wrapper">
 
@@ -515,7 +515,7 @@
                                 <li class="sub-nav-item @(!FastFood_NhanVienDangNhap.CheckPermission(Session["MaNhanVien"] as string, 6) ? "d-none" : "")">
                                     <a class="sub-nav-link" href="@Url.Action("Create", "Product", new { area = "Admin" })">Thêm sản phẩm</a>
                                 </li>
-                                <li class="sub-nav-item 
+                                <li class="sub-nav-item
                                     @(!FastFood_NhanVienDangNhap.CheckPermission(Session["MaNhanVien"] as string, 1) ? "d-none" : "")">
                                     <a class="sub-nav-link" href="@Url.Action("Approve", "Product", new {area = "Admin"})">Phê duyệt sản phẩm</a>
                                 </li>
@@ -689,32 +689,32 @@
                 @using (Html.BeginForm("ChangePassword", "Account", FormMethod.Post, new { id = "changePasswordForm" }))
                 {
                     @Html.AntiForgeryToken()
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Đổi mật khẩu</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="MatKhauCu" class="form-label">Mật khẩu cũ</label>
-                                <input name="MatKhauCu" id="MatKhauCu" type="password" class="form-control" required/>
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Đổi mật khẩu</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="mb-3">
-                                <label for="MatKhauMoi" class="form-label">Mật khẩu mới</label>
-                                <input name="MatKhauMoi" id="MatKhauMoi" type="password" class="form-control" required/>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="MatKhauCu" class="form-label">Mật khẩu cũ</label>
+                                    <input name="MatKhauCu" id="MatKhauCu" type="password" class="form-control" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="MatKhauMoi" class="form-label">Mật khẩu mới</label>
+                                    <input name="MatKhauMoi" id="MatKhauMoi" type="password" class="form-control" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="NhapLaiMatKhau" class="form-label">Nhập lại mật khẩu</label>
+                                    <input name="NhapLaiMatKhau" id="NhapLaiMatKhau" type="password" class="form-control" required />
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="NhapLaiMatKhau" class="form-label">Nhập lại mật khẩu</label>
-                                <input name="NhapLaiMatKhau" id="NhapLaiMatKhau" type="password" class="form-control" required/>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                         </div>
                     </div>
-                </div>
                 }
 
             </div>

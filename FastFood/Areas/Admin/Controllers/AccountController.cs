@@ -41,33 +41,40 @@ namespace FastFood.Areas.Admin.Controllers
                 bool isValid = queryData != null && FastFood_Tools.CheckPassword(a.MatKhau, queryData.MatKhau);
 
                 if (!isValid)
-                    return JsonMessage(false, "Tên đăng nhập hoặc mật khẩu không đúng !");
-
-                FastFood_NhanVien b = new FastFood_NhanVien
                 {
-                    MaNhanVien = queryData.MaNhanVien,
-                    AnhDD = queryData.NhanVien.AnhDD ?? string.Empty
-                };
-
-                Session["MaNhanVien"] = b.MaNhanVien.ToString();
-                Session["AnhDD"] = b.AnhDD.ToString();
-
-                if (a.GhiNhoDangNhap)
-                {
-                    HttpCookie cookie = new HttpCookie("LoginCookie")
-                    {
-                        Values = { ["MaNhanVien"] = queryData.MaNhanVien.ToString(), ["AnhDD"] = b.AnhDD.ToString() },
-                        Expires = DateTime.Now.AddDays(14),
-                        Secure = true
-                    };
-                    Response.Cookies.Add(cookie);
+                    ViewBag.ThongBao = "Tên đăng nhập hoặc mật khẩu không đúng !";
                 }
+                else
+                {
+                    FastFood_NhanVien b = new FastFood_NhanVien
+                    {
+                        MaNhanVien = queryData.MaNhanVien,
+                        AnhDD = queryData.NhanVien.AnhDD ?? string.Empty
+                    };
 
-                FastFood_NhanVien.lichSuTruyCap(b.MaNhanVien, queryData.TenDangNhap, "Đăng nhập");
-                return RedirectToAction("Index", "Home", new { area = "Admin" });
+                    Session["MaNhanVien"] = b.MaNhanVien.ToString();
+                    Session["AnhDD"] = b.AnhDD.ToString();
+
+                    if (a.GhiNhoDangNhap)
+                    {
+                        HttpCookie cookie = new HttpCookie("LoginCookie")
+                        {
+                            Values = {
+                            ["MaNhanVien"] = queryData.MaNhanVien.ToString(),
+                            ["AnhDD"] = b.AnhDD.ToString()
+                        },
+                            Expires = DateTime.Now.AddDays(14),
+                            Secure = true
+                        };
+                        Response.Cookies.Add(cookie);
+                    }
+
+                    FastFood_NhanVien.lichSuTruyCap(b.MaNhanVien, queryData.TenDangNhap, "Đăng nhập");
+                    return RedirectToAction("Index", "Home", new { area = "Admin" });
+                }
             }
 
-            return JsonMessage(false, "Thông tin không hợp lệ!");
+            return View();
         }
         /// <summary>
         /// Đăng xuất khỏi hệ thống.
@@ -149,16 +156,20 @@ namespace FastFood.Areas.Admin.Controllers
             {
                 NhanVienDangNhap dn = e.NhanVienDangNhaps.FirstOrDefault(x => x.TenDangNhap.Equals(a.TenDangNhap) && x.NhanVien.Email.Equals(a.Email));
                 if (dn == null)
-                    return JsonMessage(false, "Sai tên đăng nhập hoặc email !");
+                    ViewBag.ThongBao = "Sai tên đăng nhập hoặc email !";
+                else
+                {
+                    string tempPassword = Guid.NewGuid().ToString().Replace("-", "");
+                    string hashTempPassword = FastFood_Tools.HashPassword(tempPassword);
+                    dn.MatKhau = hashTempPassword;
+                    dn.MatKhauTamThoi = true;
+                    e.SaveChanges();
 
-                string tempPassword = Guid.NewGuid().ToString().Replace("-", "");
-                string hashTempPassword = FastFood_Tools.HashPassword(tempPassword);
-                dn.MatKhau = hashTempPassword;
-                dn.MatKhauTamThoi = true;
-                e.SaveChanges();
+                    SendResetPasswordEmail(a.Email, tempPassword);
+                    return RedirectToAction("Login", "Account", new { area = "Admin" });
+                }
+                return View();
 
-                SendResetPasswordEmail(a.Email, tempPassword);
-                return RedirectToAction("Login", "Account", new { area = "Admin" });
             }
         }
         /// <summary>
