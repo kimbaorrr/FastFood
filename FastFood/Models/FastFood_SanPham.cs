@@ -1,5 +1,6 @@
 ﻿using FastFood.DB;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace FastFood.Models
@@ -90,9 +91,15 @@ namespace FastFood.Models
     }
     public class FastFood_SanPham_DanhGiaSanPham
     {
+        [DataType(DataType.Text)]
         public int MaKhachHang { get; set; } = 0;
+        [DataType(DataType.Text)]
+        [Display(Name = "Tên khách hàng")]
         public string TenKhachHang { get; set; } = string.Empty;
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Nội dung đánh giá")]
         public string NoiDung { get; set; } = string.Empty;
+        [DataType(DataType.Text)]
         public int XepHangSao { get; set; } = 3;
         public FastFood_SanPham_DanhGiaSanPham() { }
         public FastFood_SanPham_DanhGiaSanPham(FastFood_SanPham_DanhGiaSanPham a)

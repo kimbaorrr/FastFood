@@ -46,55 +46,45 @@ namespace FastFood.Areas.Admin.Models
 
         [Display(Name = "Tên sản phẩm")]
         [DataType(DataType.Text)]
-        public string TenSanPham { get; set; }
+        public string TenSanPham { get; set; } = string.Empty;
 
         [Display(Name = "Danh mục")]
         [DataType(DataType.Text)]
-        public int MaDanhMuc { get; set; }
+        public int MaDanhMuc { get; set; } = 0;
 
         [Display(Name = "Giá gốc")]
         [DataType(DataType.Currency)]
-        public int GiaGoc { get; set; }
+        public int GiaGoc { get; set; } = 0;
 
         [Display(Name = "Khuyến mãi (%)")]
         [Range(0, 100)]
-        public int KhuyenMai { get; set; }
+        public int KhuyenMai { get; set; } = 0;
 
         [Display(Name = "Giá sau khuyến mãi")]
         [DataType(DataType.Currency)]
-        public int GiaSauKhuyenMai { get; set; }
+        public int GiaSauKhuyenMai { get; set; } = 0;
 
         [Display(Name = "Mô tả ngắn")]
         [DataType(DataType.MultilineText)]
-        public string MoTaNgan { get; set; }
+        public string MoTaNgan { get; set; } = string.Empty;
         [Display(Name = "Mô tả dài")]
         [DataType(DataType.MultilineText)]
-        public string MoTaDai { get; set; }
+        public string MoTaDai { get; set; } = string.Empty;
         [Display(Name = "Ngày tạo")]
         [DataType(DataType.DateTime)]
-        public DateTime NgayTao { get; set; }
+        public DateTime NgayTao { get; set; } = DateTime.Now;
 
         [Display(Name = "Ngày cập nhật")]
         [DataType(DataType.DateTime)]
-        public DateTime NgayCapNhat { get; set; }
+        public DateTime? NgayCapNhat { get; set; } = null;
         [Display(Name = "Người tạo")]
         [DataType(DataType.MultilineText)]
-        public string NguoiTao { get; set; }
-        public int MaNguoiTao { get; set; }
-        public SelectList DanhMuc { get; set; }
+        public string NguoiTao { get; set; } = string.Empty;
+        public int MaNguoiTao { get; set; } = 0;
+        public SelectList DanhMuc { get; set; } = null;
         public FastFood_SanPham_ThemSanPham()
         {
-            TenSanPham = string.Empty;
-            MaDanhMuc = -1;
-            GiaGoc = 0;
-            KhuyenMai = 0;
-            GiaSauKhuyenMai = 0;
-            NgayTao = DateTime.Now;
-            NgayCapNhat = DateTime.Now;
-            NguoiTao = string.Empty;
-            MaNguoiTao = -1;
-            MoTaNgan = string.Empty;
-            MoTaDai = string.Empty;
+
         }
 
         public FastFood_SanPham_ThemSanPham(FastFood_SanPham_ThemSanPham a)
@@ -116,31 +106,28 @@ namespace FastFood.Areas.Admin.Models
 
     public class FastFood_SanPham_ThemSanPham_Post
     {
-        public FastFood_SanPham_ThemSanPham SanPham { get; set; }
-        public IEnumerable<FastFood_SanPham_NguyenLieuDaChon> DanhSachNguyenLieu { get; set; }
-        public List<HttpPostedFileBase> HinhAnh { get; set; }
+        public FastFood_SanPham_ThemSanPham SanPham { get; set; } = new FastFood_SanPham_ThemSanPham();
+        public IEnumerable<FastFood_SanPham_NguyenLieuDaChon> DanhSachNguyenLieu { get; set; } = Enumerable.Empty<FastFood_SanPham_NguyenLieuDaChon>();
+        public List<HttpPostedFileBase> HinhAnh { get; set; } = Enumerable.Empty<HttpPostedFileBase>().ToList();
     }
 
     public class FastFood_SanPham_ChiTietSanPham : FastFood_SanPham_ThemSanPham
     {
         [DataType(DataType.Text)]
         [Display(Name = "Mã sản phẩm")]
-        public int MaSanPham { get; set; }
+        public int MaSanPham { get; set; } = 0;
         [Display(Name = "Trạng thái duyệt")]
         [DataType(DataType.Text)]
-        public string TrangThaiDuyet { get; set; }
+        public string TrangThaiDuyet { get; set; } = string.Empty;
         [Display(Name = "Ngày duyệt")]
         [DataType(DataType.DateTime)]
-        public DateTime? NgayDuyet { get; set; }
+        public DateTime? NgayDuyet { get; set; } = null;
         [Display(Name = "Người duyệt")]
         [DataType(DataType.Text)]
-        public string NguoiDuyet { get; set; }
+        public string NguoiDuyet { get; set; } = string.Empty;
         public FastFood_SanPham_ChiTietSanPham()
         {
-            MaSanPham = 0;
-            TrangThaiDuyet = string.Empty;
-            NguoiDuyet = string.Empty;
-            NgayDuyet = null;
+
         }
         public FastFood_SanPham_ChiTietSanPham(FastFood_SanPham_ChiTietSanPham a)
         {
@@ -153,16 +140,16 @@ namespace FastFood.Areas.Admin.Models
 
     public class FastFood_SanPham_ChiTietSanPham_Post
     {
-        public FastFood_SanPham_ChiTietSanPham SanPham { get; set; }
-        public IEnumerable<FastFood_SanPham_NguyenLieuDaChon> DanhSachNguyenLieu { get; set; }
-        public List<HttpPostedFileBase> HinhAnh { get; set; }
+        public FastFood_SanPham_ChiTietSanPham SanPham { get; set; } = new FastFood_SanPham_ChiTietSanPham();
+        public IEnumerable<FastFood_SanPham_NguyenLieuDaChon> DanhSachNguyenLieu { get; set; } = Enumerable.Empty<FastFood_SanPham_NguyenLieuDaChon>();
+        public List<HttpPostedFileBase> HinhAnh { get; set; } = Enumerable.Empty<HttpPostedFileBase>().ToList();
     }
 
     public class FastFood_SanPham_NguyenLieuDaChon
     {
-        public string MaNguyenLieu { get; set; }
-        public int SoLuong { get; set; }
-        public string DonViTinh { get; set; }
+        public string MaNguyenLieu { get; set; } = string.Empty;
+        public int SoLuong { get; set; } = 1;
+        public string DonViTinh { get; set; } = "cái";
     }
 
 

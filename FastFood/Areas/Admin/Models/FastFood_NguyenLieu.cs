@@ -181,7 +181,7 @@ namespace FastFood.Areas.Admin.Models
     public class SelectedIngredient
     {
         public string MaNguyenLieu { get; set; } = string.Empty;
-        public int SoLuong { get; set; } = 0;
+        public int SoLuong { get; set; } = 1;
         public string DonViTinh { get; set; } = "cái";
     }
 
