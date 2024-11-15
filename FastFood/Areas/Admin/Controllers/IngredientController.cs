@@ -49,11 +49,11 @@ namespace FastFood.Areas.Admin.Controllers
             if (!FastFood_NhanVienDangNhap.CheckPermission(Session["MaNhanVien"] as string, 4))
                 return HttpNotFound();
 
-            int maNV = Convert.ToInt32(Session["MaNhanVien"] as string);
+            string maNV = Session["MaNhanVien"] as string;
             FastFood_NguyenLieu_ThemPhieuNhap a = new FastFood_NguyenLieu_ThemPhieuNhap()
             {
                 NguoiNhap = FastFood_NhanVien.getHoTen(maNV),
-                MaNguoiNhap = maNV
+                MaNguoiNhap = Convert.ToInt32(maNV)
             };
             ViewBag.NguyenLieu = new SelectList(FastFood_NguyenLieu.getNguyenLieu()
                                             .Select(p => new { p.MaNguyenLieu, p.TenNguyenLieu })

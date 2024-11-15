@@ -1,7 +1,7 @@
-﻿using System;
+﻿using FastFood.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-
 namespace FastFood.Models
 {
     /// <summary>
@@ -50,7 +50,7 @@ namespace FastFood.Models
             }
             else
             {
-                DB.SanPham sp = FastFood_SanPham.getSanPham().FirstOrDefault(a => a.MaSanPham == maSanPham);
+                SanPham sp = FastFood_SanPham.getSanPham().FirstOrDefault(a => a.MaSanPham == maSanPham);
                 if (sp == null) return;
 
                 SanPhamDaChon[maSanPham] = new FastFood_GioHang_DonHangCuaToi
@@ -92,7 +92,7 @@ namespace FastFood.Models
         /// Tính tổng tiền của tất cả sản phẩm trong giỏ hàng.
         /// </summary>
         /// <returns>Tổng tiền của giỏ hàng.</returns>
-        public int TongTien() => SanPhamDaChon.Values.Sum(x => x.ThanhTien);
+        public int TongTien() => SanPhamDaChon.Values?.Sum(x => x.ThanhTien) ?? 0;
     }
 
     /// <summary>

@@ -10,31 +10,23 @@ namespace FastFood.Areas.Admin.Models
     {
         [Display(Name = "Họ đệm")]
         [DataType(DataType.Text)]
-        public string HoDem { get; set; }
+        public string HoDem { get; set; } = string.Empty;
         [Display(Name = "Tên khách hàng")]
         [DataType(DataType.Text)]
-        public string TenKhachHang { get; set; }
+        public string TenKhachHang { get; set; } = string.Empty;
         [Display(Name = "Email")]
         [DataType(DataType.Text)]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
         [Display(Name = "Số điện thoại")]
         [DataType(DataType.Text)]
-        public string SoDienThoai { get; set; }
+        public string SoDienThoai { get; set; } = string.Empty;
         [Display(Name = "Tên đăng nhập")]
         [DataType(DataType.Text)]
-        public string TenDangNhap { get; set; }
+        public string TenDangNhap { get; set; } = string.Empty;
         [Display(Name = "Mật khẩu")]
-        [DataType(DataType.Text)]
-        public string MatKhau { get; set; }
-        public FastFood_KhachHangDangNhap_DangKiMoi()
-        {
-            HoDem = string.Empty;
-            TenDangNhap = string.Empty;
-            Email = string.Empty;
-            SoDienThoai = string.Empty;
-            MatKhau = string.Empty;
-            TenKhachHang = string.Empty;
-        }
+        [DataType(DataType.Password)]
+        public string MatKhau { get; set; } = string.Empty;
+        public FastFood_KhachHangDangNhap_DangKiMoi() { }
         public FastFood_KhachHangDangNhap_DangKiMoi(FastFood_KhachHangDangNhap_DangKiMoi a)
         {
             TenDangNhap = a.TenDangNhap;

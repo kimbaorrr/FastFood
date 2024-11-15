@@ -15,28 +15,28 @@ namespace FastFood.Areas.Admin.Models
         /// </summary>
         [DataType(DataType.Text)]
         [Display(Name = "Mã nhân viên")]
-        public int MaNhanVien { get; set; }
+        public int MaNhanVien { get; set; } = 0;
 
         /// <summary>
         /// Họ và đệm của nhân viên.
         /// </summary>
         [DataType(DataType.Text)]
         [Display(Name = "Họ đệm")]
-        public string HoDem { get; set; }
+        public string HoDem { get; set; } = string.Empty;
 
         /// <summary>
         /// Tên nhân viên.
         /// </summary>
         [DataType(DataType.Text)]
         [Display(Name = "Tên nhân viên")]
-        public string TenNhanVien { get; set; }
+        public string TenNhanVien { get; set; } = string.Empty;
 
         /// <summary>
         /// Địa chỉ email của nhân viên.
         /// </summary>
         [DataType(DataType.Text)]
         [Display(Name = "Email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         /// <summary>
         /// Số điện thoại của nhân viên.
@@ -45,34 +45,28 @@ namespace FastFood.Areas.Admin.Models
         [Display(Name = "Số điện thoại")]
         [MinLength(10)]
         [MaxLength(12)]
-        public string SoDienThoai { get; set; }
+        public string SoDienThoai { get; set; } = string.Empty;
 
         /// <summary>
         /// Địa chỉ của nhân viên.
         /// </summary>
         [DataType(DataType.Text)]
         [Display(Name = "Địa chỉ")]
-        public string DiaChi { get; set; }
+        public string DiaChi { get; set; } = string.Empty;
 
         /// <summary>
         /// Đường dẫn đến ảnh đại diện của nhân viên.
         /// </summary>
         [DataType(DataType.Text)]
         [Display(Name = "Ảnh đại diện")]
-        public string AnhDD { get; set; }
+        public string AnhDD { get; set; } = string.Empty;
 
         /// <summary>
         /// Khởi tạo một đối tượng FastFood_NhanVien với các giá trị mặc định.
         /// </summary>
         public FastFood_NhanVien()
         {
-            MaNhanVien = -1;
-            HoDem = string.Empty;
-            TenNhanVien = string.Empty;
-            Email = string.Empty;
-            SoDienThoai = string.Empty;
-            AnhDD = string.Empty;
-            DiaChi = string.Empty;
+
         }
 
         /// <summary>
@@ -114,10 +108,10 @@ namespace FastFood.Areas.Admin.Models
         /// </summary>
         /// <param name="manv">Mã nhân viên cần lấy họ và tên.</param>
         /// <returns>Họ và tên của nhân viên.</returns>
-        public static string getHoTen(int manv)
+        public static string getHoTen(string manv)
         {
             string hoTen = getNhanVien()
-                .Where(x => x.MaNhanVien == manv)
+                .Where(x => x.MaNhanVien.ToString().Equals(manv))
                 .Select(m => new { HoTen = m.HoDem + " " + m.TenNhanVien })
                 .Select(x => x.HoTen)
                 .FirstOrDefault();

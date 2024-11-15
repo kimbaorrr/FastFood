@@ -17,7 +17,7 @@ namespace FastFood.Areas.Admin.Models
         [Required(ErrorMessage = "Trường này không được để trống !")]
         [MaxLength(50, ErrorMessage = "Tên đăng nhập không được vượt quá 50 kí tự !")]
         [Display(Name = "Tên đăng nhập")]
-        public string TenDangNhap { get; set; }
+        public string TenDangNhap { get; set; } = string.Empty;
 
         /// <summary>
         /// Mật khẩu của nhân viên.
@@ -25,22 +25,20 @@ namespace FastFood.Areas.Admin.Models
         [DataType(DataType.Text)]
         [Required(ErrorMessage = "Trường này không được để trống !")]
         [Display(Name = "Mật khẩu")]
-        public string MatKhau { get; set; }
+        public string MatKhau { get; set; } = string.Empty;
 
         /// <summary>
         /// Cờ để ghi nhớ đăng nhập.
         /// </summary>
         [Display(Name = "Ghi nhớ đăng nhập")]
-        public bool GhiNhoDangNhap { get; set; }
+        public bool GhiNhoDangNhap { get; set; } = false;
 
         /// <summary>
         /// Khởi tạo đối tượng FastFood_NhanVienDangNhap với các giá trị mặc định.
         /// </summary>
         public FastFood_NhanVienDangNhap()
         {
-            TenDangNhap = string.Empty;
-            MatKhau = string.Empty;
-            GhiNhoDangNhap = false;
+
         }
 
         /// <summary>
@@ -85,7 +83,7 @@ namespace FastFood.Areas.Admin.Models
         /// <returns>Danh sách mô tả quyền hạn tương ứng.</returns>
         public static IEnumerable<string> getMoTaQuyenHan(int[] ids)
         {
-            return getQuyenHanNhanVien().Where(qh => ids.Contains(qh.MaQuyenHan)).Select(qh => qh.MoTa);
+            return getQuyenHanNhanVien().Where(qh => ids.Contains(qh.MaQuyenHan)).Select(qh => qh.MoTa) ?? Enumerable.Empty<string>();
         }
 
         /// <summary>
@@ -131,7 +129,7 @@ namespace FastFood.Areas.Admin.Models
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Mật khẩu cũ")]
-        public string MatKhauCu { get; set; }
+        public string MatKhauCu { get; set; } = string.Empty;
 
         /// <summary>
         /// Mật khẩu mới của nhân viên.
@@ -139,7 +137,7 @@ namespace FastFood.Areas.Admin.Models
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Mật khẩu mới")]
-        public string MatKhauMoi { get; set; }
+        public string MatKhauMoi { get; set; } = string.Empty;
 
         /// <summary>
         /// Nhập lại mật khẩu mới của nhân viên.
@@ -147,16 +145,14 @@ namespace FastFood.Areas.Admin.Models
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Nhập lại mật khẩu")]
-        public string NhapLaiMatKhau { get; set; }
+        public string NhapLaiMatKhau { get; set; } = string.Empty;
 
         /// <summary>
         /// Khởi tạo đối tượng FastFood_NhanVienDangNhap_DoiMatKhau với các giá trị mặc định.
         /// </summary>
         public FastFood_NhanVienDangNhap_DoiMatKhau()
         {
-            MatKhauCu = string.Empty;
-            MatKhauMoi = string.Empty;
-            NhapLaiMatKhau = string.Empty;
+
         }
 
         /// <summary>
@@ -182,22 +178,21 @@ namespace FastFood.Areas.Admin.Models
         [Required]
         [DataType(DataType.EmailAddress)]
         [MaxLength(100)]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         /// <summary>
         /// Tên đăng nhập của nhân viên.
         /// </summary>
         [DataType(DataType.Text)]
         [Display(Name = "Tên đăng nhập")]
-        public string TenDangNhap { get; set; }
+        public string TenDangNhap { get; set; } = string.Empty;
 
         /// <summary>
         /// Khởi tạo đối tượng FastFood_NhanVienDangNhap_QuenMatKhau với các giá trị mặc định.
         /// </summary>
         public FastFood_NhanVienDangNhap_QuenMatKhau()
         {
-            Email = string.Empty;
-            TenDangNhap = string.Empty;
+
         }
 
         /// <summary>
@@ -219,21 +214,21 @@ namespace FastFood.Areas.Admin.Models
         /// <summary>
         /// Mã nhân viên.
         /// </summary>
-        public int MaNhanVien { get; set; }
+        public int MaNhanVien { get; set; } = 0;
 
         /// <summary>
         /// Tên đăng nhập của nhân viên.
         /// </summary>
         [Display(Name = "Tên đăng nhập")]
         [DataType(DataType.Text)]
-        public string TenDangNhap { get; set; }
+        public string TenDangNhap { get; set; } = string.Empty;
 
         /// <summary>
         /// Mật khẩu của nhân viên.
         /// </summary>
         [Display(Name = "Mật khẩu")]
         [DataType(DataType.Password)]
-        public string MatKhau { get; set; }
+        public string MatKhau { get; set; } = string.Empty;
 
         /// <summary>
         /// Cờ xác nhận mật khẩu.
@@ -242,7 +237,7 @@ namespace FastFood.Areas.Admin.Models
         [DataType(DataType.Password)]
         [Display(Name = "Xác nhận mật khẩu")]
         [Compare("MatKhau", ErrorMessage = "Mật khẩu và xác nhận mật khẩu không giống nhau !")]
-        public string XacNhanMatKhau { get; set; }
+        public string XacNhanMatKhau { get; set; } = string.Empty;
 
         /// <summary>
         /// Email của nhân viên.
@@ -251,23 +246,19 @@ namespace FastFood.Areas.Admin.Models
         [DataType(DataType.EmailAddress)]
         [MaxLength(100)]
         [Display(Name = "Email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
         /// <summary>
         /// Vai trò nhân viên
         /// </summary>
         [Display(Name = "Vai trò")]
-        public bool VaiTro { get; set; }
+        public bool VaiTro { get; set; } = false;
 
         /// <summary>
         /// Khởi tạo đối tượng FastFood_NhanVienDangNhap_TaoTaiKhoan với các giá trị mặc định.
         /// </summary>
         public FastFood_NhanVienDangNhap_TaoTaiKhoan()
         {
-            TenDangNhap = string.Empty;
-            MatKhau = string.Empty;
-            XacNhanMatKhau = string.Empty;
-            Email = string.Empty;
-            VaiTro = false;
+
         }
 
         /// <summary>

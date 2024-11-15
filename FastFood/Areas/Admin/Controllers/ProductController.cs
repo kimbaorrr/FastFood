@@ -46,11 +46,11 @@ namespace FastFood.Areas.Admin.Controllers
             if (!FastFood_NhanVienDangNhap.CheckPermission(Session["MaNhanVien"] as string, 6))
                 return HttpNotFound();
 
-            int employeeId = Convert.ToInt32(Session["MaNhanVien"] as string);
+            string employeeId = Session["MaNhanVien"] as string;
             FastFood_SanPham_ThemSanPham sanPham = new FastFood_SanPham_ThemSanPham()
             {
                 NguoiTao = FastFood_NhanVien.getHoTen(employeeId),
-                MaNguoiTao = employeeId,
+                MaNguoiTao = Convert.ToInt32(employeeId),
                 DanhMuc = new SelectList(FastFood_DanhMuc.getDanhMuc()
                                             .Select(p => new { p.MaDanhMuc, p.TenDanhMuc })
                                             .ToList(), "MaDanhMuc", "TenDanhMuc")
@@ -153,7 +153,7 @@ namespace FastFood.Areas.Admin.Controllers
                     MoTaDai = sp.MoTaDai,
                     NgayTao = (DateTime)sp.NgayTao,
                     MaDanhMuc = sp.DanhMuc.MaDanhMuc,
-                    NguoiTao = FastFood_NhanVien.getHoTen(Convert.ToInt32(sp.NguoiTao)),
+                    NguoiTao = FastFood_NhanVien.getHoTen(sp.NguoiTao.ToString()),
                     MaNguoiTao = Convert.ToInt32(Session["MaNhanVien"]),
                     TrangThaiDuyet = trangThaiDuyet,
                     NguoiDuyet = sp.NhanVien1.HoDem + " " + sp.NhanVien1.TenNhanVien,

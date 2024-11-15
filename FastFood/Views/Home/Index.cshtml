@@ -19,7 +19,7 @@
         <div class="shape shape-two scene"><span data-depth=".7"><img src="/Content/public_page/assets/images/hero/shape-3.png" alt="shape image"></span></div>
         <div class="shape shape-three scene"><span data-depth=".8"><img src="/Content/public_page/assets/images/hero/shape-4.png" alt="shape image"></span></div>
         <!--=== Hero Image ===-->
-        
+
         <div class="container">
             <div class="row">
                 <div class="col-lg-7">
@@ -57,7 +57,7 @@
                             <!--=== Foodix Banner Item ===-->
                             <div class="foodix-banner-item style-one mb-40 wow @animationClass">
                                 <div class="banner-inner-wrap bg_cover" style="background-image: url(@spkm.DanhMuc.AnhNen);">
-                                    
+
                                     <div class="banner-content">
                                         <h2>@spkm.TenSanPham</h2>
                                         <p>
@@ -73,9 +73,9 @@
                                                 }
 
                                             </p>
-                                            
+
                                         </div>
-                                        
+
                                         <button type="button" class="add-to-cart-btn theme-btn style-one" data-product-id="@spkm.MaSanPham" data-quantity="1">Thêm vào giỏ</button>
                                     </div>
                                 </div>
@@ -141,7 +141,7 @@
                                                 <div class="overflow-hidden d-flex justify-content-center align-items-center" style="width: 286px;height: 220px;">
                                                     <img src="@hinhAnh" alt="menu image" class="object-fit-fill">
                                                 </div>
-                                                
+
                                             </div>
                                             <div class="menu-info">
                                                 <h4 class="title"><a href="@Url.Action("Detail", "Menu", new {id = product.MaSanPham, return_url = Request.Url.AbsoluteUri})">@product.TenSanPham</a></h4>
@@ -149,7 +149,7 @@
                                                 <p>@product.MoTaNgan</p>
                                                 <div class="menu-bottom">
                                                     <p class="price"><span class="currency">$</span>@product.GiaSauKhuyenMai</p>
-                                                    <button type="button" class="cart-icon add-to-cart-btn"  data-product-id="@product.MaSanPham" data-quantity="1"><i class="fas fa-cart-plus"></i></button>
+                                                    <button type="button" class="cart-icon add-to-cart-btn" data-product-id="@product.MaSanPham" data-quantity="1"><i class="fas fa-cart-plus"></i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -183,21 +183,21 @@
             @foreach (var spgg in top10GiamGiaSoc)
             {
                 <!--=== Special Off Item ===-->
-            <a href="@Url.Action("Detail", "Menu", new {id = spgg.MaSanPham, return_url = Request.Url.AbsoluteUri })">
-                <div class="special-off-item text-center mb-40">
-                    <div class="sp-shape"><img src="/Content/public_page/assets/images/gallery/sp-shape-1.png" alt="shape"></div>
-                    <div class="item-title">
-                        <h4>@spgg.TenSanPham</h4>
+                <a href="@Url.Action("Detail", "Menu", new {id = spgg.MaSanPham, return_url = Request.Url.AbsoluteUri })">
+                    <div class="special-off-item text-center mb-40">
+                        <div class="sp-shape"><img src="/Content/public_page/assets/images/gallery/sp-shape-1.png" alt="shape"></div>
+                        <div class="item-title">
+                            <h4>@spgg.TenSanPham</h4>
+                        </div>
+                        <div class="image">
+                            <img src='@(FastFood_Tools.SplitAnh(spgg.HinhAnh)[0] ?? "")' alt="image">
+                        </div>
+                        <div class="content">
+                            <p>@spgg.MoTaNgan</p>
+                        </div>
                     </div>
-                    <div class="image">
-                        <img src='@(FastFood_Tools.SplitAnh(spgg.HinhAnh)[0] ?? "")' alt="image">
-                    </div>
-                    <div class="content">
-                        <p>@spgg.MoTaNgan</p>
-                    </div>
-                </div>
-            </a>
-                
+                </a>
+
             }
         </div>
     </div>
@@ -262,7 +262,7 @@
                                     }
                                 }
                             </ul>
-                            </div>
+                        </div>
                     </div>
                 }
 
@@ -328,7 +328,7 @@
                         </div>
                         <div class="post-content">
                             <div class="post-meta">
-                                <span><a href="#">@FastFood.Areas.Admin.Models.FastFood_NhanVien.getHoTen(bv.NguoiTao)</a></span>
+                                <span><a href="#">@FastFood.Areas.Admin.Models.FastFood_NhanVien.getHoTen(bv.NguoiTao.ToString())</a></span>
                                 <span><a href="#">@bv.NgayTao.ToString("dd MMM, yyyy")</a></span>
                             </div>
                             <h4 class="post-title"><a href="@Url.Action("Detail", "Article", new {id = bv.MaBaiViet, return_url = Request.Url.AbsoluteUri})">@bv.TieuDe</a></h4>

@@ -64,7 +64,7 @@ namespace FastFood.Areas.Admin.Models
         /// <returns>Danh sách nguyên liệu cơ bản.</returns>
         public static IEnumerable<FastFood_NguyenLieu_Get> getAll()
         {
-            return getNguyenLieu().Select(x => new FastFood_NguyenLieu_Get { MaNguyenLieu = x.MaNguyenLieu, TenNguyenLieu = x.TenNguyenLieu, MoTa = x.MoTa });
+            return getNguyenLieu().Select(x => new FastFood_NguyenLieu_Get { MaNguyenLieu = x.MaNguyenLieu, TenNguyenLieu = x.TenNguyenLieu, MoTa = x.MoTa }) ?? Enumerable.Empty<FastFood_NguyenLieu_Get>();
         }
 
         /// <summary>
@@ -111,64 +111,53 @@ namespace FastFood.Areas.Admin.Models
                 MoTa = x.NguyenLieu.MoTa,
                 SoLuongCan = x.SoLuongCan,
                 DonViTinh = x.DonViTinh
-            });
+            }) ?? Enumerable.Empty<FastFood_NguyenLieu_GetByProductID>();
         }
     }
 
 
     public class FastFood_NguyenLieu_Get
     {
-        public int MaNguyenLieu { get; set; }
-        public string TenNguyenLieu { get; set; }
-        public string MoTa { get; set; }
+        public int MaNguyenLieu { get; set; } = 0;
+        public string TenNguyenLieu { get; set; } = string.Empty;
+        public string MoTa { get; set; } = string.Empty;
     }
 
     public class FastFood_NguyenLieu_GetByProductID
     {
-        public int MaNguyenLieu { get; set; }
-        public string TenNguyenLieu { get; set; }
-        public string MoTa { get; set; }
-        public decimal SoLuongCan { get; set; }
-        public string DonViTinh { get; set; }
+        public int MaNguyenLieu { get; set; } = 0;
+        public string TenNguyenLieu { get; set; } = string.Empty;
+        public string MoTa { get; set; } = string.Empty;
+        public decimal SoLuongCan { get; set; } = 0;
+        public string DonViTinh { get; set; } = string.Empty;
     }
     public class FastFood_NguyenLieu_ThemPhieuNhap
     {
         [Display(Name = "Nguồn nguyên liệu đã có")]
-        public int MaNguyenLieu { get; set; }
+        public int MaNguyenLieu { get; set; } = 0;
         [Display(Name = "Tên nguyên liệu")]
         [DataType(DataType.Text)]
-        public string TenNguyenLieu { get; set; }
+        public string TenNguyenLieu { get; set; } = string.Empty;
         [Display(Name = "Số lượng nhập")]
         [DataType(DataType.Text)]
-        public int SoLuongNhap { get; set; }
+        public int SoLuongNhap { get; set; } = 0;
         [Display(Name = "Đơn vị tính")]
         [DataType(DataType.Text)]
-        public string DonViTinh { get; set; }
+        public string DonViTinh { get; set; } = "cái";
         [Display(Name = "Mức đặt hàng lại")]
         [DataType(DataType.Text)]
-        public int MucDatHangLai { get; set; }
+        public int MucDatHangLai { get; set; } = 0;
         [Display(Name = "Mô tả")]
         [DataType(DataType.Text)]
-        public string MoTa { get; set; }
+        public string MoTa { get; set; } = string.Empty;
         [Display(Name = "Ngày nhập")]
         [DataType(DataType.Text)]
-        public DateTime NgayNhap { get; set; }
+        public DateTime NgayNhap { get; set; } = DateTime.Now;
         [Display(Name = "Người nhập")]
         [DataType(DataType.Text)]
-        public string NguoiNhap { get; set; }
-        public int MaNguoiNhap { get; set; }
-        public FastFood_NguyenLieu_ThemPhieuNhap()
-        {
-            MaNguyenLieu = 0;
-            TenNguyenLieu = string.Empty;
-            SoLuongNhap = 1;
-            DonViTinh = "cái";
-            MucDatHangLai = 0;
-            MoTa = string.Empty;
-            NgayNhap = DateTime.Now;
-            NguoiNhap = string.Empty;
-            MaNguoiNhap = 0;
-        }
+        public string NguoiNhap { get; set; } = string.Empty;
+        public int MaNguoiNhap { get; set; } = 0;
+        public FastFood_NguyenLieu_ThemPhieuNhap() { }
         public FastFood_NguyenLieu_ThemPhieuNhap(FastFood_NguyenLieu_ThemPhieuNhap a)
         {
             MaNguyenLieu = a.MaNguyenLieu;
@@ -185,15 +174,15 @@ namespace FastFood.Areas.Admin.Models
 
     public class IngredientSubmission
     {
-        public Dictionary<string, string> FormData { get; set; }
-        public IEnumerable<SelectedIngredient> SelectedIngredients { get; set; }
+        public Dictionary<string, string> FormData { get; set; } = new Dictionary<string, string>();
+        public IEnumerable<SelectedIngredient> SelectedIngredients { get; set; } = Enumerable.Empty<SelectedIngredient>();
     }
 
     public class SelectedIngredient
     {
-        public string MaNguyenLieu { get; set; }
-        public int SoLuong { get; set; }
-        public string DonViTinh { get; set; }
+        public string MaNguyenLieu { get; set; } = string.Empty;
+        public int SoLuong { get; set; } = 0;
+        public string DonViTinh { get; set; } = "cái";
     }
 
 }

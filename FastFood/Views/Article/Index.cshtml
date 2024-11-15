@@ -1,5 +1,5 @@
 ﻿@using FastFood.Models;
-@using FastFood.DB; 
+@using FastFood.DB;
 @using FastFood.Areas.Admin.Models;
 @{
     var dsBaiViet = ViewBag.BaiViet as IEnumerable<BaiViet>;
@@ -37,11 +37,11 @@
                             <div class="d-flex justify-content-center align-items-center overflow-hidden" style="width: 410px;height: 280px;">
                                 <img src="@bv.HinhAnh" alt="@bv.TieuDe" width="100%" height="100%" class="object-fit-fill">
                             </div>
-                            
+
                         </div>
                         <div class="post-content">
                             <div class="post-meta">
-                                <span><a href="#">@FastFood_NhanVien.getHoTen(bv.NguoiTao)</a></span>
+                                <span><a href="#">@FastFood_NhanVien.getHoTen(bv.NguoiTao.ToString())</a></span>
                                 <span><a href="#">@bv.NgayTao.ToString("dd MMM, yyyy")</a></span>
                             </div>
                             <h4 class="post-title"><a href="@Url.Action("Detail", "Article", new {id = bv.MaBaiViet, return_url = Request.Url.AbsoluteUri})">@bv.TieuDe</a></h4>

@@ -14,7 +14,7 @@ namespace FastFood.Models
         }
         public static IEnumerable<BaiViet> GetBaiVietDaDuyet()
         {
-            return GetBaiViets().Where(x => x.DaDuyet);
+            return GetBaiViets().Where(x => x.DaDuyet) ?? Enumerable.Empty<BaiViet>();
         }
     }
 }

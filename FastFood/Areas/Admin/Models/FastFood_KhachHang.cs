@@ -14,12 +14,12 @@ namespace FastFood.Areas.Admin.Models
         /// <summary>
         /// Mã khách hàng
         /// </summary>
-        public int MaKhachHang { get; set; }
+        public int MaKhachHang { get; set; } = 0;
 
         /// <summary>
         /// Đường dẫn đến ảnh đại diện của khách hàng
         /// </summary>
-        public string AnhDD { get; set; }
+        public string AnhDD { get; set; } = string.Empty;
 
         /// <summary>
         /// Context kết nối đến cơ sở dữ liệu.
@@ -57,7 +57,7 @@ namespace FastFood.Areas.Admin.Models
         public static int tongKhachHang()
         {
             using (FastFoodEntities e = new FastFoodEntities())
-                return e.KhachHangs.Count();
+                return e.KhachHangs?.Count() ?? 0;
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace FastFood.Areas.Admin.Models
                 NgaySinh = kh.NgaySinh,
                 SoLanMua = kh.DonHangs.Count(),
                 TongHoaDon = kh.DonHangs.Sum(x => x.TongTienSanPham),
-                HoaDonLonNhat = kh.DonHangs.Max(x => x.TongTienSanPham),
+                HoaDonLonNhat = kh.DonHangs?.Max(x => x.TongTienSanPham) ?? 0,
                 LanMuaGanNhat = kh.DonHangs.OrderByDescending(dh => dh.NgayDat).Select(x => x.NgayDat).FirstOrDefault(),
                 LanTruyCapCuoi = lsTruyCap.Where(x => x.MaNguoiDung == kh.MaKhachHang).OrderByDescending(x => x.ThoiGianTruyCap).Select(x => x.ThoiGianTruyCap).FirstOrDefault()
             });
@@ -148,52 +148,37 @@ namespace FastFood.Areas.Admin.Models
 
     public class FastFood_KhachHang_DanhSachKhachHang
     {
-        public int MaKhachHang { get; set; }
-        public string HoTenKhachHang { get; set; }
-        public string AnhDD { get; set; }
-        public int SoLanMua { get; set; }
-        public int TongHoaDon { get; set; }
-        public int? HoaDonLonNhat { get; set; }
-        public DateTime? LanMuaGanNhat { get; set; }
-        public DateTime NgayTao { get; set; }
-        public int ThoiGianGanBo { get; set; }
-        public DateTime? NgaySinh { get; set; }
-        public DateTime? LanTruyCapCuoi { get; set; }
-
+        public int MaKhachHang { get; set; } = 0;
+        public string HoTenKhachHang { get; set; } = string.Empty;
+        public string AnhDD { get; set; } = string.Empty;
+        public int SoLanMua { get; set; } = 0;
+        public int TongHoaDon { get; set; } = 0;
+        public int? HoaDonLonNhat { get; set; } = null;
+        public DateTime? LanMuaGanNhat { get; set; } = null;
+        public DateTime NgayTao { get; set; } = DateTime.Now;
+        public int ThoiGianGanBo { get; set; } = 0;
+        public DateTime? NgaySinh { get; set; } = null;
+        public DateTime? LanTruyCapCuoi { get; set; } = null;
     }
+
 
     public class FastFood_KhachHang_ChiTiet
     {
-        public int MaKhachHang { get; set; }
-        public string HoTenKhachHang { get; set; }
-        public string NgaySinh { get; set; }
-        public string AnhDD { get; set; }
-        public string Email { get; set; }
-        public string SoDienThoai { get; set; }
-        public string DiaChi { get; set; }
-        public DateTime? NgayTao { get; set; }
-        public int TongChiTieu { get; set; }
-        public int TongHoaDon { get; set; }
-        public int? ChiTieuLonNhat { get; set; }
-        public int HoatDongGanDay { get; set; }
-        public IEnumerable<DonHang> DonHangs { get; set; }
+        public int MaKhachHang { get; set; } = 0;
+        public string HoTenKhachHang { get; set; } = string.Empty;
+        public string NgaySinh { get; set; } = string.Empty;
+        public string AnhDD { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string SoDienThoai { get; set; } = string.Empty;
+        public string DiaChi { get; set; } = string.Empty;
+        public DateTime? NgayTao { get; set; } = null;
+        public int TongChiTieu { get; set; } = 0;
+        public int TongHoaDon { get; set; } = 0;
+        public int? ChiTieuLonNhat { get; set; } = null;
+        public int HoatDongGanDay { get; set; } = 0;
+        public IEnumerable<DonHang> DonHangs { get; set; } = Enumerable.Empty<DonHang>();
 
-        public FastFood_KhachHang_ChiTiet()
-        {
-            MaKhachHang = -1;
-            HoTenKhachHang = string.Empty;
-            DiaChi = string.Empty;
-            Email = string.Empty;
-            SoDienThoai = string.Empty;
-            AnhDD = string.Empty;
-            TongChiTieu = 0;
-            TongHoaDon = 0;
-            NgaySinh = string.Empty;
-            NgayTao = null;
-            ChiTieuLonNhat = 0;
-            HoatDongGanDay = 0;
-            DonHangs = Enumerable.Empty<DonHang>();
-        }
+        public FastFood_KhachHang_ChiTiet() { }
 
         public FastFood_KhachHang_ChiTiet(FastFood_KhachHang_ChiTiet a)
         {

@@ -38,7 +38,7 @@ namespace FastFood.Areas.Admin.Models
         public static int demSanPham(int maDM)
         {
             using (FastFoodEntities e = new FastFoodEntities())
-                return e.SanPhams.Count(x => x.MaDanhMuc == maDM);
+                return e.SanPhams?.Count(x => x.MaDanhMuc == maDM) ?? 0;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace FastFood.Areas.Admin.Models
         {
             return getDanhMuc()
                 .OrderByDescending(x => x.SanPhams.Count())
-                .Take(take);
+                .Take(take) ?? Enumerable.Empty<DanhMuc>();
         }
     }
 
@@ -58,27 +58,20 @@ namespace FastFood.Areas.Admin.Models
     {
         [Display(Name = "Tên danh mục")]
         [DataType(DataType.Text)]
-        public string TenDanhMuc { get; set; }
+        public string TenDanhMuc { get; set; } = string.Empty;
         [Display(Name = "Mô tả")]
         [DataType(DataType.MultilineText)]
-        public string MoTa { get; set; }
+        public string MoTa { get; set; } = string.Empty;
         [Display(Name = "Ảnh đại diện")]
         [DataType(DataType.Text)]
-        public HttpPostedFileBase AnhDaiDien { get; set; }
+        public HttpPostedFileBase AnhDaiDien { get; set; } = null;
         [Display(Name = "Ảnh nền")]
         [DataType(DataType.Text)]
-        public HttpPostedFileBase AnhNen { get; set; }
+        public HttpPostedFileBase AnhNen { get; set; } = null;
         [Display(Name = "Mã người tạo")]
         [DataType(DataType.Text)]
-        public int MaNguoiTao { get; set; }
-        public FastFood_DanhMuc_TaoMoi()
-        {
-            TenDanhMuc = string.Empty;
-            MoTa = string.Empty;
-            AnhDaiDien = null;
-            AnhNen = null;
-            MaNguoiTao = -1;
-        }
+        public int MaNguoiTao { get; set; } = 0;
+        public FastFood_DanhMuc_TaoMoi() { }
         public FastFood_DanhMuc_TaoMoi(FastFood_DanhMuc_TaoMoi a)
         {
             TenDanhMuc = a.TenDanhMuc;

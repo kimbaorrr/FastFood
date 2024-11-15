@@ -5,6 +5,7 @@
     var hinhAnh = FastFood_Tools.SplitAnh(sp.HinhAnh);
     var dsDanhGia = FastFood_SanPham.GetDanhGiaTheoMaSP(sp.MaSanPham);
     var topDanhGia = FastFood_SanPham.getKhachHangDanhGia().Where(x => x.MaSanPham == sp.MaSanPham).FirstOrDefault();
+    @model FastFood_SanPham_DanhGiaSanPham
 }
 
 <!--====== Start Page Section ======-->
@@ -116,20 +117,22 @@
                                     </div>
                                     <div class="card my-4 rounded-4 border-0 border-top">
                                         <div class="card-body">
-                                            <form id="reviewForm" action="/submit-review" method="post">
+                                            @using (Html.BeginForm("Detail", "Menu", FormMethod.Post, new { @id = "reviewForm" }))
+                                            {
+                                                @Html.AntiForgeryToken()
                                                 <div class="form_group">
-                                                    <label for="customerName">Tên của bạn</label>
-                                                    <input type="text" class="form_control" id="customerName" name="customerName" required style="padding: 6px 20px; margin-bottom: 2px;">
+                                                    @Html.LabelFor(x => x.TenKhachHang, new { @class = "form-label" })
+                                                    @Html.TextBoxFor(x => x.TenKhachHang, new { @class = "form-control", @required = "", @style = "padding: 6px 20px; margin-bottom: 2px;", @readonly = "" })
                                                 </div>
                                                 <div class="form_group">
-                                                    <label for="reviewContent">Nội dung đánh giá</label>
-                                                    <textarea class="form_control" id="reviewContent" name="reviewContent" rows="3" required style="padding: 6px 20px;margin-bottom: 2px;"></textarea>
+                                                    @Html.LabelFor(x => x.NoiDung, new { @class = "form-label" })
+                                                    @Html.TextAreaFor(x => x.NoiDung, new { @class = "form-control", @required = "", @style = "padding: 6px 20px; margin-bottom: 2px;" })
                                                 </div>
                                                 <div class="form_group pb-4 pt-2">
                                                     <div class="rating text-warning" style="font-size: 30px;"></div>
                                                 </div>
                                                 <button type="submit" class="theme-btn style-one">Gửi đánh giá</button>
-                                            </form>
+                                            }
                                         </div>
                                     </div>
 
@@ -141,31 +144,20 @@
                 <div class="col-xl-5">
                     <div class="foodix-banner-wrapper">
                         <!--=== Foodix Banner ===-->
-                        <!--
-                        <div class="foodix-banner-item style-three mb-30 wow fadeInUp">
-                            <div class="banner-inner-wrap bg_cover" style="background-image: url(/Content/public_page/assets/images/bg/banner-bg-3.jpg); padding: 45px 15px 55px 15px;">
-                                <div class="banner-content text-center position-relative">
-                                    <img class="img-fluid" src="@(hinhAnh[0] ?? "")" alt="Banner" />
-                                    <div class="text-overlay position-absolute top-50 start-50 translate-middle">
-                                        <h3 style="font-size: 58px; text-shadow: 2px 6px #808080; padding-top: 2px;" class="">SIÊU ƯU ĐÃI</h3>
-                                        <h3 style="font-size: 42px; text-shadow: 2px 6px #808080;" class="">DÀNH CHO BẠN MỚI</h3>
-                                        <h1 class="fw-bold pt-2" style="font-size: 130px; color: #ab1b29; font-style: italic;">10%</h1>
+                        @if (topDanhGia != null)
+                        {
+                            <div class="foodix-banner-item style-three mb-30 wow fadeInUp">
+                                <div class="banner-inner-wrap bg_cover" style="background-image: url(/Content/public_page/assets/images/bg/banner-bg-4.jpg); padding: 45px 40px 55px 50px;">
+                                    <div class="banner-content d-block text-center mx-auto">
+                                        <div class="overflow-hidden d-flex justify-content-center align-items-center mx-auto" style="width: 80px;height: 80px;">
+                                            <img class="object-fit-cover rounded-circle" src="@topDanhGia.KhachHang.AnhDD" alt="Image" width="100%" height="100%" />
+                                        </div>
+                                        <p class="fw-bold text-center d-block mx-auto mt-2" style="font-size: 20px;"><i class="bi bi-quote"></i> @topDanhGia.DanhGia</p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                            -->
-                        <!--=== Foodix Banner ===-->
-                        <div class="foodix-banner-item style-three mb-30 wow fadeInUp">
-                            <div class="banner-inner-wrap bg_cover" style="background-image: url(/Content/public_page/assets/images/bg/banner-bg-4.jpg); padding: 45px 40px 55px 50px;">
-                                <div class="banner-content d-block text-center mx-auto">
-                                    <div class="overflow-hidden d-flex justify-content-center align-items-center mx-auto" style="width: 80px;height: 80px;">
-                                        <img class="object-fit-cover rounded-circle" src="@topDanhGia.KhachHang.AnhDD" alt="Image" width="100%" height="100%" />
-                                    </div>
-                                    <p class="fw-bold text-center d-block mx-auto mt-2" style="font-size: 20px;"><i class="bi bi-quote"></i> @topDanhGia.DanhGia</p>
-                                </div>
-                            </div>
-                        </div>
+                        }
+
                     </div>
                 </div>
 

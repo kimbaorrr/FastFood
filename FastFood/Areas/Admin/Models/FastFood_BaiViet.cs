@@ -1,4 +1,5 @@
 ﻿using FastFood.DB;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
@@ -33,18 +34,18 @@ namespace FastFood.Areas.Admin.Models
         /// Lấy các bài viết đã được duyệt.
         /// </summary>
         /// <returns>Một tập hợp các bài viết đã duyệt.</returns>
-        public static IQueryable<BaiViet> getBaiVietDaDuyet()
+        public static IEnumerable<BaiViet> getBaiVietDaDuyet()
         {
-            return getBaiViet().Where(x => x.DaDuyet);
+            return getBaiViet().Where(x => x.DaDuyet) ?? Enumerable.Empty<BaiViet>();
         }
 
         /// <summary>
         /// Lấy các bài viết chưa được duyệt.
         /// </summary>
         /// <returns>Một tập hợp các bài viết chưa duyệt.</returns>
-        public static IQueryable<BaiViet> getBaiVietChuaDuyet()
+        public static IEnumerable<BaiViet> getBaiVietChuaDuyet()
         {
-            return getBaiViet().Where(x => !x.DaDuyet);
+            return getBaiViet().Where(x => !x.DaDuyet) ?? Enumerable.Empty<BaiViet>();
         }
     }
 
@@ -53,23 +54,17 @@ namespace FastFood.Areas.Admin.Models
         public int MaNguoiTao { get; set; }
         [Display(Name = "Tiêu đề")]
         [DataType(DataType.Text)]
-        public string TieuDe { get; set; }
+        public string TieuDe { get; set; } = string.Empty;
         [Display(Name = "Mô tả ngắn")]
         [DataType(DataType.Text)]
-        public string MoTaNgan { get; set; }
+        public string MoTaNgan { get; set; } = string.Empty;
         [Display(Name = "Nội dung")]
         [DataType(DataType.MultilineText)]
-        public string NoiDung { get; set; }
+        public string NoiDung { get; set; } = string.Empty;
         [Display(Name = "Ảnh đại diện")]
         [DataType(DataType.Text)]
-        public HttpPostedFileBase HinhAnh { get; set; }
-        public FastFood_BaiViet_ThemBaiViet()
-        {
-            TieuDe = string.Empty;
-            NoiDung = string.Empty;
-            MoTaNgan = string.Empty;
-            HinhAnh = null;
-        }
+        public HttpPostedFileBase HinhAnh { get; set; } = null;
+        public FastFood_BaiViet_ThemBaiViet() { }
         public FastFood_BaiViet_ThemBaiViet(FastFood_BaiViet_ThemBaiViet a)
         {
             TieuDe = a.TieuDe;

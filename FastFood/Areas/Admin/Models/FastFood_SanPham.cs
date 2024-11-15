@@ -20,12 +20,12 @@ namespace FastFood.Areas.Admin.Models
 
         public static IEnumerable<SanPham> getSanPhamDaDuyet()
         {
-            return getSanPham().Where(x => x.DaDuyet);
+            return getSanPham().Where(x => x.DaDuyet) ?? Enumerable.Empty<SanPham>();
         }
 
         public static IEnumerable<SanPham> getSanPhamChuaDuyet()
         {
-            return getSanPham().Where(x => !x.DaDuyet);
+            return getSanPham().Where(x => !x.DaDuyet) ?? Enumerable.Empty<SanPham>();
         }
 
         public static double getXepHangSaoTrungBinh(int maSanPham)
@@ -35,7 +35,7 @@ namespace FastFood.Areas.Admin.Models
 
         public static int getTongLuotDanhGia(int maSanPham)
         {
-            return getSanPham().FirstOrDefault(x => x.MaSanPham == maSanPham).DanhGiaSanPhams.Count();
+            return getSanPham().FirstOrDefault(x => x.MaSanPham == maSanPham)?.DanhGiaSanPhams.Count() ?? 0;
 
         }
     }

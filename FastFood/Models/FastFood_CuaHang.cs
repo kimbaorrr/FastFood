@@ -16,7 +16,7 @@ namespace FastFood.Models
 
         public static ThongTinCuaHang getThongTin()
         {
-            return thongTinCuaHangs.SingleOrDefault();
+            return thongTinCuaHangs.SingleOrDefault() ?? new ThongTinCuaHang();
         }
     }
 }

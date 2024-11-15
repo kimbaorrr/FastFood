@@ -18,23 +18,23 @@ namespace FastFood.Models
             return sanPhams;
         }
 
-        public static IQueryable<SanPham> getSanPhamDaDuyet()
+        public static IEnumerable<SanPham> getSanPhamDaDuyet()
         {
-            return getSanPham().Where(x => x.DaDuyet);
+            return getSanPham().Where(x => x.DaDuyet) ?? Enumerable.Empty<SanPham>();
         }
 
         public static IEnumerable<SanPham> getSanPhamBanChay(int take)
         {
             return getSanPhamDaDuyet()
                 .OrderByDescending(x => x.ChiTietDonHangs.Count())
-                .Take(take);
+                .Take(take) ?? Enumerable.Empty<SanPham>().Take(take);
         }
 
         public static IEnumerable<SanPham> getSanPhamKhuyenMai(int take)
         {
             return getSanPhamDaDuyet()
                 .OrderByDescending(x => x.KhuyenMai)
-                .Take(take);
+                .Take(take) ?? Enumerable.Empty<SanPham>().Take(take);
         }
 
         public static IEnumerable<SanPham> getSanPhamGiamGiaSoc(int take)
@@ -42,7 +42,7 @@ namespace FastFood.Models
             return getSanPhamDaDuyet()
                 .OrderByDescending(x => x.KhuyenMai)
                 .ThenBy(x => x.GiaSauKhuyenMai)
-                .Take(take);
+                .Take(take) ?? Enumerable.Empty<SanPham>().Take(take);
         }
 
         public static IQueryable<MaKhuyenMai> getMaKhuyenMai()
@@ -60,14 +60,14 @@ namespace FastFood.Models
             return getDanhMuc()
                 .Where(x => x.MaDanhMuc == maDM)
                 .Select(x => x.TenDanhMuc)
-                .FirstOrDefault();
+                .FirstOrDefault() ?? string.Empty;
         }
 
         public static IEnumerable<SanPham> getSanPhamTheoDanhMuc(int? maDM, int take)
         {
             return getSanPhamDaDuyet()
                 .Where(x => x.MaDanhMuc == maDM)
-                .Take(take);
+                .Take(take) ?? Enumerable.Empty<SanPham>().Take(take);
         }
 
         public static IQueryable<DanhGiaSanPham> getDanhGiaSanPham()
@@ -81,11 +81,27 @@ namespace FastFood.Models
                 .Where(x => !string.IsNullOrEmpty(x.DanhGia))
                 .GroupBy(x => x.MaKhachHang)
                 .Select(g => g.OrderByDescending(x => x.XepHangSao).FirstOrDefault())
-                .OrderByDescending(x => x.XepHangSao);
+                .OrderByDescending(x => x.XepHangSao) ?? Enumerable.Empty<DanhGiaSanPham>();
         }
         public static IEnumerable<DanhGiaSanPham> GetDanhGiaTheoMaSP(int maSP)
         {
-            return getDanhGiaSanPham().Where(x => x.MaSanPham == maSP);
+            return getDanhGiaSanPham().Where(x => x.MaSanPham == maSP) ?? Enumerable.Empty<DanhGiaSanPham>();
         }
+    }
+    public class FastFood_SanPham_DanhGiaSanPham
+    {
+        public int MaKhachHang { get; set; } = 0;
+        public string TenKhachHang { get; set; } = string.Empty;
+        public string NoiDung { get; set; } = string.Empty;
+        public int XepHangSao { get; set; } = 3;
+        public FastFood_SanPham_DanhGiaSanPham() { }
+        public FastFood_SanPham_DanhGiaSanPham(FastFood_SanPham_DanhGiaSanPham a)
+        {
+            MaKhachHang = a.MaKhachHang;
+            TenKhachHang = a.TenKhachHang;
+            NoiDung = a.NoiDung;
+            XepHangSao = a.XepHangSao;
+        }
+
     }
 }

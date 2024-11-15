@@ -36,7 +36,7 @@ namespace FastFood.Areas.Admin.Models
         /// <returns>Danh sách các đơn hàng đã giao.</returns>
         public static IEnumerable<DonHang> getDonHangDaGiao()
         {
-            return getDonHang().Where(x => x.TrangThaiDon == 7);
+            return getDonHang().Where(x => x.TrangThaiDon == 7) ?? Enumerable.Empty<DonHang>();
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace FastFood.Areas.Admin.Models
             DateTime dauTuan = ngayHienTai.AddDays(-(int)ngayHienTai.DayOfWeek + (int)DayOfWeek.Monday);
             DateTime cuoiTuan = dauTuan.AddDays(7);
 
-            return getDonHangDaGiao().Count(x => x.NgayDat >= dauTuan && x.NgayDat < cuoiTuan);
+            return getDonHangDaGiao()?.Count(x => x.NgayDat >= dauTuan && x.NgayDat < cuoiTuan) ?? 0;
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace FastFood.Areas.Admin.Models
         /// <returns>Doanh thu hôm nay.</returns>
         public static int doanhThuHomNay()
         {
-            return getDonHangDaGiao().Where(x => x.NgayDat == DateTime.Today).Sum(x => x.TongTienSanPham);
+            return getDonHangDaGiao().Where(x => x.NgayDat == DateTime.Today)?.Sum(x => x.TongTienSanPham) ?? 0;
         }
 
         /// <summary>
@@ -84,12 +84,12 @@ namespace FastFood.Areas.Admin.Models
             IEnumerable<DonHang> dsDonHang = getDonHangDaGiao();
 
             decimal doanhThuThangNay = dsDonHang
-                .Where(dh => dh.NgayDat >= dauThangNay && dh.NgayDat < dauThangNay.AddMonths(1))
-                .Sum(dh => dh.TongTienSanPham);
+                .Where(dh => dh.NgayDat >= dauThangNay && dh.NgayDat < dauThangNay.AddMonths(1))?
+                .Sum(dh => dh.TongTienSanPham) ?? 0;
 
             decimal doanhThuThangTruoc = dsDonHang
-                .Where(dh => dh.NgayDat >= dauThangTruoc && dh.NgayDat <= cuoiThangTruoc)
-                .Sum(dh => dh.TongTienSanPham);
+                .Where(dh => dh.NgayDat >= dauThangTruoc && dh.NgayDat <= cuoiThangTruoc)?
+                .Sum(dh => dh.TongTienSanPham) ?? 0;
 
             if (doanhThuThangTruoc == 0)
             {
@@ -150,8 +150,8 @@ namespace FastFood.Areas.Admin.Models
                     {
                         DateTime ngay = homNay.AddDays(-i);
                         int doanhThuNgay = dsDonHang
-                            .Where(x => x.NgayDat.Date == ngay.Date)
-                            .Sum(x => x.TongTienSanPham);
+                            .Where(x => x.NgayDat.Date == ngay.Date)?
+                            .Sum(x => x.TongTienSanPham) ?? 0;
 
                         doanhThu[ngay] = doanhThuNgay;
                     }
@@ -162,8 +162,8 @@ namespace FastFood.Areas.Admin.Models
                     {
                         DateTime thang = homNay.AddMonths(-i);
                         int doanhThuThang = dsDonHang
-                            .Where(x => x.NgayDat.Year == thang.Year && x.NgayDat.Month == thang.Month)
-                            .Sum(x => x.TongTienSanPham);
+                            .Where(x => x.NgayDat.Year == thang.Year && x.NgayDat.Month == thang.Month)?
+                            .Sum(x => x.TongTienSanPham) ?? 0;
 
                         doanhThu[thang] = doanhThuThang;
                     }
@@ -174,8 +174,8 @@ namespace FastFood.Areas.Admin.Models
                     {
                         DateTime thang = homNay.AddMonths(-i);
                         int doanhThuThang = dsDonHang
-                            .Where(x => x.NgayDat.Year == thang.Year && x.NgayDat.Month == thang.Month)
-                            .Sum(x => x.TongTienSanPham);
+                            .Where(x => x.NgayDat.Year == thang.Year && x.NgayDat.Month == thang.Month)?
+                            .Sum(x => x.TongTienSanPham) ?? 0;
 
                         doanhThu[thang] = doanhThuThang;
                     }
@@ -307,54 +307,42 @@ namespace FastFood.Areas.Admin.Models
     }
     public class FastFood_DonHang_SanPhamBanChay
     {
-        public int MaSanPham { get; set; }
-        public string TenSanPham { get; set; }
-        public int SoLuongDaBan { get; set; }
+        public int MaSanPham { get; set; } = 0;
+        public string TenSanPham { get; set; } = string.Empty;
+        public int SoLuongDaBan { get; set; } = 0;
     }
 
     public class FastFood_DonHang_DanhSachDonHang
     {
-        public int MaDonHang { get; set; }
-        public DateTime? NgayDat { get; set; }
-        public string NguoiMua { get; set; }
-        public string NguoiBan { get; set; }
-        public int TongTienSanPham { get; set; }
-        public int? TongThanhToan { get; set; }
-        public TrangThaiDonHang TrangThaiDonHang { get; set; }
-        public bool? MaTrangThaiThanhToan { get; set; }
-        public string TrangThaiThanhToan { get; set; }
-        public int TongSanPham { get; set; }
+        public int MaDonHang { get; set; } = 0;
+        public DateTime? NgayDat { get; set; } = null;
+        public string NguoiMua { get; set; } = string.Empty;
+        public string NguoiBan { get; set; } = string.Empty;
+        public int TongTienSanPham { get; set; } = 0;
+        public int? TongThanhToan { get; set; } = 0;
+        public TrangThaiDonHang TrangThaiDonHang { get; set; } = new TrangThaiDonHang();
+        public bool? MaTrangThaiThanhToan { get; set; } = false;
+        public string TrangThaiThanhToan { get; set; } = string.Empty;
+        public int TongSanPham { get; set; } = 0;
+        public FastFood_DonHang_DanhSachDonHang() { }
 
     }
 
     public class FastFood_DonHang_ChiTietDonHang : FastFood_DonHang_DanhSachDonHang
     {
-        public IEnumerable<ChiTietDonHang> Chitietdonhangs { get; set; }
-        public KhachHang Khachhang { get; set; }
-        public int? PhiVanChuyen { get; set; }
-        public string NguoiGiao { get; set; }
-        public DateTime? ThoiGianGiaoHangDuKien { get; set; }
-        public DateTime? ThoiGianGiaoHangThucTe { get; set; }
-        public string PhuongThucVanChuyen { get; set; }
-        public int MaThanhToan { get; set; }
-        public int MaKhuyenMai { get; set; }
-        public long? MaGiaoDich { get; set; }
-        public DateTime? NgayThanhToan { get; set; }
+        public IEnumerable<ChiTietDonHang> Chitietdonhangs { get; set; } = Enumerable.Empty<ChiTietDonHang>();
+        public KhachHang Khachhang { get; set; } = new KhachHang();
+        public int? PhiVanChuyen { get; set; } = 0;
+        public string NguoiGiao { get; set; } = string.Empty;
+        public DateTime? ThoiGianGiaoHangDuKien { get; set; } = null;
+        public DateTime? ThoiGianGiaoHangThucTe { get; set; } = null;
+        public string PhuongThucVanChuyen { get; set; } = string.Empty;
+        public int MaThanhToan { get; set; } = 0;
+        public int MaKhuyenMai { get; set; } = 0;
+        public long? MaGiaoDich { get; set; } = null;
+        public DateTime? NgayThanhToan { get; set; } = null;
 
-        public FastFood_DonHang_ChiTietDonHang() : base()
-        {
-            Chitietdonhangs = Enumerable.Empty<ChiTietDonHang>();
-            Khachhang = new KhachHang();
-            PhiVanChuyen = 0;
-            NguoiGiao = string.Empty;
-            ThoiGianGiaoHangDuKien = null;
-            ThoiGianGiaoHangDuKien = null;
-            PhuongThucVanChuyen = string.Empty;
-            MaThanhToan = -1;
-            MaKhuyenMai = 0;
-            MaGiaoDich = null;
-            NgayThanhToan = null;
-        }
+        public FastFood_DonHang_ChiTietDonHang() : base() { }
         public FastFood_DonHang_ChiTietDonHang(FastFood_DonHang_ChiTietDonHang a)
         {
             Chitietdonhangs = a.Chitietdonhangs;
@@ -376,20 +364,14 @@ namespace FastFood.Areas.Admin.Models
         public int MaDonHang { get; set; }
         [Display(Name = "Đơn vị vận chuyển")]
         [DataType(DataType.Text)]
-        public string DonViVanChuyen { get; set; }
+        public string DonViVanChuyen { get; set; } = string.Empty;
         [Display(Name = "Mã vận đơn")]
         [DataType(DataType.Text)]
-        public string MaVanDon { get; set; }
+        public string MaVanDon { get; set; } = string.Empty;
         [Display(Name = "Số ngày dự kiến")]
         [DataType(DataType.Text)]
-        public int SoNgayDuKien { get; set; }
-        public FastFood_DonHang_ThemThongTinVanChuyen()
-        {
-            MaDonHang = 0;
-            DonViVanChuyen = string.Empty;
-            MaVanDon = string.Empty;
-            SoNgayDuKien = 0;
-        }
+        public int SoNgayDuKien { get; set; } = 0;
+        public FastFood_DonHang_ThemThongTinVanChuyen() { }
         public FastFood_DonHang_ThemThongTinVanChuyen(FastFood_DonHang_ThemThongTinVanChuyen a)
         {
             MaDonHang = a.MaDonHang;

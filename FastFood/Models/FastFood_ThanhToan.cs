@@ -85,22 +85,22 @@ namespace FastFood.Models
     {
         [Display(Name = "Mã đơn hàng")]
         [DataType(DataType.Text)]
-        public int MaDonHang { get; set; }
+        public int MaDonHang { get; set; } = 0;
 
         [Display(Name = "Tổng thanh toán")]
         [DataType(DataType.Text)]
-        public int TongThanhToan { get; set; }
+        public int TongThanhToan { get; set; } = 0;
 
         [Display(Name = "Mã giao dịch")]
         [DataType(DataType.Text)]
-        public long MaGiaoDich { get; set; }
+        public long MaGiaoDich { get; set; } = 0;
 
         [Display(Name = "Trạng thái thanh toán")]
         [DataType(DataType.Text)]
-        public string TrangThaiThanhToan { get; set; }
+        public string TrangThaiThanhToan { get; set; } = string.Empty;
 
         [Display(Name = "Trạng thái giao dịch")]
         [DataType(DataType.Text)]
-        public string TrangThaiGiaoDich { get; set; }
+        public string TrangThaiGiaoDich { get; set; } = string.Empty;
     }
 }
