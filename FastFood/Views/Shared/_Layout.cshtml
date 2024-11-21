@@ -1,0 +1,705 @@
+﻿@using FastFood.Models;
+@using FastFood.Areas.Admin.Models;
+@{
+    var thongTinCuaHang = FastFood_CuaHang.getThongTin();
+    var dsKhachHang = FastFood_KhachHang.getKhachHang().AsEnumerable();
+    var maKH = Convert.ToInt32(Session["KH_MaKhachHang"] as string);
+    var anhDD = @Session["KH_AnhDD"] as string;
+    var hoTenKH = FastFood_KhachHang.getHoTen(maKH);
+    var email = dsKhachHang.Where(x => x.MaKhachHang == maKH).Select(x => x.Email).FirstOrDefault();
+
+}
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <!--====== Required meta tags ======-->
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="Insurance, Health, Agency">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--====== Title ======-->
+    <title>@ViewBag.Title</title>
+    <!--====== Favicon Icon ======-->
+    <link rel="shortcut icon" href="/Content/public_page/assets/images/favicon.png" type="image/png">
+    <!--====== Google Fonts ======-->
+    <link href="https://fonts.bunny.net/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!--====== FontAwesome css ======-->
+    <link rel="stylesheet" href="/Content/public_page/assets/fonts/fontawesome/css/all.min.css">
+    <!--====== Bootstrap css ======-->
+    <link rel="stylesheet" href="/Content/public_page/assets/vendor/bootstrap/css/bootstrap.min.css">
+    <!--====== Slick-popup css ======-->
+    <link rel="stylesheet" href="/Content/public_page/assets/vendor/slick/slick.css">
+    <!--====== Nice Select css ======-->
+    <link rel="stylesheet" href="/Content/public_page/assets/vendor/nice-select/css/nice-select.css">
+    <!--====== magnific-popup css ======-->
+    <link rel="stylesheet" href="/Content/public_page/assets/vendor/magnific-popup/dist/magnific-popup.css">
+    <!--====== Jquery UI css ======-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/themes/base/jquery-ui.min.css">
+    <!--====== Animate css ======-->
+    <link rel="stylesheet" href="/Content/public_page/assets/vendor/animate.css">
+    <!--====== Default css ======-->
+    <link rel="stylesheet" href="/Content/public_page/assets/css/default.css">
+    <!--====== Style css ======-->
+    <link rel="stylesheet" href="/Content/public_page/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.css">
+    <!--====== Jquery js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/rater-jquery@1.0.0/rater.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        .modal form_control {
+            padding: 6px .75rem;
+        }
+    </style>
+
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    <!--====== Start Loader Area ======-->
+    <div class="fd-preloader">
+        <div class="overflow-hidden d-flex align-items-center justify-content-center" style="min-width: 25vh; min-height: 25vh;max-width: 45vh; max-height: 45vh;">
+            <img src="~/Content/public_page/assets/images/loader.gif" width="100%" height="100%" class="object-fit-fill" />
+        </div>
+
+    </div><!--====== End Loader Area ======-->
+    <!--====== Start Overlay ======-->
+    <div class="offcanvas__overlay"></div>
+    <!--====== End Overlay ======-->
+    <!--====== Start Sidemenu-wrapper-cart Area ======-->
+    <div class="sidemenu-wrapper-cart">
+        <div class="sidemenu-content">
+            <div class="widget widget-shopping-cart">
+                <h4>Giỏ hàng của tôi</h4>
+                <div class="sidemenu-cart-close"><i class="far fa-times"></i></div>
+                <div class="widget-shopping-cart-content">
+                    <ul class="foodix-mini-cart-list" style="max-height: 55vh;overflow-y: scroll;"></ul>
+                    <div class="cart-mini-total" style="margin-top: 25px!important;padding-bottom: 0;">
+                        <div class="cart-total">
+                            <span><strong>Tạm tính:</strong></span>
+                            <span class="amount">
+                                <span class="cart-total-product">
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="cart-button mt-3">
+                        <a href="@Url.Action("Index", "Cart")" class="theme-btn style-one">Đi đến giỏ hàng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--====== End Sidemenu-wrapper-cart Area ======-->
+    <!--====== Start Header Area ======-->
+    <header class="header-area header-one navigation-white transparent-header">
+        <div class="container">
+            <div class="header-navigation">
+                <div class="nav-overlay"></div>
+                <div class="primary-menu">
+                    <!--=== Site Branding ===-->
+                    <div class="site-branding">
+                        <a href="@Url.Action("Index", "Home")" class="brand-logo"><img height="50" src="@thongTinCuaHang.Logo" alt="Logo"></a>
+                    </div>
+                    <div class="nav-inner-menu">
+                        <!--=== Foodix Nav Menu ===-->
+                        <div class="foodix-nav-menu">
+                            <!--=== Mobile Logo ===-->
+                            <div class="mobile-logo mb-30 d-block d-xl-none text-center">
+                                <a href="@Url.Action("Index", "Home")" class="brand-logo"><img height="50" src="@thongTinCuaHang.Logo" alt="Site Logo"></a>
+                            </div>
+                            <!--=== Main Menu ===-->
+                            <nav class="main-menu">
+                                <ul>
+                                    <li class="menu-item">
+                                        <a href="@Url.Action("Index", "Home")">Trang chủ</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="@Url.Action("Index", "Menu")">Thực đơn</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="@Url.Action("Index", "Article")">Tin tức</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="@Url.Action("Index", "Contact")">Liên hệ</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="@Url.Action("Index", "About")">Về chúng tôi</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <!--=== Nav Button ===-->
+                            <div class="nav-button mt-50 d-block d-xl-none  text-center">
+                                <a href="@Url.Action("Index", "Menu")" class="theme-btn style-one">Đặt món ngay</a>
+                            </div>
+                        </div>
+                        <!--=== Nav Right Item ===-->
+                        <div class="nav-right-item">
+                            <div class="nav-button d-none d-xl-block">
+                                <a href="@Url.Action("Index", "Menu")" class="theme-btn style-one">Đặt món ngay</a>
+                            </div>
+                            <div class="cart-button">
+                                <i class="far fa-shopping-cart"></i>
+                            </div>
+                            <button type="button" class="login-button" id="userChoose">
+                                <i class="far fa-user"></i>
+                            </button>
+                            <div class="navbar-toggler">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header><!--====== End Header Area ======-->
+    @RenderBody()
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background-color: #f7f1e1;">
+                <div class="modal-header">
+                    <h5 class="modal-title page-title" id="loginModalLabel">Khách hàng đăng nhập</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body gap-2">
+                    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "loginForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label for="TenDangNhap" style="font-size: 18px; font-weight: 500;">Tên đăng nhập</label>
+                            <input type="text" name="TenDangNhap" class="form_control" id="TenDangNhap" required style="padding: 6px 1rem;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="MatKhau" style="font-size: 18px; font-weight: 500;">Mật khẩu</label>
+                            <input type="password" name="MatKhau" class="form_control" id="MatKhau" required style="padding: 6px 1rem;">
+                        </div>
+                        <div class="mb-3 d-flex align-items-center justify-content-between">
+                            <div class="form-check">
+                                <input type="checkbox" name="GhiNhoDangNhap" class="form-check-input" id="GhiNhoDangNhap" style="border-color: #888;">
+                                <label for="GhiNhoDangNhap" class="form-check-label" style="font-size: 16px;">Ghi nhớ đăng nhập</label>
+                            </div>
+                            <a href="/Account/ForgotPassword" style="font-size: 16px;">Quên mật khẩu?</a>
+                        </div>
+                        <p class="text-center text-muted">Chưa có tài khoản? <a href="#" class="text-decoration-none" style="color: #007bff;" id="openRegistrationModal">Đăng ký ngay</a></p>
+                        <button type="submit" class="theme-btn style-one w-100" style="padding: 10px;">Đăng nhập</button>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- User Info Modal -->
+    <div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background-color: #f7f1e1;">
+                <div class="modal-header">
+                    <h5 class="modal-title page-title" id="userInfoModalLabel">Thông tin người dùng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-column align-items-center">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4086/4086679.png" alt="Avatar" class="rounded-circle" style="width: 100px; height: 100px; margin-bottom: 20px;">
+                    <div class="text-center">
+                        <h6 style="font-size: 20px; font-weight: 500;">Xin chào <span id="userInfoName">Nguyễn Văn A</span></h6>
+                        <p style="font-size: 16px; font-weight: 400;">Email: <span id="userInfoEmail">example@mail.com</span></p>
+                    </div>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-primary" id="editProfileBtn" style="padding: 10px 20px;">Chỉnh sửa thông tin</button>
+                    </div>
+                    <div class="mt-1">
+                        <a href="@Url.Action("Logout", "Account")" class="btn btn-danger" id="logoutProfileBtn" style="padding: 10px 18px;">Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Registration Modal -->
+    <div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background-color: #f7f1e1;">
+                <div class="modal-header">
+                    <h5 class="modal-title page-title" id="registrationModalLabel">Đăng ký tài khoản</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { id = "registrationForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <div class="me-2">
+                                @Html.Label("HoDem", "Họ đệm", new { @style = "font-size: 18px; font-weight: 500;" })
+                                @Html.TextBox("HoDem", null, new { @class = "form_control", @required = "required", @style = "padding: 6px 1rem;", id = "HoDem" })
+                            </div>
+                            <div class="">
+                                @Html.Label("TenKhachHang", "Tên khách hàng", new { @style = "font-size: 18px; font-weight: 500;" })
+                                @Html.TextBox("TenKhachHang", null, new { @class = "form_control", @required = "required", @style = "padding: 6px 1rem;", id = "TenKhachHang" })
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            @Html.Label("TenDangNhap", "Tên đăng nhập", new { @style = "font-size: 18px; font-weight: 500;" })
+                            @Html.TextBox("TenDangNhap", null, new { @class = "form_control", @required = "required", @style = "padding: 6px 1rem;", id = "TenDangNhap" })
+                        </div>
+                        <div class="mb-2">
+                            @Html.Label("MatKhau", "Mật khẩu", new { @style = "font-size: 18px; font-weight: 500;" })
+                            @Html.Password("MatKhau", null, new { @class = "form_control", @required = "required", @style = "padding: 6px 1rem;", id = "MatKhau" })
+                        </div>
+                        <div class="mb-2">
+                            @Html.Label("DiaChiGiaoHang", "Địa chỉ giao hàng", new { @style = "font-size: 18px; font-weight: 500;" })
+                            @Html.TextBox("DiaChiGiaoHang", null, new { @class = "form_control", @style = "padding: 6px 1rem;", id = "DiaChiGiaoHang" })
+                        </div>
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <div class="me-2">
+                                @Html.Label("Email", "Email", new { @style = "font-size: 18px; font-weight: 500;" })
+                                @Html.TextBox("Email", null, new { @class = "form_control", @type = "email", @style = "padding: 6px 1rem;", id = "Email" })
+                            </div>
+                            <div class="">
+                                @Html.Label("SoDienThoai", "Số điện thoại", new { @style = "font-size: 18px; font-weight: 500;" })
+                                @Html.TextBox("SoDienThoai", null, new { @class = "form_control", @type = "tel", @style = "padding: 6px 1rem;", id = "SoDienThoai" })
+                            </div>
+                        </div>
+
+                        <button type="submit" class="theme-btn style-one w-100" style="padding: 10px;">Đăng ký</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--====== Start Footer ======-->
+    <footer class="footer-default p-r z-1">
+        <div class="footer-shape f-shape_one scene"><span data-depth=".3"><img src="/Content/public_page/assets/images/shape/shape-2.png" alt="shape"></span></div>
+        <div class="footer-shape f-shape_two scene"><span data-depth=".4"><img src="/Content/public_page/assets/images/shape/shape-3.png" alt="shape"></span></div>
+        <div class="footer-shape f-shape_three scene"><span data-depth=".5"><img src="/Content/public_page/assets/images/shape/shape-4.png" alt="shape"></span></div>
+        <div class="footer-shape f-shape_four scene"><span data-depth=".6"><img src="/Content/public_page/assets/images/shape/shape-5.png" alt="shape"></span></div>
+        <div class="footer-shape f-shape_five scene"><span data-depth=".7"><img src="/Content/public_page/assets/images/shape/shape-6.png" alt="shape"></span></div>
+        <div class="footer-shape f-shape_six scene"><span data-depth=".8"><img src="/Content/public_page/assets/images/shape/shape-7.png" alt="shape"></span></div>
+        <div class="footer-shape f-shape_seven scene"><span data-depth=".9"><img src="/Content/public_page/assets/images/shape/shape-8.png" alt="shape"></span></div>
+        <div class="container">
+            <!--=== Footer Widget Area ===-->
+            <div class="footer-widget-area pt-120 pb-75">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <!--=== Footer Widget ===-->
+                        <div class="footer-widget footer-about-widget mb-40 wow fadeInUp">
+                            <div class="widget-content">
+                                <div class="footer-logo mb-25">
+                                    <a href="@Url.Action("Index", "Home")"><img height="70" src="@thongTinCuaHang.Logo" alt="Brand Logo"></a>
+                                </div>
+                                <p>
+                                    @thongTinCuaHang.Slogan
+                                </p>
+                                <ul class="social-link">
+                                    <li><a href="@thongTinCuaHang.FacebookUrl"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="@thongTinCuaHang.XUrl"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="@thongTinCuaHang.InstagramUrl"><i class="fab fa-instagram"></i></a></li>
+                                    <li><a href="@thongTinCuaHang.YoutubeUrl"><i class="fab fa-youtube"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <!--=== Footer Widget ===-->
+                        <div class="footer-widget footer-contact-widget mb-40 wow fadeInUp">
+                            <div class="widget-content">
+                                <h4 class="widget-title">Liên hệ chúng tôi</h4>
+                                <ul class="address-list">
+                                    <li>@thongTinCuaHang.DiaChi</li>
+                                    <li><a href="tel:@thongTinCuaHang.Hotline">Tel:@thongTinCuaHang.Hotline</a></li>
+                                    <li><a href="mailto:@thongTinCuaHang.Email">@thongTinCuaHang.Email</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <!--=== Footer Widget ===-->
+                        <div class="footer-widget footer-nav-widget mb-40 wow fadeInUp">
+                            <div class="widget-content">
+                                <h4 class="widget-title">Truy cập nhanh</h4>
+                                <ul class="widget-menu">
+                                    <li>
+                                        <a href="@Url.Action("Index", "Home")">Trang chủ</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index", "Menu")">Thực đơn</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index", "News")">Tin tức</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index", "Contact")">Liên hệ</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index", "About")">Về chúng tôi</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <!--=== Footer Widget ===-->
+                        <div class="footer-widget footer-opening-widget mb-40 wow fadeInUp">
+                            <div class="widget-content">
+                                <h4 class="widget-title">Giờ mở cửa</h4>
+                                <ul class="opening-schedule">
+                                    @foreach (var op in FastFood_CuaHang.getGioLamViec())
+                                    {
+                                        <li>@op.NgayLamViec: <span>@op.ThoiGianLamViec </span></li>
+                                    }
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--=== Copyright Area ===-->
+        <div class="copyright-area text-center">
+            <div class="container">
+                <div class="copyright-text">
+                    <p>&copy; @DateTime.Now.Year BaoIT. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer><!--====== End Footer ======-->
+    <!--====== Back To Top  ======-->
+    <a href="#" class="back-to-top"><i class="far fa-angle-up"></i></a>
+
+    <!--====== Popper js ======-->
+    <script src="/Content/public_page/assets/vendor/popper/popper.min.js"></script>
+    <!--====== Bootstrap js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/js/bootstrap.min.js"></script>
+    <!--====== Slick js ======-->
+    <script src="/Content/public_page/assets/vendor/slick/slick.min.js"></script>
+    <!--====== Magnific js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.2.0/jquery.magnific-popup.min.js"></script>
+    <!--====== Nice-select js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+    <!--====== Parallax js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+    <!--====== jquery UI js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js"></script>
+    <!--====== WOW js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <!--====== Main js ======-->
+    <script src="/Content/public_page/assets/js/theme.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.js"></script>
+    <script>
+        var $responseData = [];
+        const csrfToken = $('input[name="__RequestVerificationToken"]').val();
+    function loadCartItems(callback) {
+        $.ajax({
+            url: '@Url.Action("GetItem", "Cart")',
+            method: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                $responseData = response;
+                summaryCheckout("");
+                if (callback) callback();
+            },
+            error: function (error) {
+                console.error('Lỗi khi tải giỏ hàng:', error);
+            }
+        });
+    }
+
+    function updateToSubCart() {
+        loadCartItems(function () {
+            const cartList = $('.foodix-mini-cart-list');
+            cartList.empty();
+
+            if ($responseData.length === 0) {
+                cartList.append('<p class="fw-bold text-danger text-center mt-3">Giỏ hàng rỗng!</p>');
+            } else {
+                $responseData.forEach(function (item) {
+                    cartList.append(`
+                        <li class="foodix-menu-cart">
+                            <button type="button" class="remove-cart remove-cart-btn bg-white" data-product-id="${item.MaSanPham}"><i class="far fa-trash-alt"></i></button>
+                            <a href="#">
+                                <img src="${item.HinhAnh}" alt="cart image">
+                                ${item.TenSanPham}
+                            </a>
+                            <span class="quantity">${item.SoLuong} × <span>${item.GiaBan} VNĐ</span></span>
+                        </li>
+                    `);
+                });
+            }
+        });
+    }
+
+    function updateToCartPage() {
+        loadCartItems(function () {
+            const cartTable = $('.cart-table table tbody');
+            cartTable.empty();
+
+            if ($responseData.length === 0) {
+                cartTable.append('<tr><td class="fw-bold text-danger text-center mt-3">Giỏ hàng rỗng!</td></tr>');
+            } else {
+                $responseData.forEach(function (item) {
+                    cartTable.append(`
+                       <tr>
+                            <td class="thumbnail-title">
+                                <img src="${item.HinhAnh}" alt="Cart Image">
+                                <span class="title"><a href="menu-details.html">${item.TenSanPham}</a></span>
+                            </td>
+                            <td class="price">$${item.GiaBan}</td>
+                            <td class="quantity">
+                                <div class="quantity-input">
+                                    <button class="quantity-down" data-product-id="${item.MaSanPham}"><i class="far fa-minus"></i></button>
+                                    <input class="quantity" type="text" value="${item.SoLuong}" name="quantity">
+                                    <button class="quantity-up" data-product-id="${item.MaSanPham}"><i class="far fa-plus"></i></button>
+                                </div>
+                            </td>
+                            <td class="subtotal">$${item.ThanhTien}</td>
+                            <td class="remove">
+                                <button type="button" class="remove-cart-btn bg-white" data-product-id="${item.MaSanPham}"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
+        });
+    }
+
+    function addToCart(productId, quantity) {
+        $.ajax({
+            url: '@Url.Action("AddItem", "Cart")',
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                productId: productId,
+                quantity: quantity,
+                __RequestVerificationToken: csrfToken,
+            },
+            success: function (response) {
+                if (response.success) {
+                    alertMessage(response.type, response.message);
+                    updateToSubCart();
+                }
+            },
+            error: function (error) {
+                console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error);
+            }
+        });
+    }
+
+    function removeFromCart(productId) {
+        $.ajax({
+            url: '@Url.Action("RemoveItem", "Cart")',
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                productId: productId,
+                __RequestVerificationToken: csrfToken,
+            },
+            success: function (response) {
+                if (response.success) {
+                    alertMessage(response.type, response.message);
+                    updateToSubCart();
+                    updateToCartPage();
+                }
+            },
+            error: function (error) {
+                console.error('Lỗi khi xóa sản phẩm khỏi giỏ hàng:', error);
+            }
+        });
+    }
+
+        function decreaseQuantity(productId) {
+            $.ajax({
+               url: '@Url.Action("DecreaseQuantity", "Cart")',
+                method: 'POST',
+               data: {
+                   productId: productId,
+                   __RequestVerificationToken: csrfToken,
+               },
+               success: function (response) {
+                   if (response.success) {
+                        updateToSubCart();
+                   }
+               },
+               error: function (error) {
+                   console.error('Lỗi khi giảm số lượng sản phẩm:', error);
+               }
+            });
+        }
+
+        function cartIsEmpty() {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: '@Url.Action("IsEmpty", "Cart")',
+                    method: 'POST',
+                    data: {
+                        __RequestVerificationToken: csrfToken,
+                    },
+                    success: function (response) {
+                        resolve(response);
+                    },
+                    error: function (error) {
+                        console.error('Lỗi khi kiểm tra giỏ hàng rỗng!', error);
+                        reject(error);
+                    }
+                });
+            });
+        }
+
+    function summaryCheckout(couponCode) {
+        $.ajax({
+            url: '@Url.Action("GetSummaryCheckout", "Cart")',
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                couponCode: couponCode,
+                __RequestVerificationToken: csrfToken,
+            },
+            success: function (response) {
+                if (!response.success) {
+                    alertMessage(response.type, response.message);
+                }
+
+                $(".cart-total-product").text(response.data.TongTienSanPham);
+                $(".cart-total-product").append('<span class="currency ps-1">VNĐ</span>');
+                $(".cart-shipping-fee").text(`+${response.data.PhiVanChuyen}`);
+                $(".cart-shipping-fee").append('<span class="currency ps-1">VNĐ</span>');
+                $(".cart-coupon-code").text(`-${response.data.MaKhuyenMai}`);
+                $(".cart-coupon-code").append('<span class="currency ps-1">VNĐ</span>');
+                $(".cart-total-pay").text(response.data.TongThanhToan);
+                $(".cart-total-pay").append('<span class="currency ps-1">VNĐ</span>');
+            },
+            error: function (error) {
+                console.error('Lỗi tóm tắt thanh toán. Thử lại !', error);
+            }
+        });
+    }
+
+    function alertMessage(type, message) {
+        Toastify({
+            text: message,
+            duration: 2000,
+            newWindow: true,
+            close: true,
+            gravity: "top",
+            position: "center",
+            stopOnFocus: true,
+            style: {
+                background: type,
+            }
+        }).showToast();
+        }
+
+        function checkLogged(maKhachHang) {
+            return maKhachHang !== null && maKhachHang !== 0 && maKhachHang !== undefined;
+        }
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            let maKhachHang = @maKH;
+            let anhDD = '@anhDD';
+            let hoTenKhachHang = '@hoTenKH';
+            let email = '@email'
+            updateToSubCart();
+
+            $(document).on('click', '.add-to-cart-btn', function () {
+                const productId = $(this).data('product-id');
+                const quantity = $(this).data('quantity');
+                addToCart(productId, quantity);
+
+            });
+
+            $(document).on('click', '.remove-cart-btn', function () {
+                const productId = $(this).data('product-id');
+                removeFromCart(productId);
+            });
+
+            $(document).on('click', '.cart-button', function () {
+                updateToSubCart();
+            });
+
+            $(document).on('click', '#openRegistrationModal', function () {
+                $('.modal').modal('hide');
+                $("#registrationModal").modal("show");
+            });
+
+            $("#userChoose").on("click", () => {
+
+                if (maKhachHang && anhDD) {
+                    $('#userInfoModal #userInfoName').text(hoTenKhachHang);
+                    $('#userInfoModal #userInfoEmail').text(email);
+                    $('#userInfoModal img').attr("src", anhDD);
+                    $('#userInfoModal').modal('show');
+                } else {
+                    $('#loginModal').modal('show');
+
+                }
+            });
+
+            $(document).on('click', '#paymentPage', function () {
+                if (!checkLogged(maKhachHang)) {
+                    $('#loginModal').modal('show');
+                } else {
+                    cartIsEmpty().then(function (response) {
+                        if (!response.success) {
+                            alertMessage(response.type, response.message,);
+                        } else {
+                            window.location.replace("@Url.Action("Index", "Checkout")");
+                        }
+                    });
+                }
+            });
+
+            $('#loginForm').on('submit', function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                var formUrl = $(this).attr('action');
+
+                $.ajax({
+                    url: formUrl,
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        alertMessage(response.type, response.message);
+                        if (response.success) {
+                            $("#loginModal").modal("hide");
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500)
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.");
+                    }
+                });
+            });
+
+            $('#registrationForm').on('submit', function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                var formUrl = $(this).attr('action');
+
+                $.ajax({
+                    url: formUrl,
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        alertMessage(response.type, response.message);
+                        $("#registrationModal").modal("hide");
+                        $('.modal').modal('hide');
+                        $("#loginModal").modal("show");
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.");
+                    }
+                });
+            });
+
+        });
+    </script>
+
+</body>
+</html>

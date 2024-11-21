@@ -1,0 +1,43 @@
+
+/*---==================
+    02. Elements  
+    
+        # 13 Checkout CSS
+=================----*/
+
+.checkout-form{
+    & label{
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+}
+
+
+.payment-method{
+    padding: 20px 30px;
+    @extend %gray-bg;
+    border-radius: 10px;
+    & .form-check  {
+        & .form-check-input{
+            margin-top: 7px;
+        }
+    }
+    & > p{
+        margin-bottom: 20px;
+    }
+    & ul{
+        border: 1px solid rgba(118, 167, 19, 0.15);
+    }
+    & li{
+        position: relative;
+        padding: 15px 20px 15px 45px;
+        &:not(:last-child){
+            border-bottom: 1px solid rgba(118, 167, 19, 0.15);
+        }
+        & label{
+            margin-bottom: 0;
+            cursor: pointer;
+            display: block;
+        }
+    }
+}

@@ -1,0 +1,248 @@
+﻿@using FastFood.DB;
+@using FastFood.Models;
+@{
+    var sp = ViewBag.SanPham as SanPham;
+    var hinhAnh = FastFood_Tools.SplitAnh(sp.HinhAnh);
+    var dsDanhGia = FastFood_SanPham.GetDanhGiaTheoMaSP(sp.MaSanPham);
+    var topDanhGia = FastFood_SanPham.getKhachHangDanhGia().Where(x => x.MaSanPham == sp.MaSanPham).FirstOrDefault();
+    @model FastFood_SanPham_DanhGiaSanPham
+}
+
+<!--====== Start Page Section ======-->
+<section class="page-banner">
+    <div class="page-bg-wrapper p-r z-1 bg_cover pt-100 pb-110" style="background-image: url(/Content/public_page/assets/images/bg/page-bg.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--=== Page Banner Content ===-->
+                    <div class="page-banner-content text-center">
+                        <h1 class="page-title">@ViewBag.Title</h1>
+                        <ul class="breadcrumb-link">
+                            <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                            <li class="active">Món ăn @sp.TenSanPham</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--====== End Page Section ======-->
+<!--====== Start Menu Section ======-->
+<section class="menu-details-section pt-130 pb-65">
+    <div class="container">
+        <!--=== Menu Details Wrapper ===-->
+        <div class="menu-details-wrapper">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <!--=== Menu Image ===-->
+                    <div class="menu-image mb-50 wow fadeInLeft">
+                        <div class="overflow-hidden d-flex justify-content-center align-items-center mx-auto" style="width: 540px;height: 450px;">
+                            <img src="@(hinhAnh[0] ?? "")" alt="Product Image" width="100%" height="100%" class="object-fit-fill">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <!--=== Menu Info ===-->
+                    <div class="menu-info-content mb-50 wow fadeInRight">
+                        <h4 class="title">@sp.TenSanPham</h4>
+                        <p>@sp.MoTaNgan</p>
+                        <span class="price">
+                            @sp.GiaSauKhuyenMai VNĐ
+                            @if (sp.KhuyenMai != 0)
+                            {
+                                <span class="pre-price">
+                                    @sp.GiaGoc VNĐ
+                                </span>
+                            }
+                        </span>
+                        <div class="product-cart-variation">
+                            <ul>
+                                <li>
+                                    <div class="quantity-input">
+                                        <button class="quantity-down" data-product-id="@sp.MaSanPham"><i class="far fa-minus"></i></button>
+                                        <input class="quantity" type="text" value="1" name="quantity">
+                                        <button class="quantity-up" data-product-id="@sp.MaSanPham"><i class="far fa-plus"></i></button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="add-to-cart">
+                            <button type="button" class="theme-btn style-one add-to-cart-btn" data-product-id="@sp.MaSanPham" data-quantity="1">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-7">
+                    <!--=== Description Content Wrapper ===-->
+                    <div class="description-content-wrapper mb-30 wow fadeInDown">
+                        <!--=== Foodix Tabs ===-->
+                        <div class="foodix-tabs style-three mb-20">
+                            <ul class="nav nav-tabs wow fadeInDown" style="justify-content: left;">
+                                <li>
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#cat1">Thông tin</button>
+                                </li>
+                                <li>
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#cat2">Đánh giá</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--=== Foodix Tab Content ===-->
+                        <div class="tab-content">
+                            <!--=== Tab Pane ===-->
+                            <div class="tab-pane fade show active" id="cat1">
+                                <div class="content-box">
+                                    <p>@Html.Raw(sp.MoTaDai)</p>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="cat2">
+                                <div class="content-box">
+                                    <h5 class="title fw-bold text-uppercase">Đánh giá từ khách hàng</h5>
+                                    <div class="customer-reviews my-4" style="overflow-y: scroll;max-height: 40vh;">
+                                        @foreach (var dg in dsDanhGia)
+                                        {
+                                            <div class="review d-flex mb-3 p-3">
+                                                <div class="overflow-hidden d-flex justify-content-center align-items-center" style="width: 75px;max-height: 75px;">
+                                                    <img class="object-fit-fill rounded-circle" src="@dg.KhachHang.AnhDD" alt="Image" width="100%" height="100%" />
+                                                </div>
+                                                <div class="ps-2">
+                                                    <h6 class="italic fw-bold mb-1">@dg.KhachHang.HoDem @dg.KhachHang.TenKhachHang</h6>
+                                                    <div class="rater text-warning"></div>
+                                                    <p class="" style="">@dg.DanhGia</p>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                    <div class="card my-4 rounded-4 border-0 border-top">
+                                        <div class="card-body">
+                                            @using (Html.BeginForm("Detail", "Menu", FormMethod.Post, new { @id = "reviewForm" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <div class="form_group">
+                                                    @Html.LabelFor(x => x.TenKhachHang, new { @class = "form-label" })
+                                                    @Html.TextBoxFor(x => x.TenKhachHang, new { @class = "form-control", @required = "", @style = "padding: 6px 20px; margin-bottom: 2px;", @readonly = "" })
+                                                </div>
+                                                <div class="form_group">
+                                                    @Html.LabelFor(x => x.NoiDung, new { @class = "form-label" })
+                                                    @Html.TextAreaFor(x => x.NoiDung, new { @class = "form-control", @required = "", @style = "padding: 6px 20px; margin-bottom: 2px;" })
+                                                </div>
+                                                <div class="form_group pb-4 pt-2">
+                                                    <div class="rating text-warning" style="font-size: 30px;"></div>
+                                                </div>
+                                                <button type="submit" class="theme-btn style-one">Gửi đánh giá</button>
+                                            }
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-5">
+                    <div class="foodix-banner-wrapper">
+                        <!--=== Foodix Banner ===-->
+                        @if (topDanhGia != null)
+                        {
+                            <div class="foodix-banner-item style-three mb-30 wow fadeInUp">
+                                <div class="banner-inner-wrap bg_cover" style="background-image: url(/Content/public_page/assets/images/bg/banner-bg-4.jpg); padding: 45px 40px 55px 50px;">
+                                    <div class="banner-content d-block text-center mx-auto">
+                                        <div class="overflow-hidden d-flex justify-content-center align-items-center mx-auto" style="width: 80px;height: 80px;">
+                                            <img class="object-fit-cover rounded-circle" src="@topDanhGia.KhachHang.AnhDD" alt="Image" width="100%" height="100%" />
+                                        </div>
+                                        <p class="fw-bold text-center d-block mx-auto mt-2" style="font-size: 20px;"><i class="bi bi-quote"></i> @topDanhGia.DanhGia</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <!--=== Releted Item WRapper ===-->
+                <div class="releted-item-wrap pt-45">
+                    <!--=== Releted Title ===-->
+                    <h3 class="releted-title mb-30 wow fadeInDown">Có thể bạn sẽ thích</h3>
+                    <div class="row justify-content-center">
+                        @{
+                            foreach (var splq in FastFood_SanPham.getSanPham().OrderBy(x => Guid.NewGuid()).Take(4))
+                            {
+                                string[] anh = FastFood_Tools.SplitAnh(splq.HinhAnh);
+
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <!--=== Menu Item ===-->
+                                    <div class="menu-item related-menu-item style-four mb-30 wow fadeInUp border border-start border-end rounded-4" style="padding: 0;">
+                                        <div class="menu-image">
+                                            <div class="overflow-hidden d-flex justify-content-center align-items-center mx-auto" style="width: 300px;height: 300px;">
+                                                <img src="@((anh != null && anh.Length > 0) ? anh[0] : "")" alt="Image" width="100%" height="100%" class="object-fit-fill">
+                                            </div>
+
+                                        </div>
+
+                                        <div class="menu-info">
+                                            <div class="menu-meta">
+                                                <span class="price">
+                                                    <span class="currency">$</span>
+                                                    @splq.GiaSauKhuyenMai
+                                                    <span class="ps-1 text-decoration-line-through" style="color:slategray;">@splq.GiaGoc</span>
+
+
+                                                </span>
+                                                <span class="rating">
+                                                    <i class="fas fa-star"></i>
+                                                    <a href="#">3</a>
+
+                                                </span>
+                                            </div>
+                                            <h4 class="title"><a href="@Url.Action("Detail", "Menu", new {id = splq.MaSanPham, return_url = Request.Url.AbsoluteUri })">@splq.TenSanPham</a></h4>
+                                            <p class="text-secondary" style="font-weight: 500;">@splq.MoTaNgan</p>
+                                            <button type="button" class="add-to-cart-btn theme-btn style-two mt-3" style="padding: 12px 0;" data-product-id="15" data-quantity="1"><i class="far fa-cart-plus"></i> Thêm vào giỏ</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+</section><!--====== End Menu Section ======-->
+
+<script>
+    $(document).ready(function () {
+        $('input[name="quantity"]').on("change keyup", function () {
+            const quant = $(this).val();
+            $('.add-to-cart-btn').attr('data-quantity', quant);
+        });
+
+        $(document).on("click", ".quantity-up", function () {
+            const quantity_input = $(this).closest('.quantity-input').find('input[name="quantity"]');
+            const sl = parseInt(quantity_input.val());
+            quantity_input.val(sl).trigger("change");
+        });
+
+        $(document).on("click", ".quantity-down", function () {
+            const quantity_input = $(this).closest('.quantity-input').find('input[name="quantity"]');
+            const sl = parseInt(quantity_input.val());
+            quantity_input.val(sl).trigger("change");
+        });
+
+        var options = {
+            max_value: 5,
+            step_size: 1,
+            initial_value: 3,
+
+
+        }
+        $(".rater").rate(options);
+    });
+
+</script>
+
+<script>
+
+
+</script>

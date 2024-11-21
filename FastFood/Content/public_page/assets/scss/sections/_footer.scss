@@ -1,0 +1,139 @@
+
+/*---==================
+    04. Sections  
+        # 04 Footer CSs
+=================----*/
+
+.footer-default{
+    background-color: #121619;
+    @extend %primary-dark-bg;
+    color: rgba(255, 255, 255, 0.70);
+    & .footer-shape{
+        position: absolute;
+        z-index: -1;
+        @media #{$xm}{
+            display: none;
+        }
+        &.f-shape_one{
+            top: 120px;
+            left: 0;
+        }
+        &.f-shape_two{
+            bottom: 0;
+            left: 0;
+        }
+        &.f-shape_three{
+            bottom: 50px;
+            left: 30%;
+        }
+
+        &.f-shape_four{
+            bottom: 30px;
+            right: 47%;
+        }
+        &.f-shape_five{
+            bottom: 20px;
+            right: 30%;
+        }
+        &.f-shape_six{
+            bottom: 0;
+            right: 5px;
+        }
+
+        &.f-shape_seven{
+            bottom: 180px;
+            right: 0;
+        }
+    }
+}
+
+.footer-widget{
+    & h4.widget-title{
+        margin-bottom: 15px;
+        @extend %white-color;
+        text-transform: uppercase;
+    }
+    & .widget-content{
+        & p{
+            margin-bottom: 20px;
+        }
+    }
+    &.footer-about-widget{
+        & ul.social-link{
+            & li{
+                &:not(:last-child){
+                    margin-right: 10px;
+                }
+                & a{
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    border: 1px solid rgba(255, 255, 255, 0.10);
+                    @extend %flex-center;
+                    &:hover{
+                        @extend %white-color;
+                        @extend %primary-bg;
+                        border-color: transparent;
+                    }
+                }
+            }
+        }
+    }
+    &.footer-contact-widget{
+        padding-left: 30px;
+        @media #{$lm}{
+            padding-left: 0;
+        }
+        & .widget-content{
+            & ul.address-list{
+                & li{
+                    &:not(:last-child){
+                        margin-bottom: 10px;
+                    }
+                    & a{
+                        &:hover{
+                            @extend %primary-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    &.footer-nav-widget{
+        padding-left: 50px;
+        @media #{$lm}{
+            padding-left: 0;
+        }
+        & .widget-content{
+            & ul.widget-menu{
+                & li {
+                    &:not(:last-child){
+                        margin-bottom: 10px;
+                    }
+                    & a{
+                        font-weight: 500;
+                        &:hover{
+                            @extend %primary-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    &.footer-opening-widget{
+        & .widget-content{
+            & ul.opening-schedule{
+                & li{
+                    &:not(:last-child){
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.copyright-area{
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px 0;
+}

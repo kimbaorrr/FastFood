@@ -1,0 +1,117 @@
+
+/*---==================
+    03. Post  
+        # 02 Sidebar CSs
+=================----*/
+
+.sidebar-widget-area{
+    & .sidebar-widget{
+        padding: 23px 30px 30px;
+        background-color: #F5F5F5;
+        border-radius: 16px;
+        & h4.sidebar-title{
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        &.sidebar-search-widget{
+            .widget-content{
+                & form{
+                    & input{
+                        border-radius: 8px;
+                        width: 100%;
+                        border:none;
+                        @extend %white-bg;
+                        padding: 12px 20px;
+                        font-size: 18px;
+                    }
+                    & .search-btn{
+                        @extend %heading-color;
+                        position: absolute;
+                        top: 15px;
+                        right: 20px;
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
+        &.sidebar-post-widget{
+            & .recent-post-list{
+                & .post-thumbnail-content{
+                    display: flex;
+                    align-items: center;
+                    &:not(:last-child){
+                        margin-bottom: 30px;
+                    }
+                    & img{
+                        flex: 0 0 auto;
+                        margin-right: 20px;
+                        object-fit: contain;
+                        width: 95px;
+                        height: 95px;
+                    }
+                    & .post-title-date{
+                        & h6{
+                            font-weight: 500;
+                            line-height: 25px;
+                            &:hover{
+                                @extend %primary-color;
+                            }
+                        }
+                        & span.posted-on{
+                            font-weight: 600;
+                            color: rgba(0, 0, 0, 0.60);
+                        }
+                    }
+                }
+            }
+        }
+        &.sidebar-category-widget{
+            padding: 23px 30px 25px;
+            & .widget-content{
+                & ul{
+                    & li{
+                        &:not(:last-child){
+                            & a{
+                                padding-bottom: 15px;
+                                border-bottom: 1px solid #DDD;
+                                margin-bottom: 15px;
+                            }
+                        }
+                        & a{
+                            display: flex;
+                            align-items: center;
+                            font: 600 18px $body-font;
+                            &:hover{
+                                @extend %primary-color;
+                            }
+                            & i{
+                                margin-right: 10px;
+                            }
+                            & span{
+                                margin-left: auto;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        &.sidebar-tag-widget{
+            padding: 23px 30px 20px;
+            & .tagcloud{
+                & a{
+                    padding: 13px 20px;
+                    border-radius: 8px;
+                    @extend %white-bg;
+                    font: 600 18px $heading-font;
+                    text-transform: uppercase;
+                    margin-bottom: 10px;
+                    margin-right: 5px;
+                    &:hover{
+                        @extend %primary-bg;
+                        @extend %white-color;
+                    }
+                }
+            }
+        }
+    }
+}

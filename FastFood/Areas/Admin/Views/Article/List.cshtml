@@ -1,0 +1,161 @@
+﻿@using FastFood.DB;
+@{
+    var dsBaiViet = ViewBag.BaiViet as IEnumerable<BaiViet>;
+}
+
+@Html.AntiForgeryToken()
+<!-- Start Container Fluid -->
+<div class="container-xxl">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="d-flex card-header justify-content-between align-items-center">
+                    <div>
+                        <h4 class="card-title">@ViewBag.Title</h4>
+                    </div>
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle btn btn-sm btn-outline-light rounded" data-bs-toggle="dropdown" aria-expanded="false">
+                            This Month
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <!-- item-->
+                            <a href="#!" class="dropdown-item">Download</a>
+                            <!-- item-->
+                            <a href="#!" class="dropdown-item">Export</a>
+                            <!-- item-->
+                            <a href="#!" class="dropdown-item">Import</a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover table-centered">
+                            <thead class="bg-light-subtle">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Người tạo</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Ngày cập nhật</th>
+                                    <th>Ngày duyệt</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var bv in dsBaiViet)
+                                {
+                                    <tr>
+                                        <td><a href="@Url.Action("Detail", "Article", new {area = "Admin", id = bv.MaBaiViet, return_url = Request.Url.AbsoluteUri })">@bv.MaBaiViet</a></td>
+                                        <td>@bv.NhanVien.HoDem @bv.NhanVien.TenNhanVien</td>
+                                        <td>@bv.TieuDe</td>
+                                        <td>@bv.NgayTao</td>
+                                        <td>@bv.NgayCapNhat</td>
+                                        <td>@bv.NgayDuyet</td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="@Url.Action("Detail", "Article", new {area = "Admin", id = bv.MaBaiViet, return_url = Request.Url.AbsoluteUri })" class="btn btn-light btn-sm"><iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon></a>
+                                                <a href="#" class="btn btn-soft-danger btn-sm btn-delete" data-id="@bv.MaBaiViet">
+                                                    <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table-responsive -->
+                </div>
+                <div class="card-footer border-top">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end mb-0">
+                            <!-- Previous Page Link -->
+                            @if (ViewBag.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("List", "Article", new { area = "Admin", page = ViewBag.CurrentPage - 1 })">
+                                        Trước đây
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Trước đây</span>
+                                </li>
+                            }
+
+                            <!-- Page Numbers -->
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@i</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("List", "Article", new { area = "Admin", page = i })">@i</a>
+                                    </li>
+                                }
+                            }
+
+                            <!-- Next Page Link -->
+                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("List", "Article", new { area = "Admin", page = ViewBag.CurrentPage + 1 })">
+                                        Tiếp theo
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Tiếp theo</span>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- End Container Fluid -->
+
+<script>
+    function deleteArticle(articleId) {
+        const token = $('input[name="__RequestVerificationToken"]').val();
+        $.ajax({
+            url: "@Url.Action("Delete", "Article", new {area = "Admin"})",
+            type: "POST",
+            data: {
+                articleId: articleId,
+                __RequestVerificationToken: token
+
+            },
+            success: function (response) {
+                alertMessage(response.message, response.type);
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+
+            },
+            error: function (xhr) {
+                console.log("Lỗi xóa article !");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $(".btn-delete").on("click", function () {
+            const articleId = $(this).data("id");
+            deleteArticle(articleId);
+        });
+    })
+</script>

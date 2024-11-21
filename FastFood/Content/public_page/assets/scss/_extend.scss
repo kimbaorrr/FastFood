@@ -1,0 +1,78 @@
+
+/* Color */ 
+
+%primary-color{
+    color: $primary-color;
+}
+%secondary-color{
+    color: $secondary-color;
+}
+%heading-color{
+    color: $heading-color;
+}
+%white-color{
+    color: $white-color;
+}
+%orange-color{
+    color: $orange-color;
+}
+
+/* Background Color */ 
+
+%primary-bg{
+    background-color: $primary-color
+}
+%secondary-bg{
+    background-color: $secondary-color;;
+}
+%primary-dark-bg{
+    background-color: $heading-color;
+}
+%white-bg{
+    background-color: $white-color;
+}
+%gray-bg{
+    background-color: $gray-color;
+}
+%gray-light-bg{
+    background-color: $gray-light-color;
+}
+%orange-bg{
+    background-color: $orange-color;
+}
+
+
+/* Typrography */ 
+
+%h1{
+    font-size: 80px;
+    line-height: 90px;
+}
+%h2{
+    font-size: 60px;
+    line-height: 1;
+}
+%h3{
+    font-size: 27px;
+    line-height: 1.1;
+}
+%h4{
+    font-size: 24px;
+    line-height: 1.2;
+}
+%h5{
+    font-size: 20px;
+    line-height: 1;
+}
+%h6{
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* Flex Center */ 
+
+%flex-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -1,0 +1,280 @@
+﻿@using FastFood.DB;
+@{
+    var dsBaiViet = ViewBag.BaiViet as IEnumerable<BaiViet>;
+}
+
+@Html.AntiForgeryToken()
+<!-- Start Container Fluid -->
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center gap-1">
+                    <h4 class="card-title flex-grow-1">@ViewBag.Title</h4>
+
+                    <div class="d-flex gap-2 mb-2">
+                        <button id="approve-selected" class="btn btn-success d-none btn-sm">Phê duyệt được chọn</button>
+                        <button id="reject-selected" class="btn btn-danger d-none btn-sm">Từ chối được chọn</button>
+                    </div>
+
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-expanded="false">
+                            This Month
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <!-- item-->
+                            <a href="#!" class="dropdown-item">Download</a>
+                            <!-- item-->
+                            <a href="#!" class="dropdown-item">Export</a>
+                            <!-- item-->
+                            <a href="#!" class="dropdown-item">Import</a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover table-centered">
+                            <thead class="bg-light-subtle">
+                                <tr>
+                                    <th style="width: 20px;">
+                                        <div class="form-check ms-1">
+                                            <input type="checkbox" class="form-check-input" id="select-all">
+                                            <label class="form-check-label" for="select-all"></label>
+                                        </div>
+                                    </th>
+                                    <th>Tiêu đề</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Ngày cập nhật</th>
+                                    <th>Đã duyệt ?</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var bv in dsBaiViet)
+                                {
+                                    string[] anhSplitted = FastFood_Tools.SplitAnh(bv.HinhAnh);
+                                    <tr>
+                                        <td>
+                                            @{
+                                                if (!bv.DaDuyet)
+                                                {
+                                                    <div class="form-check ms-1">
+                                                        <input type="checkbox" class="form-check-input article-checkbox" data-id="@bv.MaBaiViet">
+                                                        <label class="form-check-label">&nbsp;</label>
+                                                    </div>
+                                                }
+                                            }
+
+                                        </td>
+                                        <td>@bv.TieuDe</td>
+                                        <td> @bv.NgayTao</td>
+                                        <td> @bv.NgayCapNhat</td>
+                                        <td>
+                                            @{
+                                                if (bv.DaDuyet)
+                                                {
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" checked="">
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox">
+                                                    </div>
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @{
+                                                if (!bv.DaDuyet)
+                                                {
+                                                    <div class="d-flex gap-2">
+                                                        <button type="button" class="btn btn-green btn-sm action-btn" data-id="@bv.MaBaiViet" data-action="accept">
+                                                            Phê duyệt
+                                                        </button>
+                                                        <button type="button" class="btn btn-red btn-sm action-btn" data-id="@bv.MaBaiViet" data-action="refuse">
+                                                            Từ chối
+                                                        </button>
+                                                    </div>
+                                                }
+                                            }
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table-responsive -->
+                </div>
+                <div class="card-footer border-top">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end mb-0">
+                            <!-- Previous Page Link -->
+                            @if (ViewBag.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Approve", "Article", new { area = "Admin", page = ViewBag.CurrentPage - 1 })">
+                                        Trước đây
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Trước đây</span>
+                                </li>
+                            }
+
+                            <!-- Page Numbers -->
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@i</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Approve", "Article", new { area = "Admin", page = i })">@i</a>
+                                    </li>
+                                }
+                            }
+
+                            <!-- Next Page Link -->
+                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Approve", "Article", new { area = "Admin", page = ViewBag.CurrentPage + 1 })">
+                                        Tiếp theo
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Tiếp theo</span>
+                                </li>
+                            }
+                        </ul>
+
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!-- End Container Fluid -->
+
+<script>
+    $(document).ready(function () {
+        const token = $('input[name="__RequestVerificationToken"]').val();
+
+        $('.action-btn').click(function () {
+            const articleId = $(this).data('id');
+            const action = $(this).data('action');
+            const employeeId = @Session["MaNhanVien"];
+            $.ajax({
+                url: '@Url.Action("Approve", "Article", new {area = "Admin"})',
+                method: 'POST',
+                data: {
+                    articleId: articleId,
+                    employeeId: employeeId,
+                    action: action,
+                    __RequestVerificationToken: token
+                },
+                success: function (response) {
+                    alertMessage(response.message, response.type);
+                    if (response.success) {
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
+                    }
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi khi thực hiện yêu cầu.');
+                }
+            });
+        });
+
+        $('#select-all').on('change', function () {
+            $('.article-checkbox').prop('checked', this.checked);
+            toggleActionButtons();
+        });
+
+        $('.article-checkbox').on('change', function () {
+            toggleActionButtons();
+        });
+
+        function toggleActionButtons() {
+            const anyChecked = $('.article-checkbox:checked').length > 0;
+            $('#approve-selected, #reject-selected').toggleClass('d-none', !anyChecked);
+        }
+
+        $('#approve-selected').on('click', function () {
+            let selectedIds = [];
+            $('.article-checkbox:checked').each(function () {
+                let row = $(this).closest('tr');
+                if (row.find('.action-btn').length) {
+                    selectedIds.push($(this).data('id'));
+                }
+            });
+
+            if (selectedIds.length > 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ApproveMultiple", "Article", new {area = "Admin"})',
+                    data: { articleIds: selectedIds, employeeId: @Session["MaNhanVien"], action: 'accept', __RequestVerificationToken: token },
+                    success: function (response) {
+                        alertMessage(response.message, response.type);
+                        if (response.success) {
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        }
+                    },
+                    error: function () {
+                        alert('Đã xảy ra lỗi khi thực hiện yêu cầu.');
+                    }
+                });
+            }
+        });
+
+        $('#reject-selected').on('click', function () {
+            let selectedIds = [];
+            $('.article-checkbox:checked').each(function () {
+                let row = $(this).closest('tr');
+                if (row.find('.action-btn').length) {
+                    selectedIds.push($(this).data('id'));
+                }
+            });
+
+            if (selectedIds.length > 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ApproveMultiple", "Article", new {area = "Admin"})',
+                    data: { articleIds: selectedIds, employeeId: @Session["MaNhanVien"], action: 'refuse', __RequestVerificationToken: token },
+                    success: function (response) {
+                        alertMessage(response.message, response.type);
+                        if (response.success) {
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        }
+                    },
+                    error: function () {
+                        alert('Đã xảy ra lỗi khi thực hiện yêu cầu.');
+                    }
+                });
+            }
+        });
+
+        
+    });
+</script>

@@ -1,0 +1,61 @@
+﻿@using FastFood.Models;
+@{
+    @model FastFood_ThanhToan_KetQua
+}
+
+<!--====== Start Page Section ======-->
+<section class="page-banner">
+    <div class="page-bg-wrapper p-r z-1 bg_cover pt-100 pb-110" style="background-image: url(/Content/public_page/assets/images/bg/page-bg.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--=== Page Banner Content ===-->
+                    <div class="page-banner-content text-center">
+                        <h1 class="page-title">@ViewBag.Title</h1>
+                        <ul class="breadcrumb-link">
+                            <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                            <li class="active">@ViewBag.Title</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--====== End Page Section ======-->
+<!--====== Start Checkout Section ======-->
+<section class="checkout-section pt-130 pb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-title text-center">KẾT QUẢ THANH TOÁN</h3>
+                <div class="row justify-content-center">
+                    <div class="col-5">
+                        <table class="table mt-4">
+                            <tr>
+                                <td><strong>@Html.LabelFor(m => m.MaDonHang, new { @class = "control-label" })</strong></td>
+                                <td>@Html.DisplayFor(m => m.MaDonHang, new { @class = "form-control" })</td>
+                            </tr>
+                            <tr>
+                                <td><strong>@Html.LabelFor(m => m.TongThanhToan, new { @class = "control-label" })</strong></td>
+                                <td>@Html.DisplayFor(m => m.TongThanhToan, new { @class = "form-control" })</td>
+                            </tr>
+                            <tr>
+                                <td><strong>@Html.LabelFor(m => m.MaGiaoDich, new { @class = "control-label" })</strong></td>
+                                <td>@Html.DisplayFor(m => m.MaGiaoDich, new { @class = "form-control" })</td>
+                            </tr>
+                            <tr>
+                                <td><strong>@Html.LabelFor(m => m.TrangThaiThanhToan, new { @class = "control-label" })</strong></td>
+                                <td>@Html.DisplayFor(m => m.TrangThaiThanhToan, new { @class = "form-control" })</td>
+                            </tr>
+                            <tr>
+                                <td><strong>@Html.LabelFor(m => m.TrangThaiGiaoDich, new { @class = "control-label" })</strong></td>
+                                <td>@Html.DisplayFor(m => m.TrangThaiGiaoDich, new { @class = "form-control" })</td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--====== End Checkout Section ======-->

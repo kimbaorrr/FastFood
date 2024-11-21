@@ -1,0 +1,130 @@
+
+
+/*---========================
+        01. Base css 
+=======================----*/
+
+/* Base CSS */
+
+:root {
+    --primary-color: #BF1109;
+    --secondary-color: #14A83A;
+    --primary-dark-color: #0C0C1C;
+    --orange-color: #FFB200;
+    --white-color: #ffffff;
+    --gray-color: #F7F1E1;
+    --gray-light-color: #F5F5F5;
+    --text-color: #484848;
+    --heading-font: 'Barlow Condensed', sans-serif;
+    --body-font: 'Hanken Grotesk', sans-serif;
+}
+
+html{
+    font-size: 100%;
+}
+*{
+    margin: 0;
+    padding: 0;
+    @include box-sizing (border-box);
+}
+a{
+    color: inherit;
+    text-decoration: none;
+    @include transition(.3s);
+    &:hover,&:focus{
+        color: inherit;
+        text-decoration: none;
+    }
+}
+a:focus,
+input:focus,
+textarea:focus,
+button:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+i,
+span,
+a{
+    display: inline-block;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+    font-weight: 700;
+    margin: 0px;
+    font-family: $heading-font;
+    @extend %heading-color;
+}
+h1{
+    @extend %h1;
+}
+h2{
+    @extend %h2;
+}
+h3{
+    @extend %h3;
+}
+h4{
+    @extend %h4;
+}
+h5{
+    @extend %h5;
+}
+h6{
+    @extend %h6;
+}
+ul,ol {
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+}
+p{
+    margin: 0px;
+}
+input,textarea{
+    display: inherit;
+}
+button{
+    border: none;
+}
+label{
+    margin-bottom: 0;
+}
+iframe{
+    width: 100%;
+    border: none;
+    display: inherit;
+}
+img{
+    max-width: 100%;
+}
+body {
+    font-weight: normal;
+    font-style: normal;
+    font-weight: 400;
+    color: $text-color;
+    font-family: $body-font;
+    font-size: 16px;
+    line-height: 30px;
+    overflow-x: hidden;
+    
+}
+
+/*===== Scrollbar =====*/
+
+::-webkit-scrollbar {
+    width: 7px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+   
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color:#010101 ;
+}
