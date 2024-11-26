@@ -1,11 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FastFood.Areas.Admin.Models
+namespace FastFood.Models
 {
-    public class FastFood_KhachHangDangNhap
-    {
-
-    }
     public class FastFood_KhachHangDangNhap_DangKiMoi
     {
         [Display(Name = "Họ đệm")]

@@ -1,5 +1,5 @@
-﻿using FastFood.Areas.Admin.Models;
-using FastFood.DB;
+﻿using FastFood.DB;
+using FastFood.Models;
 using System;
 using System.Linq;
 using System.Web;
@@ -7,16 +7,17 @@ using System.Web.Mvc;
 
 namespace FastFood.Controllers
 {
+    [RoutePrefix("khach-hang")]
     public class AccountController : Controller
     {
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("dang-nhap")]
         public ActionResult Login(FastFood_NhanVienDangNhap a)
         {
             if (!ModelState.IsValid)
                 return JsonMessage(false, "Thông tin không hợp lệ!");
 
-            string matKhauDaBam = FastFood_Tools.HashPassword(a.MatKhau);
             KhachHangDangNhap queryData = FastFood_KhachHang.getKhachHangDangNhap().FirstOrDefault(x => x.TenDangNhap.Equals(a.TenDangNhap));
 
             if (queryData == null || !FastFood_Tools.CheckPassword(a.MatKhau, queryData.MatKhau))
@@ -48,6 +49,7 @@ namespace FastFood.Controllers
         }
 
         [HttpGet]
+        [Route("dang-xuat")]
         public ActionResult Logout()
         {
             Session.Clear();
@@ -56,6 +58,7 @@ namespace FastFood.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("dang-ki")]
         public ActionResult Register(FastFood_KhachHangDangNhap_DangKiMoi a)
         {
             if (!ModelState.IsValid)

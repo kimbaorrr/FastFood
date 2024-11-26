@@ -1,11 +1,10 @@
 ﻿using System;
-
-namespace FastFood
+namespace FastFood.Models
 {
     /// <summary>
     /// Lớp này cung cấp các phương thức tiện ích liên quan đến mật khẩu và xử lý chuỗi.
     /// </summary>
-    public class FastFood_Tools
+    public static class FastFood_Tools
     {
         /// <summary>
         /// Mã hóa mật khẩu bằng cách sử dụng thuật toán bcrypt.

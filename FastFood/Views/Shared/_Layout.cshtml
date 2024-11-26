@@ -1,7 +1,7 @@
 ﻿@using FastFood.Models;
-@using FastFood.Areas.Admin.Models;
+@using FastFood.Models;
 @{
-    var thongTinCuaHang = FastFood_CuaHang.getThongTin();
+    var thongTinCuaHang = FastFood_CuaHang.GetThongTin();
     var dsKhachHang = FastFood_KhachHang.getKhachHang().AsEnumerable();
     var maKH = Convert.ToInt32(Session["KH_MaKhachHang"] as string);
     var anhDD = @Session["KH_AnhDD"] as string;
@@ -343,7 +343,7 @@
                             <div class="widget-content">
                                 <h4 class="widget-title">Giờ mở cửa</h4>
                                 <ul class="opening-schedule">
-                                    @foreach (var op in FastFood_CuaHang.getGioLamViec())
+                                    @foreach (var op in FastFood_CuaHang.GetGioLamViec())
                                     {
                                         <li>@op.NgayLamViec: <span>@op.ThoiGianLamViec </span></li>
                                     }

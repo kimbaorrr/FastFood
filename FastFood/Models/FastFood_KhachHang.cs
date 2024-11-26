@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FastFood.Areas.Admin.Models
+namespace FastFood.Models
 {
     /// <summary>
     /// Lớp này đại diện cho khách hàng trong hệ thống cửa hàng thức ăn nhanh, 
@@ -125,7 +125,7 @@ namespace FastFood.Areas.Admin.Models
                 NgayTao = kh.NgayTao,
                 ThoiGianGanBo = (DateTime.Now - kh.NgayTao).Days,
                 NgaySinh = kh.NgaySinh,
-                SoLanMua = kh.DonHangs.Count(),
+                SoLanMua = kh.DonHangs.Count,
                 TongHoaDon = kh.DonHangs.Sum(x => x.TongTienSanPham),
                 HoaDonLonNhat = kh.DonHangs?.Max(x => x.TongTienSanPham) ?? 0,
                 LanMuaGanNhat = kh.DonHangs.OrderByDescending(dh => dh.NgayDat).Select(x => x.NgayDat).FirstOrDefault(),

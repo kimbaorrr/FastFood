@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace FastFood.Areas.Admin.Models
+namespace FastFood.Models
 {
     /// <summary>
     /// Lớp FastFood_NhanVien đại diện cho thông tin của nhân viên trong hệ thống quản lý thức ăn nhanh.

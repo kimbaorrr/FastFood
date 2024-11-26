@@ -1,5 +1,5 @@
-﻿using FastFood.Areas.Admin.Models;
-using FastFood.DB;
+﻿using FastFood.DB;
+using FastFood.Models;
 using System;
 using System.Linq;
 using System.Web.Mvc;
@@ -85,6 +85,8 @@ namespace FastFood.Areas.Admin.Controllers
                     a.MaNguyenLieu = nlm.MaNguyenLieu;
                 }
                 NguyenLieu nl = e.NguyenLieux.FirstOrDefault(x => x.MaNguyenLieu == a.MaNguyenLieu);
+                if (nl == null)
+                    return HttpNotFound();
                 nl.SoLuongTonKho = nl.SoLuongTonKho + a.SoLuongNhap;
                 NhapKho nk = new NhapKho()
                 {

@@ -2,10 +2,6 @@
 
 namespace FastFood.Models
 {
-    public class FastFood_ThanhToan
-    {
-    }
-
     public class FastFood_ThanhToan_TomTatThanhToan
     {
         public int TongTienSanPham { get; set; } = 0;

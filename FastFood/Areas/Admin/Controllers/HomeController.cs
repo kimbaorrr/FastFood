@@ -1,4 +1,4 @@
-﻿using FastFood.Areas.Admin.Models;
+﻿using FastFood.Models;
 using System.Linq;
 using System.Web.Mvc;
 using X.PagedList.Extensions;

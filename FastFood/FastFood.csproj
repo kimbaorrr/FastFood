@@ -159,16 +159,6 @@
     <Compile Include="Areas\Admin\Controllers\OrderController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
     <Compile Include="Areas\Admin\Controllers\SessionController.cs" />
-    <Compile Include="Areas\Admin\Models\FastFood_BaiViet.cs" />
-    <Compile Include="Areas\Admin\Models\FastFood_DanhMuc.cs" />
-    <Compile Include="Areas\Admin\Models\FastFood_DonHang.cs" />
-    <Compile Include="Areas\Admin\Models\FastFood_KhachHang.cs" />
-    <Compile Include="Areas\Admin\Models\FastFood_KhachHangDangNhap.cs" />
-    <Compile Include="Areas\Admin\Models\FastFood_NguyenLieu.cs" />
-    <Compile Include="Areas\Admin\Models\FastFood_NhanVien.cs" />
-    <Compile Include="Areas\Admin\Models\FastFood_NhanVienDangNhap.cs" />
-    <Compile Include="Areas\Admin\Models\FastFood_SanPham.cs" />
-    <Compile Include="Areas\Admin\Models\FastFood_Tools.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
@@ -177,7 +167,6 @@
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
-    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="DB\BaiViet.cs">
       <DependentUpon>FastFoodModel.tt</DependentUpon>
@@ -262,9 +251,17 @@
     </Compile>
     <Compile Include="Models\FastFood_BaiViet.cs" />
     <Compile Include="Models\FastFood_CuaHang.cs" />
+    <Compile Include="Models\FastFood_DanhMuc.cs" />
+    <Compile Include="Models\FastFood_DonHang.cs" />
     <Compile Include="Models\FastFood_GioHang.cs" />
+    <Compile Include="Models\FastFood_KhachHang.cs" />
+    <Compile Include="Models\FastFood_KhachHangDangNhap.cs" />
+    <Compile Include="Models\FastFood_NguyenLieu.cs" />
+    <Compile Include="Models\FastFood_NhanVien.cs" />
+    <Compile Include="Models\FastFood_NhanVienDangNhap.cs" />
     <Compile Include="Models\FastFood_SanPham.cs" />
     <Compile Include="Models\FastFood_ThanhToan.cs" />
+    <Compile Include="Models\FastFood_Tools.cs" />
     <Compile Include="Models\VnPayLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -2444,7 +2441,6 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />

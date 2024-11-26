@@ -11,10 +11,6 @@ namespace FastFood.Controllers
             {
                 Session["GioHang"] = new FastFood_GioHang();
             }
-            //if (string.IsNullOrEmpty(Session["MaKhachHang"] as string))
-            //{
-            //    filterContext.Result = RedirectToAction("", "Account", new { area = "Admin" });
-            //}
         }
 
         /// <summary>

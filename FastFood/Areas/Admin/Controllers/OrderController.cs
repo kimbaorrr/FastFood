@@ -1,5 +1,5 @@
-﻿using FastFood.Areas.Admin.Models;
-using FastFood.DB;
+﻿using FastFood.DB;
+using FastFood.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -76,8 +76,8 @@ namespace FastFood.Areas.Admin.Controllers
                 TongTienSanPham = dh.TongTienSanPham,
                 TongThanhToan = dh.TongThanhToan,
                 MaTrangThaiThanhToan = dh.ThanhToans.Select(x => x.TrangThaiThanhToan).FirstOrDefault(),
-                TrangThaiThanhToan = dh.ThanhToans.Select(x => x.TrangThaiThanhToan).FirstOrDefault() == false ? "Chưa thanh toán" : "Đã thanh toán",
-                TongSanPham = dh.ChiTietDonHangs.Count(),
+                TrangThaiThanhToan = dh.ThanhToans.Select(x => x.TrangThaiThanhToan).FirstOrDefault() ? "Đã thanh toán" : "Chưa thanh toán",
+                TongSanPham = dh.ChiTietDonHangs.Count,
                 PhiVanChuyen = dh.PhiVanChuyen,
                 PhuongThucVanChuyen = dh.PhuongThucVanChuyen,
                 ThoiGianGiaoHangDuKien = dh.ThoiGianGiaoHangDuKien,

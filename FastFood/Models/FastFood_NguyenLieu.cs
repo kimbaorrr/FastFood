@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace FastFood.Areas.Admin.Models
+namespace FastFood.Models
 {
     /// <summary>
     /// Lớp quản lý các nguyên liệu trong hệ thống thức ăn nhanh.
     /// </summary>
-    public class FastFood_NguyenLieu
+    public static class FastFood_NguyenLieu
     {
         /// <summary>
         /// Lấy ra đối tượng context từ cơ sở dữ liệu.
@@ -64,7 +64,7 @@ namespace FastFood.Areas.Admin.Models
         /// <returns>Danh sách nguyên liệu cơ bản.</returns>
         public static IEnumerable<FastFood_NguyenLieu_Get> getAll()
         {
-            return getNguyenLieu().Select(x => new FastFood_NguyenLieu_Get { MaNguyenLieu = x.MaNguyenLieu, TenNguyenLieu = x.TenNguyenLieu, MoTa = x.MoTa }) ?? Enumerable.Empty<FastFood_NguyenLieu_Get>();
+            return getNguyenLieu().Select(x => new FastFood_NguyenLieu_Get { MaNguyenLieu = x.MaNguyenLieu, TenNguyenLieu = x.TenNguyenLieu, MoTa = x.MoTa });
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace FastFood.Areas.Admin.Models
                 MoTa = x.NguyenLieu.MoTa,
                 SoLuongCan = x.SoLuongCan,
                 DonViTinh = x.DonViTinh
-            }) ?? Enumerable.Empty<FastFood_NguyenLieu_GetByProductID>();
+            });
         }
     }
 

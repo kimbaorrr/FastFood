@@ -1,5 +1,5 @@
-﻿using FastFood.Areas.Admin.Models;
-using FastFood.DB;
+﻿using FastFood.DB;
+using FastFood.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -63,6 +63,7 @@ namespace FastFood.Areas.Admin.Controllers
         /// <param name="duLieuGuiDi">Dữ liệu gửi lên từ form.</param>
         /// <returns>Trả về kết quả thực thi (thành công hay lỗi).</returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(FastFood_SanPham_ThemSanPham_Post duLieuGuiDi)
         {
             Tuple<List<string>, ActionResult> isValidFiles = uploadFile(duLieuGuiDi.HinhAnh);
@@ -87,7 +88,7 @@ namespace FastFood.Areas.Admin.Controllers
                     KhuyenMai = duLieuGuiDi.SanPham.KhuyenMai,
                     MoTaNgan = duLieuGuiDi.SanPham.MoTaNgan,
                     MoTaDai = duLieuGuiDi.SanPham.MoTaDai,
-                    HinhAnh = string.Join(",", dsHinhAnh) ?? "",
+                    HinhAnh = string.Join(",", dsHinhAnh),
                     NgayTao = DateTime.Now,
                     NgayCapNhat = null,
                     NguoiTao = duLieuGuiDi.SanPham.MaNguoiTao,
@@ -98,7 +99,7 @@ namespace FastFood.Areas.Admin.Controllers
                 e.SanPhams.Add(sp);
                 e.SaveChanges();
 
-                if (duLieuGuiDi.DanhSachNguyenLieu != null && duLieuGuiDi.DanhSachNguyenLieu.Count() > 0)
+                if (duLieuGuiDi.DanhSachNguyenLieu != null && duLieuGuiDi.DanhSachNguyenLieu.Any())
                 {
                     foreach (FastFood_SanPham_NguyenLieuDaChon nguyenLieu in duLieuGuiDi.DanhSachNguyenLieu)
                     {
@@ -215,7 +216,7 @@ namespace FastFood.Areas.Admin.Controllers
                 sp.DaDuyet = false;
                 sp.NguoiDuyet = null;
                 sp.NgayDuyet = null;
-                sp.HinhAnh = string.Join(",", dsHinhAnh) ?? "";
+                sp.HinhAnh = string.Join(",", dsHinhAnh);
 
                 if (duLieuGuiDi.DanhSachNguyenLieu == null || !duLieuGuiDi.DanhSachNguyenLieu.Any())
                     return JsonMessage(false, "Vui lòng chọn ít nhất 1 nguyên liệu !");
@@ -234,7 +235,7 @@ namespace FastFood.Areas.Admin.Controllers
                 foreach (FastFood_SanPham_NguyenLieuDaChon nguyenLieu in duLieuGuiDi.DanhSachNguyenLieu)
                 {
                     int maNguyenLieu = Convert.ToInt32(nguyenLieu.MaNguyenLieu);
-                    SanPham_NguyenLieu existingIngredient = nguyenLieuHienCoTrongDb.FirstOrDefault(x => x.MaNguyenLieu == maNguyenLieu);
+                    SanPham_NguyenLieu existingIngredient = nguyenLieuHienCoTrongDb.Find(x => x.MaNguyenLieu == maNguyenLieu);
 
                     if (existingIngredient != null)
                     {
@@ -468,7 +469,7 @@ namespace FastFood.Areas.Admin.Controllers
 
             List<string> dsHinhAnh = new List<string>();
 
-            if (hinhAnh == null || hinhAnh.Count() == 0)
+            if (hinhAnh == null || !hinhAnh.Any())
                 return Tuple.Create<List<string>, ActionResult>(dsHinhAnh, null);
 
             if (hinhAnh.Count() > 5)

@@ -1,13 +1,14 @@
-﻿@using FastFood.Areas.Admin.Models;
+﻿@using FastFood.Models;
 @{
     @model FastFood_SanPham_ThemSanPham
 }
 
 <!-- Start Container Fluid -->
 <div class="container-xxl">
+    @Html.AntiForgeryToken()
     @using (Html.BeginForm("Create", "Product", FormMethod.Post, new { area = "Admin", id = "productForm" }))
     {
-        @Html.AntiForgeryToken()
+
         @Html.TextBoxFor(x => x.MaNguoiTao, new { @hidden = "" })
         <div class="row">
             <div class="col-xl-3 col-lg-4">
@@ -269,8 +270,10 @@
             formData.append(`SanPham.${item.name}`, item.value);
         });
 
-        const antiForgeryToken = $('#productForm input[name="__RequestVerificationToken"]').val();
+        const antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
         formData.append("__RequestVerificationToken", antiForgeryToken);
+
+
 
         $('#selected-ingredients-list .list-group-item').each(function () {
             const maNguyenLieuCode = $(this).attr('id').split('-')[1];
@@ -287,6 +290,10 @@
         for (let i = 0; i < hinhAnh.length; i++) {
             formData.append("HinhAnh", hinhAnh[i]);
         }
+
+        formData.forEach((value, key) => {
+            console.log(key, value);
+        });
 
         $.ajax({
             url: '@Url.Action("Create", "Product", new { area = "Admin" })',

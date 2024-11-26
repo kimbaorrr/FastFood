@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace FastFood.Areas.Admin.Models
+namespace FastFood.Models
 {
     /// <summary>
     /// Lớp FastFood_DanhMuc quản lý các danh mục trong hệ thống cửa hàng thức ăn nhanh.
     /// </summary>
-    public class FastFood_DanhMuc
+    public static class FastFood_DanhMuc
     {
         /// <summary>
         /// Khởi tạo một đối tượng mới của FastFoodEntities để truy xuất dữ liệu.
@@ -49,8 +49,8 @@ namespace FastFood.Areas.Admin.Models
         public static IEnumerable<DanhMuc> getDanhMucNhieuSanPham(int take)
         {
             return getDanhMuc()
-                .OrderByDescending(x => x.SanPhams.Count())
-                .Take(take) ?? Enumerable.Empty<DanhMuc>();
+                .OrderByDescending(x => x.SanPhams.Count)
+                .Take(take);
         }
     }
 

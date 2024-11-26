@@ -2,9 +2,10 @@
 
 namespace FastFood.Controllers
 {
+    [RoutePrefix("ve-chung-toi")]
     public class AboutController : SessionController
     {
-        // GET: About
+        [Route("")]
         public ActionResult Index()
         {
             ViewBag.Title = "Về chúng tôi";

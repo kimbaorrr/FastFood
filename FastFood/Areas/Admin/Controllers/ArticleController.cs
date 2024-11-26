@@ -1,5 +1,5 @@
-﻿using FastFood.Areas.Admin.Models;
-using FastFood.DB;
+﻿using FastFood.DB;
+using FastFood.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -82,7 +82,7 @@ namespace FastFood.Areas.Admin.Controllers
         public ActionResult List(int page = 1, int size = 10)
         {
             ViewBag.Title = "Tất cả bài viết";
-            X.PagedList.IPagedList<BaiViet> baiViet = FastFood_BaiViet.getBaiVietDaDuyet().OrderBy(m => m.MaBaiViet).ToPagedList(page, size);
+            X.PagedList.IPagedList<BaiViet> baiViet = FastFood_BaiViet.GetBaiVietDaDuyet().OrderBy(m => m.MaBaiViet).ToPagedList(page, size);
             ViewBag.BaiViet = baiViet;
             ViewBag.CurrentPage = baiViet.PageNumber;
             ViewBag.TotalPages = baiViet.PageCount;
@@ -123,8 +123,6 @@ namespace FastFood.Areas.Admin.Controllers
         {
             using (FastFoodEntities e = new FastFoodEntities())
             {
-                List<int> failedDeletes = new List<int>();
-                int totalCount = articleIds.Count();
                 foreach (int articleId in articleIds)
                 {
                     BaiViet a = e.BaiViets.FirstOrDefault(x => x.MaBaiViet == articleId);
@@ -151,7 +149,7 @@ namespace FastFood.Areas.Admin.Controllers
             if (!FastFood_NhanVienDangNhap.CheckPermission(Session["MaNhanVien"] as string, 3))
                 return HttpNotFound();
 
-            X.PagedList.IPagedList<BaiViet> baiViet = FastFood_BaiViet.getBaiVietChuaDuyet().OrderBy(m => m.MaBaiViet).ToPagedList(page, size);
+            X.PagedList.IPagedList<BaiViet> baiViet = FastFood_BaiViet.GetBaiVietChuaDuyet().OrderBy(m => m.MaBaiViet).ToPagedList(page, size);
             ViewBag.BaiViet = baiViet;
             ViewBag.CurrentPage = baiViet.PageNumber;
             ViewBag.TotalPages = baiViet.PageCount;
@@ -246,7 +244,7 @@ namespace FastFood.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult GetListNonApprove()
         {
-            var bv = FastFood_BaiViet.getBaiVietChuaDuyet()
+            var bv = FastFood_BaiViet.GetBaiVietChuaDuyet()
                 .AsEnumerable()
                 .Where(x => x.NguoiTao.ToString().Equals(Session["MaNhanVien"] as string))
                 .Select(x => new { x.MaBaiViet, x.HinhAnh, x.TieuDe, x.MoTaNgan });

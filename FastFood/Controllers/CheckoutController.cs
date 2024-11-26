@@ -1,5 +1,4 @@
-﻿using FastFood.Areas.Admin.Models;
-using FastFood.DB;
+﻿using FastFood.DB;
 using FastFood.Models;
 using System;
 using System.Collections.Generic;
@@ -10,15 +9,17 @@ using System.Web.Mvc;
 using VNPAY_CS_ASPX;
 namespace FastFood.Controllers
 {
+    [RoutePrefix("thanh-toan")]
     public class CheckoutController : SessionController
     {
         [HttpGet]
+        [Route("")]
         public ActionResult Index()
         {
             int maKhachHang = Convert.ToInt32(Session["KH_MaKhachHang"] as string);
-            if (maKhachHang == 0)
-                return HttpNotFound();
             KhachHang kh = FastFood_KhachHang.getKhachHang().FirstOrDefault(x => x.MaKhachHang == maKhachHang);
+            if (kh == null)
+                return HttpNotFound();
             FastFood_ThanhToan_TomTatThanhToan checkOut = Session["TomTatThanhToan"] as FastFood_ThanhToan_TomTatThanhToan;
             FastFood_ThanhToan_ThemDot tt = new FastFood_ThanhToan_ThemDot()
             {
@@ -38,6 +39,7 @@ namespace FastFood.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("")]
         public ActionResult Index(FastFood_ThanhToan_ThemDot a)
         {
             FastFood_GioHang gioHang = Session["GioHang"] as FastFood_GioHang;
@@ -51,6 +53,8 @@ namespace FastFood.Controllers
                         int soTienDuocGiam = e.MaKhuyenMais.Where(x => x.id == a.IDMaKhuyenMai).Select(x => x.SoTienDuocGiam).FirstOrDefault();
                         int tongThanhToan = a.TongTienSanPham + a.PhiVanChuyen - soTienDuocGiam;
                         KhachHang kh = e.KhachHangs.FirstOrDefault(x => x.MaKhachHang == a.MaNguoiMua);
+                        if (kh == null)
+                            return HttpNotFound();
                         kh.DiaChi = a.DiaChiGiaoHang;
                         DonHang dh = new DonHang()
                         {
@@ -96,6 +100,7 @@ namespace FastFood.Controllers
         }
 
         [HttpGet]
+        [Route("ket-qua")]
         public ActionResult PaymentResult()
         {
             ViewBag.Title = "Kết quả thanh toán";
@@ -133,8 +138,10 @@ namespace FastFood.Controllers
                             TrangThaiThanhToan = transactionStatusMessages[vnp_TransactionStatus]
                         };
                         ThanhToan tt = e.ThanhToans.FirstOrDefault(x => x.MaDonHang == vnp_TxnRef);
+                        if (tt == null)
+                            return HttpNotFound();
                         tt.MaGiaoDich = vnp_TransactionNo;
-                        if (vnp_Amount == tt.DonHang.TongThanhToan && tt.TrangThaiThanhToan == false && vnp_ResponseCode.Equals("00") && vnp_TransactionStatus.Equals("00"))
+                        if (vnp_Amount == tt.DonHang.TongThanhToan && !tt.TrangThaiThanhToan && vnp_ResponseCode.Equals("00") && vnp_TransactionStatus.Equals("00"))
                         {
                             tt.TrangThaiThanhToan = true;
                             e.SaveChanges();
@@ -155,7 +162,7 @@ namespace FastFood.Controllers
             string vnp_HashSecret = ConfigurationManager.AppSettings["vnp_HashSecret"];
 
             vnpay.AddRequestData("vnp_Amount", (tongThanhToan * 100).ToString());
-            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CreateDate", ngayTao.ToString("yyyyMMddHHmmss"));
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress());
             vnpay.AddRequestData("vnp_TxnRef", maDonHang.ToString());
             vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang {maDonHang}");
@@ -171,7 +178,7 @@ namespace FastFood.Controllers
             return paymentUrl;
         }
 
-        private Dictionary<string, string> responseCodeMessages = new Dictionary<string, string>
+        private readonly Dictionary<string, string> responseCodeMessages = new Dictionary<string, string>
             {
                 { "00", "Giao dịch thành công" },
                 { "07", "Trừ tiền thành công. Giao dịch bị nghi ngờ (liên quan tới lừa đảo, giao dịch bất thường)." },
@@ -188,7 +195,7 @@ namespace FastFood.Controllers
                 { "99", "Các lỗi khác (lỗi còn lại, không có trong danh sách mã lỗi đã liệt kê)" }
             };
 
-        private Dictionary<string, string> transactionStatusMessages = new Dictionary<string, string>
+        private readonly Dictionary<string, string> transactionStatusMessages = new Dictionary<string, string>
             {
                 { "00", "Giao dịch thành công" },
                 { "01", "Giao dịch chưa hoàn tất" },

@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-namespace FastFood.Areas.Admin.Models
+namespace FastFood.Models
 {
-    public class FastFood_DonHang
+    public static class FastFood_DonHang
     {
         private static FastFoodEntities context => new FastFoodEntities();
         private static IQueryable<DonHang> donHangs => context.DonHangs;
@@ -36,7 +36,7 @@ namespace FastFood.Areas.Admin.Models
         /// <returns>Danh sách các đơn hàng đã giao.</returns>
         public static IEnumerable<DonHang> getDonHangDaGiao()
         {
-            return getDonHang().Where(x => x.TrangThaiDon == 7) ?? Enumerable.Empty<DonHang>();
+            return getDonHang().Where(x => x.TrangThaiDon == 7);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace FastFood.Areas.Admin.Models
         /// <returns>Tên trạng thái đơn hàng.</returns>
         public static string getTenTrangThai(int maTT)
         {
-            return getTrangThaiDonHang().Where(x => x.MaTrangThai == maTT).Select(x => x.TenTrangThai)?.FirstOrDefault() ?? string.Empty;
+            return getTrangThaiDonHang().Where(x => x.MaTrangThai == maTT).Select(x => x.TenTrangThai).FirstOrDefault();
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace FastFood.Areas.Admin.Models
         /// <returns>Doanh thu hôm nay.</returns>
         public static int doanhThuHomNay()
         {
-            return getDonHangDaGiao().Where(x => x.NgayDat == DateTime.Today)?.Sum(x => x.TongTienSanPham) ?? 0;
+            return getDonHangDaGiao().Where(x => x.NgayDat == DateTime.Today).Sum(x => x.TongTienSanPham);
         }
 
         /// <summary>
@@ -84,12 +84,12 @@ namespace FastFood.Areas.Admin.Models
             IEnumerable<DonHang> dsDonHang = getDonHangDaGiao();
 
             decimal doanhThuThangNay = dsDonHang
-                .Where(dh => dh.NgayDat >= dauThangNay && dh.NgayDat < dauThangNay.AddMonths(1))?
-                .Sum(dh => dh.TongTienSanPham) ?? 0;
+                .Where(dh => dh.NgayDat >= dauThangNay && dh.NgayDat < dauThangNay.AddMonths(1))
+                .Sum(dh => dh.TongTienSanPham);
 
             decimal doanhThuThangTruoc = dsDonHang
-                .Where(dh => dh.NgayDat >= dauThangTruoc && dh.NgayDat <= cuoiThangTruoc)?
-                .Sum(dh => dh.TongTienSanPham) ?? 0;
+                .Where(dh => dh.NgayDat >= dauThangTruoc && dh.NgayDat <= cuoiThangTruoc)
+                .Sum(dh => dh.TongTienSanPham);
 
             if (doanhThuThangTruoc == 0)
             {
@@ -150,8 +150,8 @@ namespace FastFood.Areas.Admin.Models
                     {
                         DateTime ngay = homNay.AddDays(-i);
                         int doanhThuNgay = dsDonHang
-                            .Where(x => x.NgayDat.Date == ngay.Date)?
-                            .Sum(x => x.TongTienSanPham) ?? 0;
+                            .Where(x => x.NgayDat.Date == ngay.Date)
+                            .Sum(x => x.TongTienSanPham);
 
                         doanhThu[ngay] = doanhThuNgay;
                     }
@@ -162,8 +162,8 @@ namespace FastFood.Areas.Admin.Models
                     {
                         DateTime thang = homNay.AddMonths(-i);
                         int doanhThuThang = dsDonHang
-                            .Where(x => x.NgayDat.Year == thang.Year && x.NgayDat.Month == thang.Month)?
-                            .Sum(x => x.TongTienSanPham) ?? 0;
+                            .Where(x => x.NgayDat.Year == thang.Year && x.NgayDat.Month == thang.Month)
+                            .Sum(x => x.TongTienSanPham);
 
                         doanhThu[thang] = doanhThuThang;
                     }
@@ -174,8 +174,8 @@ namespace FastFood.Areas.Admin.Models
                     {
                         DateTime thang = homNay.AddMonths(-i);
                         int doanhThuThang = dsDonHang
-                            .Where(x => x.NgayDat.Year == thang.Year && x.NgayDat.Month == thang.Month)?
-                            .Sum(x => x.TongTienSanPham) ?? 0;
+                            .Where(x => x.NgayDat.Year == thang.Year && x.NgayDat.Month == thang.Month)
+                            .Sum(x => x.TongTienSanPham);
 
                         doanhThu[thang] = doanhThuThang;
                     }
@@ -298,10 +298,10 @@ namespace FastFood.Areas.Admin.Models
                 TongTienSanPham = dh.TongTienSanPham,
                 TrangThaiDonHang = dh.TrangThaiDonHang,
                 MaTrangThaiThanhToan = dh.ThanhToans.Select(x => x.TrangThaiThanhToan).FirstOrDefault(),
-                TrangThaiThanhToan = dh.ThanhToans.Select(x => x.TrangThaiThanhToan).FirstOrDefault() == false ? "Chưa thanh toán" : "Đã thanh toán",
-                TongSanPham = dh.ChiTietDonHangs.Count(),
+                TrangThaiThanhToan = dh.ThanhToans.Select(x => x.TrangThaiThanhToan).FirstOrDefault() ? "Đã thanh toán" : "Chưa thanh toán",
+                TongSanPham = dh.ChiTietDonHangs.Count,
                 NguoiMua = dh.KhachHang.HoDem + " " + dh.KhachHang.TenKhachHang
-            }) ?? Enumerable.Empty<FastFood_DonHang_DanhSachDonHang>();
+            });
             return ketQua;
         }
     }

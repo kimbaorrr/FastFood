@@ -1,8 +1,8 @@
 ﻿@using FastFood.DB;
-@using FastFood.Areas.Admin.Models;
+@using FastFood.Models;
 @{
     var bv = ViewBag.BaiViet as BaiViet;
-    var dsBaiVietGanDay = FastFood_BaiViet.getBaiVietDaDuyet().Where(x => x.MaBaiViet != bv.MaBaiViet).OrderByDescending(x => x.NgayTao).Take(4);
+    var dsBaiVietGanDay = FastFood_BaiViet.GetBaiVietDaDuyet().Where(x => x.MaBaiViet != bv.MaBaiViet).OrderByDescending(x => x.NgayTao).Take(4);
 }
 
 

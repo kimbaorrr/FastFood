@@ -1,6 +1,7 @@
-﻿using FastFood.Areas.Admin.Models;
-using FastFood.DB;
+﻿using FastFood.DB;
+using FastFood.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using X.PagedList.Extensions;
@@ -61,11 +62,10 @@ namespace FastFood.Areas.Admin.Controllers
                 .Select(x => x.ThoiGianTruyCap)
                 .FirstOrDefault();
 
-            int hoatDongGanDay = thoiGianTruyCap.HasValue ? (DateTime.Now - thoiGianTruyCap.Value).Hours : 0;
+            int hoatDongGanDay = thoiGianTruyCap.HasValue ? DateTime.SpecifyKind(DateTime.Now, thoiGianTruyCap.Value.Kind).Hour : 0;
             hoatDongGanDay = hoatDongGanDay < 12 ? 0 : hoatDongGanDay;
-
-            X.PagedList.IPagedList<DB.DonHang> donHangs = kh.DonHangs.OrderBy(x => x.MaDonHang).ToPagedList(page, size);
-
+            IEnumerable<DonHang> donHangs = kh.DonHangs ?? Enumerable.Empty<DonHang>();
+            donHangs = donHangs.OrderBy(x => x.MaDonHang).ToPagedList(page, size);
             FastFood_KhachHang_ChiTiet chiTiet = new FastFood_KhachHang_ChiTiet
             {
                 MaKhachHang = id,
@@ -76,10 +76,10 @@ namespace FastFood.Areas.Admin.Controllers
                 Email = kh.Email,
                 SoDienThoai = kh.SoDienThoai,
                 AnhDD = kh.AnhDD,
-                TongChiTieu = kh.DonHangs.Sum(x => x.TongTienSanPham),
-                TongHoaDon = kh.DonHangs.Count(),
+                TongChiTieu = donHangs.Sum(x => x.TongTienSanPham),
+                TongHoaDon = donHangs.Count(),
                 DonHangs = donHangs,
-                ChiTieuLonNhat = kh.DonHangs.Max(x => x.TongTienSanPham),
+                ChiTieuLonNhat = donHangs.Max(x => x.TongTienSanPham),
                 HoatDongGanDay = hoatDongGanDay
             };
 

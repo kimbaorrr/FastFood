@@ -1,5 +1,5 @@
-﻿using FastFood.Areas.Admin.Models;
-using FastFood.DB;
+﻿using FastFood.DB;
+using FastFood.Models;
 using System;
 using System.Configuration;
 using System.Linq;
@@ -36,7 +36,6 @@ namespace FastFood.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                string matKhauDaBam = FastFood_Tools.HashPassword(a.MatKhau);
                 NhanVienDangNhap queryData = FastFood_NhanVienDangNhap.getNhanVienDangNhap().FirstOrDefault(nv => nv.TenDangNhap.Equals(a.TenDangNhap));
                 bool isValid = queryData != null && FastFood_Tools.CheckPassword(a.MatKhau, queryData.MatKhau);
 
@@ -99,6 +98,7 @@ namespace FastFood.Areas.Admin.Controllers
         /// <returns>Trả về thông báo JSON.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("doi-mat-khau")]
         public ActionResult ChangePassword(FastFood_NhanVienDangNhap_DoiMatKhau a)
         {
             if (!ModelState.IsValid)
@@ -147,6 +147,7 @@ namespace FastFood.Areas.Admin.Controllers
         /// <param name="a">Thông tin tài khoản cần khôi phục.</param>
         /// <returns>Trả về thông báo JSON hoặc chuyển hướng đến trang đăng nhập nếu thành công.</returns>
         [HttpPost]
+        [Route("quen-mat-khau")]
         public ActionResult ForgetPassword(FastFood_NhanVienDangNhap_QuenMatKhau a)
         {
             ViewBag.Title = "Khôi phục mật khẩu";
@@ -211,7 +212,7 @@ namespace FastFood.Areas.Admin.Controllers
         {
             using (FastFoodEntities e = new FastFoodEntities())
             {
-                bool isTempPassword = e.NhanVienDangNhaps.Select(x => x.MatKhauTamThoi).FirstOrDefault() == true;
+                bool isTempPassword = e.NhanVienDangNhaps.Select(x => x.MatKhauTamThoi).FirstOrDefault();
                 return Json(new { is_temp_pwd = isTempPassword });
             }
         }

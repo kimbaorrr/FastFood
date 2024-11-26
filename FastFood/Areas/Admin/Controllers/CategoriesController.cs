@@ -1,5 +1,5 @@
-﻿using FastFood.Areas.Admin.Models;
-using FastFood.DB;
+﻿using FastFood.DB;
+using FastFood.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -151,7 +151,7 @@ namespace FastFood.Areas.Admin.Controllers
         /// Xóa tệp trên hệ thống nếu tệp tồn tại.
         /// </summary>
         /// <param name="filePath">Đường dẫn của tệp cần xóa.</param>
-        private void DeleteFileIfExists(string filePath)
+        private static void DeleteFileIfExists(string filePath)
         {
             if (System.IO.File.Exists(filePath))
                 System.IO.File.Delete(filePath);

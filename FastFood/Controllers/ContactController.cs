@@ -2,9 +2,11 @@
 
 namespace FastFood.Controllers
 {
+    [RoutePrefix("lien-he")]
     public class ContactController : SessionController
     {
-        // GET: Contact
+        [HttpGet]
+        [Route("")]
         public ActionResult Index()
         {
             ViewBag.Title = "Liên hệ FastFood";

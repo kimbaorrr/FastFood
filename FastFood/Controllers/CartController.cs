@@ -5,8 +5,10 @@ using System.Web.Mvc;
 
 namespace FastFood.Controllers
 {
+    [RoutePrefix("gio-hang")]
     public class CartController : SessionController
     {
+        [Route("")]
         public ActionResult Index()
         {
             ViewBag.Title = "Giỏ hàng";
@@ -14,6 +16,7 @@ namespace FastFood.Controllers
         }
 
         [HttpGet]
+        [Route("thong-tin")]
         public ActionResult GetItem()
         {
             if (!(Session["GioHang"] is FastFood_GioHang gioHang))
@@ -24,6 +27,7 @@ namespace FastFood.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("thanh-toan")]
         public ActionResult GetSummaryCheckout(string couponCode)
         {
             if (!(Session["GioHang"] is FastFood_GioHang gioHang))
@@ -61,6 +65,7 @@ namespace FastFood.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("them-vao-gio")]
         public ActionResult AddItem(int productId, int quantity)
         {
             if (!(Session["GioHang"] is FastFood_GioHang gioHang))
@@ -75,6 +80,7 @@ namespace FastFood.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("xoa-khoi-gio")]
         public ActionResult RemoveItem(int productId)
         {
             if (Session["GioHang"] is FastFood_GioHang gioHang)
@@ -86,6 +92,7 @@ namespace FastFood.Controllers
         }
 
         [HttpPost]
+        [Route("giam-so-luong")]
         public ActionResult DecreaseQuantity(int productId)
         {
             if (Session["GioHang"] is FastFood_GioHang gioHang)
@@ -97,18 +104,14 @@ namespace FastFood.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("kiem-tra-gio-hang-rong")]
         public ActionResult IsEmpty()
         {
-            if (Session["GioHang"] is FastFood_GioHang gioHang)
-            {
-                if (gioHang.GioHangRong())
-                    return JsonMessage(false, "Giỏ hàng hiện đang rỗng !");
-
-            }
-            return JsonMessage(true, "");
+            FastFood_GioHang gioHang = Session["GioHang"] as FastFood_GioHang;
+            return gioHang.GioHangRong() ? JsonMessage(false, "Giỏ hàng hiện đang rỗng !") : JsonMessage(true, "");
         }
 
-        private bool IsValidCoupon(DB.MaKhuyenMai maKhuyenMai)
+        private static bool IsValidCoupon(DB.MaKhuyenMai maKhuyenMai)
         {
             DateTime now = DateTime.Now;
             bool isExpired = maKhuyenMai.NgayKetThuc.HasValue && now > maKhuyenMai.NgayKetThuc.Value;

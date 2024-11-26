@@ -7,15 +7,18 @@ using System.Web.Mvc;
 
 namespace FastFood.Controllers
 {
+    [RoutePrefix("thuc-don")]
     public class MenuController : Controller
     {
         [HttpGet]
+        [Route("")]
         public ActionResult Index()
         {
             ViewBag.Title = "Thực đơn";
             return View();
         }
         [HttpGet]
+        [Route("chi-tiet-mon-an/{id}")]
         public ActionResult Detail(int id, string return_url)
         {
             SanPham sp = FastFood_SanPham.getSanPhamDaDuyet().FirstOrDefault(x => x.MaSanPham == id);
@@ -23,7 +26,7 @@ namespace FastFood.Controllers
                 return HttpNotFound();
             FastFood_SanPham_DanhGiaSanPham dgsp = new FastFood_SanPham_DanhGiaSanPham()
             {
-                TenKhachHang = FastFood.Areas.Admin.Models.FastFood_NhanVien.getHoTen(Session["MaKhachHang"] as string),
+                TenKhachHang = FastFood_NhanVien.getHoTen(Session["MaKhachHang"] as string),
                 MaKhachHang = Convert.ToInt32(Session["MaKhachHang"] as string)
             };
             ViewBag.Title = "Thông tin món ăn";
@@ -34,6 +37,7 @@ namespace FastFood.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("chi-tiet-mon-an/{productId}")]
         public ActionResult Detail(int productId, FastFood_SanPham_DanhGiaSanPham a)
         {
             using (FastFoodEntities e = new FastFoodEntities())

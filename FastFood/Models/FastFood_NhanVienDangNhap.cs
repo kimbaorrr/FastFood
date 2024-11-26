@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace FastFood.Areas.Admin.Models
+namespace FastFood.Models
 {
     /// <summary>
     /// Lớp này đại diện cho thông tin đăng nhập của nhân viên.
@@ -83,7 +83,7 @@ namespace FastFood.Areas.Admin.Models
         /// <returns>Danh sách mô tả quyền hạn tương ứng.</returns>
         public static IEnumerable<string> getMoTaQuyenHan(int[] ids)
         {
-            return getQuyenHanNhanVien().Where(qh => ids.Contains(qh.MaQuyenHan)).Select(qh => qh.MoTa) ?? Enumerable.Empty<string>();
+            return getQuyenHanNhanVien().Where(qh => ids.Contains(qh.MaQuyenHan)).Select(qh => qh.MoTa);
         }
 
         /// <summary>
