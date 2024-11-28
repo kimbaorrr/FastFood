@@ -1,0 +1,54 @@
+name: Build and Export ASP.NET MVC 5 Application to Package
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Setup Visual Studio Build Tools
+      - name: Setup Visual Studio Build Tools
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: '2022'
+
+      # Restore NuGet packages
+      - name: Restore NuGet packages
+        run: nuget restore FastFood.sln
+
+      # Build the application
+      - name: Build the application
+        run: msbuild FastFood.sln /p:Configuration=Release
+
+      # Run tests (optional)
+      - name: Run unit tests
+        run: |
+          nuget restore FastFood.sln
+          vstest.console YourTestProject.dll
+
+      # Publish the application to a folder (prepare for packaging)
+      - name: Publish the application
+        run: msbuild FastFood.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+
+      # Create a package (e.g., ZIP file)
+      - name: Create ZIP package
+        run: |
+          # Use PowerShell to zip the published output into a package (e.g., a ZIP file)
+          Compress-Archive -Path './bin/Release/PublishOutput/*' -DestinationPath './FastFood.zip'
+
+      # Upload the package as an artifact
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: mvc5-package
+          path: ./FastFood.zip
