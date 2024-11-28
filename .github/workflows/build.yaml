@@ -3,10 +3,10 @@ name: Build and Export ASP.NET MVC 5 Application to Package
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
