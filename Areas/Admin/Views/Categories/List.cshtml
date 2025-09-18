@@ -1,0 +1,265 @@
+﻿@using FastFood.Models;
+@using FastFood.DB;
+@{
+	ViewBag.Title = "Tất cả danh mục";
+	IEnumerable<Danhmuc>? danhMucs = ViewBag.DanhMuc as IEnumerable<Danhmuc>;
+}
+
+<!-- Start Container Fluid -->
+<div class="container-fluid">
+	<div class="row">
+		@foreach (var i in FastFood_DanhMuc.getDanhMucNhieuSanPham(4))
+		{
+			<div class="col-md-6 col-xl-3">
+				<div class="card">
+					<div class="card-body text-center">
+						<div class="rounded bg-secondary-subtle d-flex align-items-center justify-content-center mx-auto">
+							<img src="@i.Anhdaidien" alt="" class="avatar-xl">
+						</div>
+						<h4 class="mt-3 mb-0">@i.Tendanhmuc</h4>
+					</div>
+				</div>
+			</div>
+		}
+
+
+	</div>
+
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="card">
+				<div class="card-header d-flex justify-content-between align-items-center gap-1">
+					<h4 class="card-title flex-grow-1">@ViewBag.Title</h4>
+					<div class="d-flex gap-2">
+						<button id="delete-selected" class="btn btn-danger d-none btn-sm">Xóa được chọn</button>
+						<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createCategoryModal">Tạo danh mục</button>
+					</div>
+				</div>
+				<div>
+					<div class="table-responsive">
+						<table class="table align-middle mb-0 table-hover table-centered">
+							<thead class="bg-light-subtle">
+								<tr>
+									<th style="width: 20px;">
+										<div class="form-check">
+											<input type="checkbox" class="form-check-input " id="select-all">
+											<label class="form-check-label" for="select-all"></label>
+										</div>
+									</th>
+									<th>Tên danh mục</th>
+									<th>Mô tả</th>
+									<th>Người tạo</th>
+									<th>Ngày tạo</th>
+									<th>Tổng sản phẩm</th>
+									<th>Thao tác</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (Danhmuc? dm in danhMucs!)
+								{
+									<tr>
+										<td>
+											<div class="form-check">
+												<input type="checkbox" class="form-check-input category-checkbox" id="customCheck2">
+												<label class="form-check-label" for="customCheck2"></label>
+											</div>
+										</td>
+										<td>
+											<div class="d-flex align-items-center gap-2">
+												<div class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
+													<img src="@dm.Anhdaidien" alt="" class="avatar-md">
+												</div>
+												<p class="text-dark fw-medium fs-15 mb-0">@dm.Tendanhmuc</p>
+											</div>
+											
+										</td>
+										<td>@dm.Mota</td>
+										<td>@(dm.Nguoitao.HasValue ? FastFood_NhanVien.getHoTen(dm.Nguoitao.Value.ToString()) : string.Empty)</td>
+										<td>@dm.Ngaytao</td>
+										<td>@FastFood_DanhMuc.countSanPhamDanhMuc(dm.Madanhmuc)</td>
+										<td>
+											<div class="d-flex gap-2">
+												<button type="button" class="btn btn-soft-primary btn-sm btn-edit" data-category-id="@dm.Madanhmuc" data-category-name="@dm.Tendanhmuc" data-category-description="@dm.Mota" data-bs-toggle="modal" data-bs-target="#editCategoryModal"><iconify-icon icon="solar:pen-broken" class="align-middle fs-18"></iconify-icon></button>
+												<button type="button" class="btn btn-soft-danger btn-sm btn-delete" data-category-id="@dm.Madanhmuc"><iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon></button>
+											</div>
+										</td>
+									</tr>
+								}
+
+
+							</tbody>
+						</table>
+					</div>
+					<!-- end table-responsive -->
+				</div>
+				<div class="card-footer border-top">
+					<nav aria-label="Page navigation example">
+						<ul class="pagination justify-content-end mb-0">
+							@if (ViewBag.CurrentPage > 1)
+							{
+								<li class="page-item">
+									<a class="page-link" href="@Url.Action("List", "Categories", new { area = "Admin", page = ViewBag.CurrentPage - 1 })">
+										Trước đây
+									</a>
+								</li>
+							}
+							else
+							{
+								<li class="page-item disabled">
+									<span class="page-link">Trước đây</span>
+								</li>
+							}
+
+							<!-- Page Numbers -->
+							@for (int i = 1; i <= ViewBag.TotalPages; i++)
+							{
+								if (i == ViewBag.CurrentPage)
+								{
+									<li class="page-item active">
+										<span class="page-link">@i</span>
+									</li>
+								}
+								else
+								{
+									<li class="page-item">
+										<a class="page-link" href="@Url.Action("List", "Categories", new { area = "Admin", page = i })">@i</a>
+									</li>
+								}
+							}
+
+							<!-- Next Page Link -->
+							@if (ViewBag.CurrentPage < ViewBag.TotalPages)
+							{
+								<li class="page-item">
+									<a class="page-link" href="@Url.Action("List", "Categories", new { area = "Admin", page = ViewBag.CurrentPage + 1 })">
+										Tiếp theo
+									</a>
+								</li>
+							}
+							else
+							{
+								<li class="page-item disabled">
+									<span class="page-link">Tiếp theo</span>
+								</li>
+							}
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Create Category Modal -->
+	@Html.Partial("_Create")
+	<!--Edit Category Modal-->
+	@Html.Partial("_Edit")
+</div>
+<!-- End Container Fluid -->
+<script>
+	$(document).ready(function () {
+		$('.category-checkbox').on("change", function () {
+			if ($('.category-checkbox:checked').length > 0) {
+				$('#delete-selected').show();
+			} else {
+				$('#delete-selected').hide();
+			}
+		});
+
+		// $('.category-description').each(function () {
+		//     var fullDescription = $(this).data('full-description');
+		//     if (fullDescription.length > 30) {
+		//         var shortDescription = fullDescription.substring(0, 30) + ' ...';
+		//         $(this).text(shortDescription);
+		//     }
+		// });
+
+		$('#select-all').on('change', function () {
+			$('.category-checkbox').prop('checked', this.checked);
+			toggleActionButtons();
+		});
+
+		$('.category-checkbox').on('change', function () {
+			toggleActionButtons();
+		});
+
+		function toggleActionButtons() {
+			const anyChecked = $('.category-checkbox:checked').length > 0;
+			$('#delete-selected').toggleClass('d-none', !anyChecked);
+		}
+		$('#delete-selected').on('click', function () {
+			let selectedIds = [];
+			$('.category-checkbox:checked').each(function () {
+				let categoryId = $(this).closest("tr").find(".btn-delete").data('category-id');
+				if (categoryId !== undefined) {
+					selectedIds.push(categoryId);
+				}
+			});
+
+			if (selectedIds.length > 0) {
+				if (confirm("Bạn có chắc chắn muốn xóa các danh mục đã chọn không?")) {
+					$.ajax({
+						type: 'POST',
+						url: '@Url.Action("DeleteMultiple", "Categories", new { area = "Admin" })',
+						dataType: 'json',
+						traditional: true,
+						data: {
+							categoryIds: selectedIds,
+						},
+						success: function (response) {
+							alertMessage(response.message, response.type);
+							setTimeout(() => {
+								location.reload();
+							}, 1500);
+						},
+						error: function (xhr, status, error) {
+							alert('Đã xảy ra lỗi khi thực hiện yêu cầu.');
+						}
+					});
+				}
+			} else {
+				alert('Vui lòng chọn ít nhất một danh mục để xóa.');
+			}
+		});
+
+		$('.btn-delete').click(function () {
+			const categoryId = $(this).data('category-id');
+
+			$.ajax({
+				url: '@Url.Action("Delete", "Categories", new { area = "Admin" })',
+				method: 'POST',
+				dataType: 'json',
+				data: {
+					categoryId: categoryId,
+				},
+				success: function (response) {
+					alertMessage(response.message, response.type);
+					if (response.success) {
+						setTimeout(() => {
+							location.reload();
+						}, 1500);
+					}
+
+				},
+				error: function (xhr, status, error) {
+					alert('Đã xảy ra lỗi khi thực hiện yêu cầu.');
+				}
+			});
+		});
+
+		$(".btn-edit").on("click", function () {
+			const categoryId = $(this).data("category-id");
+			const categoryName = $(this).data("category-name");
+			const categoryDescription = $(this).data("category-description");
+
+			$("#editCategoryModalLabel").find("span").text(categoryId);
+			$("#MaDanhMuc").val(categoryId);
+			$(".category-name").val(categoryName);
+			$(".category-description").val(categoryDescription);
+
+		})
+	});
+</script>
+
+<script>
+
+</script>
+

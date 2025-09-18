@@ -1,0 +1,63 @@
+﻿@using FastFood.DB
+@using FastFood.Models;
+@{
+    Thongtincuahang thongTin = FastFood_CuaHang.GetThongTin();
+}
+
+<!--====== Start Page Section ======-->
+<section class="page-banner">
+    <div class="page-bg-wrapper p-r z-1 bg_cover pt-100 pb-110" style="background-image: url(/public_page/assets/images/bg/page-bg.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--=== Page Banner Content ===-->
+                    <div class="page-banner-content text-center">
+                        <h1 class="page-title">@ViewBag.Title</h1>
+                        <ul class="breadcrumb-link">
+                            <li><a href="index.html">Trang chủ</a></li>
+                            <li class="active">@ViewBag.Title</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--====== End Page Section ======-->
+<!--====== Start Contact Section ======-->
+<section class="contact-section gray-bg" style="padding: 120px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6 col-md-12">
+                <!--=== Section Content Box ===-->
+                <div class="contact-wrapper">
+                    <div class="section-title mb-15 wow fadeInDown">
+                        <h4 class="pb-2">Thông tin liên hệ</h4>
+                        <div class="address-contact d-flex justify-content-start align-items-center mb-2">
+                            <img src="https://jollibee.com.vn/media/wysiwyg/ICON_DUI_GA-05.png" alt="" width="20" height="20">
+                            <p style="margin-left: 8px;">@thongTin.Tencuahang</p>
+                        </div>
+                        <div class="address-contact d-flex justify-content-start align-items-center mb-2">
+                            <img src="https://jollibee.com.vn/media/jollibee/Phone_20x20.png" alt="" width="20" height="20">
+                            <p style="margin-left: 8px;">@thongTin.Hotline</p>
+                        </div>
+                        <div class="address-contact d-flex justify-content-start align-items-baseline mb-2">
+                            <img src="https://jollibee.com.vn/media/jollibee/Map_20x20.png" alt="" width="20" height="20">
+                            <p style="margin-left: 8px;">@thongTin.Diachi</p>
+                        </div>
+                        <h4>Gửi tin nhắn cho chúng tôi</h4>
+                    </div>
+                    @Html.Partial("_Question")
+
+                </div>
+            </div>
+            <div class="col-xl-6 col-md-12 d-none d-xl-block">
+                <!--=== Contact Image Box ===-->
+                <section class="contact-map-section">
+                    <div class="contact-map-box wow fadeInDown">
+                        <iframe height="600" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d501726.16473542276!2d106.07120970857474!3d10.754844189608669!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529292e8d3dd1%3A0xf15f5aad773c112b!2zVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1731551196059!5m2!1svi!2s" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </section><!--====== End Map Section ======-->
+            </div>
+        </div>
+    </div>
+</section><!--====== End Contact Section ======-->

@@ -1,0 +1,66 @@
+﻿<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #f7f1e1;">
+            <div class="modal-header">
+                <h5 class="modal-title page-title" id="loginModalLabel">Khách hàng đăng nhập</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body gap-2">
+                @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "loginForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="TenDangNhap" style="font-size: 18px; font-weight: 500;">Tên đăng nhập</label>
+                        <input type="text" name="TenDangNhap" class="form_control" id="TenDangNhap" required style="padding: 6px 1rem;">
+                    </div>
+                    <div class="mb-3">
+                        <label for="MatKhau" style="font-size: 18px; font-weight: 500;">Mật khẩu</label>
+                        <input type="password" name="MatKhau" class="form_control" id="MatKhau" required style="padding: 6px 1rem;">
+                    </div>
+                    <div class="mb-3 d-flex align-items-center justify-content-between">
+                        <div class="form-check">
+                            <input type="checkbox" name="GhiNhoDangNhap" class="form-check-input" id="GhiNhoDangNhap" style="border-color: #888;">
+                            <label for="GhiNhoDangNhap" class="form-check-label" style="font-size: 16px;">Ghi nhớ đăng nhập</label>
+                        </div>
+                        <a href="/Account/ForgotPassword" style="font-size: 16px;">Quên mật khẩu?</a>
+                    </div>
+                    <p class="text-center text-muted">Chưa có tài khoản? <a href="#" class="text-decoration-none" style="color: #007bff;" id="openRegistrationModal">Đăng ký ngay</a></p>
+                    <button type="submit" class="theme-btn style-one w-100" style="padding: 10px;">Đăng nhập</button>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#loginForm').on('submit', function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                var formUrl = $(this).attr('action');
+
+                $.ajax({
+                    url: formUrl,
+                    type: 'POST',
+                    data: formData,
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response.type);
+                        alertMessage(response.type, response.message);
+                        if (response.success) {
+                            $("#loginModal").modal("hide");
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500)
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.");
+                    }
+                });
+            });
+    });
+</script>

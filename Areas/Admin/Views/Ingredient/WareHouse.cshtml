@@ -1,0 +1,19 @@
+﻿@using FastFood.Models;
+@{
+	@model FastFood_NguyenLieu_ThemPhieuNhap
+	var dsNguyenLieu = ViewBag.NguyenLieu as SelectList;
+}
+
+<div class="container-fluid my-3">
+	<div class="row mt-3">
+		<div class="col-12 col-lg-4">
+			@Html.Partial("_Add")
+		</div>
+		<div class="col-12 col-lg-8">
+			@Html.Partial("_Receipt")
+			@Html.Partial("_Inventory")
+		</div>
+	</div>
+
+</div>
+

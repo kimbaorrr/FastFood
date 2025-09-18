@@ -1,0 +1,184 @@
+
+/*---==================
+    03. Post  
+        # 01 POst CSs
+=================----*/
+
+.post-thumbnail{
+    & img{
+        width: 100%;
+    }
+}
+
+.read-more{
+    font: 700 18px $body-font;
+    @extend %primary-color;
+    text-transform: capitalize;
+    & i{
+        margin-left: 10px;
+        @include transition(.35s);
+    }
+    &:hover{
+        @extend %secondary-color;
+        & i{
+            margin-left: 13px;
+        }
+    }
+}
+
+.blog-post-item {
+    &.style-one{
+        & .post-thumbnail{
+            position: relative;
+            overflow: hidden;
+            & img{
+                border-radius: 10px;
+            }
+            & .category-btn{
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                padding: 5px 15px;
+                @extend %orange-bg;
+                @extend %heading-color;
+                border-radius: 5px;
+                line-height: 24px;
+                font: 700 16px $body-font;
+            }
+        }
+        & .post-content{
+            padding-top: 20px;
+            & .post-meta{
+                display: flex;
+                justify-content: space-between;
+                & span{
+                    margin-bottom: 10px;
+                    & i{
+                        margin-right: 10px;
+                    }
+                    & a{
+                        &:hover{
+                            @extend %primary-color;
+                        }
+                    }
+                }
+            }
+            & h4.post-title{
+                margin-bottom: 15px;
+                text-transform: uppercase;
+                &:hover{
+                    @extend %primary-color;
+                }
+            }
+            & p{
+                font: 500 18px $body-font;
+                margin-bottom: 10px;
+                line-height: 27px;
+            }
+        }
+    }
+    &.style-two{
+        & .post-thumbnail{
+            & img{
+                border-radius: 10px;
+            }
+        }
+        & .post-content{
+            padding-top: 15px;
+            & .post-meta{
+                margin-bottom: 10px;
+                & span{
+                    font: 500 18px $body-font;
+                    color: rgba(0, 0, 0, 0.70);
+                    margin-bottom: 5px;
+                    text-transform: capitalize;
+                    &:not(:last-child){
+                        &:after{
+                            display: inline-flex;
+                            content: '';
+                            width: 7px;
+                            height: 8px;
+                            border-radius: 50%;
+                            @extend %primary-bg;
+                            margin-left: 10px;
+                            margin-right: 10px;
+                        }
+                    }
+                    & i{
+                        margin-right: 10px;
+                    }
+                    &:hover{
+                        & a{
+                            @extend %primary-color;
+                        }
+                    }
+                }
+            }
+            & h4.post-title{
+                text-transform: uppercase;
+                margin-bottom: 15px;
+                &:hover{
+                    @extend %primary-color;
+                }
+            }
+            & figure{
+                & img{
+                    width: 100%;
+                }
+            }
+            & p{
+                margin-bottom: 15px;
+                font: 500 18px $body-font;
+                line-height: 27px;
+            }
+            & .read-more{
+                font: 700 18px $body-font;
+                @extend %primary-color;
+                text-transform: capitalize;
+                & i{
+                    margin-left: 10px;
+                    @include transition(.35s);
+                }
+                &:hover{
+                    @extend %secondary-color;
+                    & i{
+                        margin-left: 13px;
+                    }
+                }
+            }
+        }
+    }
+    &.style-three{
+        & .post-content{
+            @extend %gray-light-bg;
+            padding: 30px 30px 25px;
+            & .post-meta{
+                & span{
+                    margin-bottom: 10px;
+                    &:not(:last-child){
+                        margin-right: 25px;
+                    }
+                    &:hover{
+                        & a{
+                            @extend %secondary-color;
+                        }
+                    }
+                    & i{
+                        margin-right: 10px;
+                    }
+                }
+            }
+            & h4.title{
+                margin-bottom: 20px;
+                text-transform: uppercase;
+                line-height: 31px;
+                @media #{$lm}{
+                    font-size: 22px;
+                }
+                &:hover{
+                    @extend %secondary-color;
+                }
+            }
+        }
+    }
+}

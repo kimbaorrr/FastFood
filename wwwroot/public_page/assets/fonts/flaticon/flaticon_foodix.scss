@@ -1,0 +1,69 @@
+$flaticon_foodix-font: "flaticon_foodix";
+
+@font-face {
+    font-family: $flaticon_foodix-font;
+    src: url("./flaticon_foodix.woff2?0bb9d4558f5bb9f32cce0448d4965d93") format("woff2"),
+url("./flaticon_foodix.woff?0bb9d4558f5bb9f32cce0448d4965d93") format("woff"),
+url("./flaticon_foodix.eot?0bb9d4558f5bb9f32cce0448d4965d93#iefix") format("embedded-opentype"),
+url("./flaticon_foodix.ttf?0bb9d4558f5bb9f32cce0448d4965d93") format("truetype"),
+url("./flaticon_foodix.svg?0bb9d4558f5bb9f32cce0448d4965d93#flaticon_foodix") format("svg");
+}
+
+i[class^="flaticon-"]:before, i[class*=" flaticon-"]:before {
+    font-family: flaticon_foodix !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+$flaticon_foodix-map: (
+    "food-tray": "\f101",
+    "burger": "\f102",
+    "healthy-food": "\f103",
+    "sandwich": "\f104",
+    "sandwich-1": "\f105",
+    "shrimp": "\f106",
+    "clean-water": "\f107",
+    "party": "\f108",
+    "date": "\f109",
+    "chef": "\f10a",
+    "pasta": "\f10b",
+);
+
+.flaticon-food-tray:before {
+    content: map-get($flaticon_foodix-map, "food-tray");
+}
+.flaticon-burger:before {
+    content: map-get($flaticon_foodix-map, "burger");
+}
+.flaticon-healthy-food:before {
+    content: map-get($flaticon_foodix-map, "healthy-food");
+}
+.flaticon-sandwich:before {
+    content: map-get($flaticon_foodix-map, "sandwich");
+}
+.flaticon-sandwich-1:before {
+    content: map-get($flaticon_foodix-map, "sandwich-1");
+}
+.flaticon-shrimp:before {
+    content: map-get($flaticon_foodix-map, "shrimp");
+}
+.flaticon-clean-water:before {
+    content: map-get($flaticon_foodix-map, "clean-water");
+}
+.flaticon-party:before {
+    content: map-get($flaticon_foodix-map, "party");
+}
+.flaticon-date:before {
+    content: map-get($flaticon_foodix-map, "date");
+}
+.flaticon-chef:before {
+    content: map-get($flaticon_foodix-map, "chef");
+}
+.flaticon-pasta:before {
+    content: map-get($flaticon_foodix-map, "pasta");
+}

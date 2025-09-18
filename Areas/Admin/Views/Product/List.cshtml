@@ -1,0 +1,305 @@
+﻿@    using FastFood.Models;
+@    using FastFood.DB;
+@    using X.PagedList;
+@    using X.PagedList.Mvc;
+    using FastFood.Models.ViewModels;
+@{
+    ViewBag.Title = "Tất cả sản phẩm";
+    IEnumerable<Sanpham>? dsSanPham = ViewBag.SanPham as IEnumerable<Sanpham>;
+}
+
+@Html.AntiForgeryToken()
+<!-- Start Container Fluid -->
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center gap-1">
+                    <h4 class="card-title flex-grow-1">@ViewBag.Title</h4>
+
+                    <button id="delete-selected" class="btn btn-danger btn-sm" style="display: none;">Xóa đã chọn</button>
+                </div>
+                <div>
+                    <div class="table-responsive">
+                        <table class="table-hover table-centered mb-0 table align-middle">
+                            <thead class="bg-light-subtle">
+                                <tr>
+                                    <th style="width: 20px;">
+                                        <div class="form-check ms-1">
+                                            <input type="checkbox" class="form-check-input" id="select-all">
+                                            <label class="form-check-label" for="select-all"></label>
+                                        </div>
+                                    </th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Giá bán</th>
+                                    <th>Danh mục</th>
+                                    <th>Đã duyệt</th>
+                                    <th>Ngày duyệt</th>
+                                    <th>Xếp hạng</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var sp in ViewBag.SanPham)
+                                {
+                                    string[] anhSplitted = sp.Hinhanh != null ? sp.Hinhanh.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) : Array.Empty<string>();
+                                    string imageUrl = (anhSplitted != null && anhSplitted.Length > 0) ? anhSplitted[0] : "#";
+                                    <tr>
+                                        <td>
+
+                                            <div class="form-check ms-1">
+                                                <input type="checkbox" class="form-check-input product-checkbox" data-id="@sp.Masanpham">
+                                                <label class="form-check-label">&nbsp;</label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="bg-light avatar-md d-flex align-items-center justify-content-center rounded">
+                                                    <img src="@imageUrl" alt="" class="avatar-md">
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <p class="text-dark fw-medium fs-15 mb-1">@sp.Tensanpham</p>
+                                                    <p class="text-secondary product-description mb-0" data-full-description="@sp.Motangan">@sp.Motangan</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <p class="text-red fw-bold mb-1">@sp.Giasaukhuyenmai đ</p>
+                                                @if (sp.Khuyenmai != 0)
+                                                {
+                                                    <p class="text-secondary text-muted text-decoration-line-through mb-0">@sp.Giagoc đ</p>
+                                                }
+                                            </div>
+                                        </td>
+                                        <td> @sp.MadanhmucNavigation!.Tendanhmuc</td>
+                                        <td>
+                                            @{
+                                                if (sp.Daduyet)
+                                                {
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#09ee2e" fill-rule="evenodd" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20m10.742-26.33a1 1 0 1 0-1.483-1.34L21.28 29.567l-6.59-6.291a1 1 0 0 0-1.382 1.446l7.334 7l.743.71l.689-.762z" clip-rule="evenodd" /></svg>
+                                                }
+                                                else
+                                                {
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#e92241" fill-rule="evenodd" d="M44 24c0 11.046-8.954 20-20 20S4 35.046 4 24S12.954 4 24 4s20 8.954 20 20m-27.778 7.778a1 1 0 0 1 0-1.414L22.586 24l-6.364-6.364a1 1 0 0 1 1.414-1.414L24 22.586l6.364-6.364a1 1 0 0 1 1.414 1.414L25.414 24l6.364 6.364a1 1 0 0 1-1.414 1.414L24 25.414l-6.364 6.364a1 1 0 0 1-1.414 0" clip-rule="evenodd" /></svg>
+                                                }
+                                            }
+                                        </td>
+                                        <td> @sp.Ngayduyet</td>
+                                        <td>
+                                            <span class="badge bg-light text-dark fs-12 me-1 p-1"><i class="bx bxs-star fs-14 text-warning me-1 align-text-top"></i>@FastFood_SanPham.getXepHangSaoTrungBinh(sp.Masanpham)</span> @FastFood_SanPham.getTongLuotDanhGia(sp.Masanpham) đánh giá
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="@Url.Action("Detail", "Product", new {area = "Admin", id = sp.Masanpham})" class="btn btn-light btn-sm">
+                                                    <iconify-icon icon="solar:eye-broken" class="fs-18 align-middle"></iconify-icon>
+                                                </a>
+                                                <a href="@Url.Action("Detail", "Product", new {area = "Admin", id = sp.Masanpham})" class="btn btn-soft-primary btn-sm">
+                                                    <iconify-icon icon="solar:pen-2-broken" class="fs-18 align-middle"></iconify-icon>
+                                                </a>
+                                                <a href="#" class="btn btn-soft-danger btn-sm btn-delete" data-id="@sp.Masanpham">
+                                                    <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="fs-18 align-middle"></iconify-icon>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table-responsive -->
+                </div>
+                <div class="card-footer border-top">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end mb-0">
+                            <!-- Previous Page Link -->
+                            @if (ViewBag.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("List", "Product", new { area = "Admin", page = ViewBag.CurrentPage - 1 })">
+                                        Trước đây
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Trước đây</span>
+                                </li>
+                            }
+
+                            <!-- Page Numbers -->
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@i</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("List", "Product", new { area = "Admin", page = i })">@i</a>
+                                    </li>
+                                }
+                            }
+
+                            <!-- Next Page Link -->
+                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("List", "Product", new { area = "Admin", page = ViewBag.CurrentPage + 1 })">
+                                        Tiếp theo
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Next</span>
+                                </li>
+                            }
+                        </ul>
+
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!-- End Container Fluid -->
+
+<script>
+const token = $('input[name="__RequestVerificationToken"]').val();
+$(document).on('click', '.btn-delete', function (event) {
+    event.preventDefault();
+    const productId = $(this).data('id');
+    
+    if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
+        $.ajax({
+            url: `@Url.Action("Delete", "Product", new {area = "Admin"})`,
+            method: 'POST',
+                dataType: 'json',
+            data: {
+                productId: productId,
+                __RequestVerificationToken: token
+            },
+            success: function (response) {
+                alertMessage(response.message, response.type);
+                if (response.success) {
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                }
+            },
+            error: function () {
+                alertMessage("Đã xảy ra lỗi khi gửi dữ liệu!", "error");
+            }
+        });
+    }
+});
+
+$('#select-all').on('click', function () {
+    $('.product-checkbox').prop('checked', this.checked);
+});
+
+$('#delete-selected').on('click', function () {
+    const selectedIds = [];
+    $('.product-checkbox:checked').each(function () {
+        selectedIds.push($(this).data('id'));
+    });
+    if (selectedIds.length === 0) {
+        alert("Vui lòng chọn ít nhất một sản phẩm để xóa.");
+        return;
+    }
+    if (confirm("Bạn có chắc chắn muốn xóa những sản phẩm đã chọn?")) {
+        $.ajax({
+            url: '@Url.Action("DeleteMultiple", "Product", new { area = "Admin" })',
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                productIds: selectedIds,
+                __RequestVerificationToken: token
+            },
+            success: function (response) {
+                alertMessage(response.message, response.type);
+                if (response.success) {
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                }
+            },
+            error: function () {
+                alertMessage("Đã xảy ra lỗi khi gửi dữ liệu!", "error");
+            }
+        });
+    }
+});
+
+    $(document).ready(function () {
+        $('#select-all').on('change', function () {
+            $('.product-checkbox').prop('checked', this.checked);
+            toggleActionButtons();
+        });
+
+        $('.product-checkbox').on("change", function () {
+            $('#delete-selected').toggle($('.product-checkbox:checked').length > 0);
+        });
+
+    function exportTableToCSV(data, filename) {
+        let csv = [];
+        csv.push(Object.keys(data[0]).join(","));
+        data.forEach(row => {
+            csv.push(Object.values(row).join(","));
+        });
+        let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+        let downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(csvFile);
+        downloadLink.download = filename;
+        downloadLink.click();
+    }
+
+    function exportTableToExcel(data, filename) {
+        let table = `<table><tr>${Object.keys(data[0]).map(key => `<th>${key}</th>`).join('')}</tr>`;
+        data.forEach(row => {
+            table += `<tr>${Object.values(row).map(cell => `<td>${cell}</td>`).join('')}</tr>`;
+        });
+        table += `</table>`;
+        let downloadLink = document.createElement("a");
+        downloadLink.href = 'data:application/vnd.ms-excel,' + encodeURIComponent(table);
+        downloadLink.download = filename;
+        downloadLink.click();
+    }
+
+    $('.dropdown-item').on('click', function (e) {
+        e.preventDefault();
+        let format = $(this).text().trim();
+        $.ajax({
+            url: '@Url.Action("GetAllProducts", "Product", new { area = "Admin" })',
+            method: 'POST',
+            success: function (data) {
+                if (format === "CSV") {
+                    exportTableToCSV(data, 'table_data.csv');
+                } else if (format === "Excel") {
+                    exportTableToExcel(data, 'table_data.xls');
+                }
+            },
+            error: function () {
+                alert("Có lỗi xảy ra khi lấy dữ liệu.");
+            }
+        });
+    });
+
+    $('.product-description').each(function () {
+        var fullDescription = $(this).data('full-description');
+        if (fullDescription.length > 30) {
+            var shortDescription = fullDescription.substring(0, 30) + ' ...';
+            $(this).text(shortDescription);
+        }
+    });
+});
+</script>

@@ -1,0 +1,80 @@
+﻿@using FastFood.Models;
+@using FastFood.DB;
+@{
+    IEnumerable<Baiviet>? dsBaiViet = ViewBag.BaiViet as IEnumerable<Baiviet>;
+}
+
+<!--====== Start Page Section ======-->
+<section class="page-banner">
+    <div class="page-bg-wrapper p-r z-1 bg_cover pt-100 pb-110" style="background-image: url(/public_page/assets/images/bg/page-bg.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--=== Page Banner Content ===-->
+                    <div class="page-banner-content text-center">
+                        <h1 class="page-title">@ViewBag.Title</h1>
+                        <ul class="breadcrumb-link">
+                            <li><a href="index.html">Trang chủ</a></li>
+                            <li class="active">@ViewBag.Title</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--====== End Page Section ======-->
+<!--====== Start Blogs Page ======-->
+<section class="blogs-grid-section pt-130 pb-130">
+    <div class="container">
+        <div class="row">
+            @foreach (Baiviet bv in dsBaiViet!)
+            {
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <!--=== Blog Post Item ===-->
+                    <div class="blog-post-item style-two mb-30 wow fadeInUp">
+                        <div class="post-thumbnail">
+                            <div class="d-flex justify-content-center align-items-center overflow-hidden" style="width: 410px;height: 280px;">
+                                <img src="@bv.Hinhanh" alt="@bv.Tieude" width="100%" height="100%" class="object-fit-fill">
+                            </div>
+
+                        </div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span><a href="#">@FastFood_NhanVien.getHoTen(bv.Nguoitao.ToString())</a></span>
+                                <span><a href="#">@bv.Ngaytao.ToString("dd MMM, yyyy")</a></span>
+                            </div>
+                            <h4 class="post-title"><a href="@Url.Action("Detail", "Article", new {id = bv.Mabaiviet})">@bv.Tieude</a></h4>
+                            <p>@bv.Motangan</p>
+                            <a href="@Url.Action("Detail", "Article", new {id = bv.Mabaiviet})" class="read-more" style="text-transform: none;">Xem thêm<i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <!--=== Foodix Pagination ===-->
+                <ul class="foodix-pagination d-flex justify-content-center mt-20 wow fadeInDown">
+                    <!-- Page Numbers -->
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        if (i == ViewBag.CurrentPage)
+                        {
+                            <li>
+                                <a href="#">@i</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Article", new { page = i })">@i</a>
+                            </li>
+                        }
+                    }
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</section><!--====== End Blogs Page ======-->

@@ -1,0 +1,51 @@
+﻿<div class="card">
+	<div class="card-header">
+		<h3 class="card-title">Bảng nhập kho nguyên liệu</h3>
+	</div>
+	<div class="card-body">
+		<table class="table table-striped" id="receipt">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">Tên nguyên liệu</th>
+					<th scope="col">Số lượng nhập</th>
+					<th scope="col">Người nhập</th>
+					<th scope="col">Ngày nhập</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script>
+	function loadReceipt() {
+		$.ajax({
+			url: '@Url.Action("GetListReceipt", "Ingredient", new { area = "Admin" })',
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				var tableBody = $('#receipt tbody');
+				tableBody.empty();
+
+				$.each(data, function (index, item) {
+					var row = $('<tr></tr>');
+					row.append('<td>' + item.MaNhapKho + '</td>');
+					row.append('<td>' + item.TenNguyenLieu + '</td>');
+					row.append('<td>' + item.SoLuongNhap + '</td>');
+					row.append('<td>' + item.NguoiNhap + '</td>');
+					row.append('<td>' + item.NgayNhap + '</td>');
+					tableBody.append(row);
+				});
+			},
+			error: function (xhr, status, error) {
+				alert("Có lỗi khi tải lại bảng dữ liệu: " + error);
+			}
+		});
+	}
+
+	$(document).ready(function () {
+		loadReceipt();
+	});
+</script>

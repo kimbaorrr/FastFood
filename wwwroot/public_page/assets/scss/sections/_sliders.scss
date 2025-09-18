@@ -1,0 +1,70 @@
+
+/*---==================
+    04. Sections  
+        # 01 Sliders CSs
+=================----*/
+
+.instagram-slider-two,
+.gallery-slider-two,
+.special-off-slider,
+.testimonial-slider-two,
+.testimonial-slider-one{
+    margin-left: -15px;
+    margin-right: -15px;
+    @media #{$xm}{
+        margin-left: -12px;
+        margin-right: -12px;
+    }
+    & .slick-slide{
+        margin-left: 15px;
+        margin-right: 15px;
+        @media #{$xm}{
+            margin-left: 12px;
+            margin-right: 12px;
+        }
+    }
+}
+
+.instagram-slider-two{
+    & .gallery-item{
+        & .gallery-img{
+            border-radius: 10px;
+            & img{
+                border-radius: 10px;
+            }
+        }
+    }
+}
+
+
+.instagram-wrapper-two{
+    & .instagram-slider-one{
+        margin-left: -15px;
+        margin-right: -15px;
+        @media #{$xm}{
+            margin-left: -12px;
+            margin-right: -12px;
+        }
+        & .slick-slide{
+            margin-left: 15px;
+            margin-right: 15px;
+            @media #{$xm}{
+                margin-left: 12px;
+                margin-right: 12px;
+            }
+        }
+    }
+    & .gallery-item{
+        &.style-one{
+            & img{
+                border-radius: 20px;
+            }
+            & .gallery-img{
+                overflow: hidden;
+                & .hover-content{
+                    border-radius: 20px;
+                }
+            }
+        }
+    }
+}

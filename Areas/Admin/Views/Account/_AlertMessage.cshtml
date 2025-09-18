@@ -1,0 +1,10 @@
+﻿@{
+    if (ViewBag.ThongBao != null)
+    {
+        <script>
+            $(document).ready(function() {
+                alertMessage("@Html.Raw(ViewBag.ThongBao)", "var(--bs-danger)");
+            });
+        </script>
+    }
+}

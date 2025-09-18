@@ -1,0 +1,379 @@
+﻿@using FastFood.Models;
+@{
+	FastFood_DonHang_ChiTietDonHang? ctdh = ViewBag.ChiTiet as FastFood_DonHang_ChiTietDonHang;
+}
+
+<!-- Start Container -->
+<div class="container-xxl">
+
+	<div class="row">
+		<div class="col-xl-9 col-lg-8">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="card">
+						<div class="card-body">
+							<div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+								<div>
+									<h4 class="fw-medium text-dark d-flex align-items-center gap-2">#@ctdh.MaDonHang</h4>
+									<p class="mb-0">Đơn hàng / Chi tiết đơn hàng / #@ctdh.MaDonHang - @ctdh.NgayDat</p>
+								</div>
+								<div>
+									<button type="button" id="cancelBtn" class="btn btn-outline-danger" style="display: none;">Hủy đơn</button>
+								</div>
+							</div>
+
+							<div class="mt-4">
+								<h4 class="fw-medium text-dark">Trạng thái đơn</h4>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<p class="mb-1 mt-3">@ctdh.TrangThaiDonHang.Tentrangthai</p>
+									<div class="progress mb-3" style="height: 10px;">
+										<div class="progress-bar @ctdh.TrangThaiDonHang.Mausac" role="progressbar" style="width: @ctdh.TrangThaiDonHang.Progress%" aria-valuenow="@ctdh.TrangThaiDonHang.Progress" aria-valuemin="0" aria-valuemax="100">
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<div class="card-footer d-flex flex-wrap align-items-center justify-content-between bg-light-subtle gap-2">
+							<!-- Left section with two lines of text -->
+							<div class="d-flex flex-column">
+								<p class="border rounded mb-1 px-2 py-1 bg-body">
+									<i class="bx bx-alarm align-middle fs-16"></i> Thời gian giao hàng dự kiến:
+									<span class="text-dark fw-medium">@(ctdh.ThoiGianGiaoHangDuKien.HasValue ? ctdh.ThoiGianGiaoHangDuKien.Value.ToString("dd/MM/yyyy") : "Không xác định !")</span>
+								</p>
+								<p class="border rounded mb-0 px-2 py-1 bg-body">
+									<i class="bx bx-arrow-from-left align-middle fs-16"></i> Thời gian giao hàng thực tế:
+									<span class="text-dark fw-medium">@(ctdh.ThoiGianGiaoHangThucTe.HasValue ? ctdh.ThoiGianGiaoHangThucTe.Value.ToString("dd/MM/yyyy HH:mm:ss") : "Không xác định !")</span>
+								</p>
+							</div>
+
+							<!-- Right section with button -->
+							<div>
+								<button class="btn btn-primary" id="status-btn"></button>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header">
+							<h4 class="card-title">Sản phẩm đã mua</h4>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table align-middle mb-0 table-hover table-centered">
+									<thead class="bg-light-subtle border-bottom">
+										<tr>
+											<th>ID</th>
+											<th>Tên sản phẩm</th>
+											<th>Đơn giá</th>
+											<th>Số lượng</th>
+											<th>Thành tiền</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var ct in ctdh.Chitietdonhangs)
+										{
+											<tr>
+												<td>@ct.Masanpham</td>
+												<td>@ct.MasanphamNavigation.Tensanpham</td>
+												<td>@ct.MasanphamNavigation.Giasaukhuyenmai đ</td>
+												<td>@ct.Soluong</td>
+												<td class="text-red fw-bold">@ct.Thanhtien đ</td>
+											</tr>
+										}
+
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="card bg-light-subtle">
+						<div class="card-body">
+							<div class="row g-3 g-lg-0">
+								<div class="col-lg-3 border-end">
+									<div class="d-flex align-items-center gap-3 justify-content-between px-3">
+										<div>
+											<p class="text-dark fw-medium fs-16 mb-1">Ngày thanh toán</p>
+											<p class="mb-0">@(ctdh.NgayThanhToan)</p>
+										</div>
+										<div class="avatar bg-light d-flex align-items-center justify-content-center rounded">
+											<iconify-icon icon="solar:shop-2-bold-duotone" class="fs-35 text-primary"></iconify-icon>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3 border-end">
+									<div class="d-flex align-items-center gap-3 justify-content-between px-3">
+										<div>
+											<p class="text-dark fw-medium fs-16 mb-1">Ngày đặt</p>
+											<p class="mb-0">@ctdh.NgayDat</p>
+										</div>
+										<div class="avatar bg-light d-flex align-items-center justify-content-center rounded">
+											<iconify-icon icon="solar:calendar-date-bold-duotone" class="fs-35 text-primary"></iconify-icon>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3 border-end">
+									<div class="d-flex align-items-center gap-3 justify-content-between px-3">
+										<div>
+											<p class="text-dark fw-medium fs-16 mb-1">Người mua</p>
+											<p class="mb-0">@ctdh.NguoiMua</p>
+										</div>
+										<div class="avatar bg-light d-flex align-items-center justify-content-center rounded">
+											<iconify-icon icon="solar:user-circle-bold-duotone" class="fs-35 text-primary"></iconify-icon>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3">
+									<div class="d-flex align-items-center gap-3 justify-content-between px-3">
+										<div>
+											<p class="text-dark fw-medium fs-16 mb-1">Mã giao dịch</p>
+											<p class="mb-0">@(ctdh.MaGiaoDich)</p>
+										</div>
+										<div class="avatar bg-light d-flex align-items-center justify-content-center rounded">
+											<iconify-icon icon="solar:clipboard-text-bold-duotone" class="fs-35 text-primary"></iconify-icon>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-3 col-lg-4">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">Tổng quan đơn hàng</h4>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table mb-0">
+							<tbody>
+								<tr>
+									<td class="px-0">
+										<p class="d-flex mb-0 align-items-center gap-1"><iconify-icon icon="solar:clipboard-text-broken"></iconify-icon> Tổng hóa đơn : </p>
+									</td>
+									<td class="text-end text-dark fw-medium px-0">@ctdh.TongTienSanPham</td>
+								</tr>
+								<tr>
+									<td class="px-0">
+										<p class="d-flex mb-0 align-items-center gap-1"><iconify-icon icon="solar:kick-scooter-broken" class="align-middle"></iconify-icon> Phí vận chuyển : </p>
+									</td>
+									<td class="text-end text-dark fw-medium px-0">+@ctdh.PhiVanChuyen</td>
+								</tr>
+								<tr>
+									<td class="px-0">
+										<p class="d-flex mb-0 align-items-center gap-1"><iconify-icon icon="solar:ticket-broken" class="align-middle"></iconify-icon> Mã khuyến mãi : </p>
+									</td>
+									<td class="text-end text-dark fw-medium px-0">-@ctdh.MaKhuyenMai</td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="card-footer d-flex align-items-center justify-content-between bg-light-subtle">
+					<div>
+						<p class="fw-medium text-dark mb-0">Tổng thanh toán</p>
+					</div>
+					<div>
+						<p class="fw-bold text-danger mb-0">@ctdh.TongThanhToan vnđ</p>
+					</div>
+
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">Thông tin khách hàng</h4>
+				</div>
+				<div class="card-body">
+					<div class="d-flex align-items-center gap-2">
+						<img src="@ctdh.Khachhang.Anhdd" alt="" class="avatar rounded-3 border border-light border-3">
+						<div>
+							<p class="mb-1">@ctdh.Khachhang.Hodem @ctdh.Khachhang.Tenkhachhang</p>
+							<a href="#!" class="link-primary fw-medium">@ctdh.Khachhang.Email</a>
+						</div>
+					</div>
+					<div class="d-flex justify-content-between mt-3">
+						<h5 class="">Số điện thoại</h5>
+					</div>
+					<p class="mb-1">@ctdh.Khachhang.Sodienthoai</p>
+
+					<div class="d-flex justify-content-between mt-3">
+						<h5 class="">Địa chỉ giao hàng</h5>
+					</div>
+
+					<div>
+						<p class="mb-1">@ctdh.Khachhang.Diachi</p>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+	<!-- Shipping Info Modal -->
+	<div class="modal fade" id="shippingModal" tabindex="-1" aria-labelledby="shippingModalLabel" aria-hidden="false" data-bs-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="shippingModalLabel">Thêm thông tin vận chuyển</h5>
+				</div>
+				@using (Html.BeginForm("UpdateShippingInfo", "Order", FormMethod.Post, new { id = "shippinginfoForm" }))
+				{
+				@model FastFood_DonHang_ThemThongTinVanChuyen
+					@Html.AntiForgeryToken()
+					@Html.Hidden("MaDonHang", ctdh.MaDonHang)
+					<div class="modal-body">
+						<div class="form-group mb-3">
+							@Html.LabelFor(x => x.DonViVanChuyen, new { @class = "form-label" }) <span class="text-red"> *</span>
+							@Html.TextBoxFor(x => x.DonViVanChuyen, new { @class = "form-control", @required = "" })
+						</div>
+						<div class="mb-3">
+							@Html.LabelFor(x => x.MaVanDon, new { @class = "form-label" }) <span class="text-red"> *</span>
+							@Html.TextBoxFor(x => x.MaVanDon, new { @class = "form-control", @required = "" })
+						</div>
+						<div class="mb-3">
+							@Html.LabelFor(x => x.SoNgayDuKien, new { @class = "form-label" }) <span class="text-red"> *</span>
+							@Html.TextBoxFor(x => x.SoNgayDuKien, new { @class = "form-control", @type = "number", @required = "" })
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary">Xác nhận</button>
+					</div>
+				}
+
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
+<script>
+	const statusMapping = {
+		0: { next: 1, name: "Đã thanh toán" },
+		1: { next: 4, name: "Đang thực hiện món" },
+		4: { next: 5, name: "Chờ giao hàng" },
+		5: { next: 6, name: "Đang giao hàng" },
+		6: { next: 7, name: "Đã giao hàng" },
+		7: {next: 7}
+	};
+
+	function sendOrderStatus(orderId, status, token) {
+		$.ajax({
+			url: '@Url.Action("UpdateOrderStatus", "Order", new { area = "Admin" })',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				id: orderId,
+				orderStatus: status,
+				__RequestVerificationToken: token
+			},
+			success: function (response) {
+				alertMessage(response.message, response.type);
+				if (response.success) {
+					setTimeout(() => location.reload(), 1500);
+				}
+			},
+			error: function () {
+				alert('Đã xảy ra lỗi khi cập nhật trạng thái đơn hàng.');
+			}
+		});
+	}
+
+	function checkShippingInfo(orderId) {
+		$.ajax({
+			url: '@Url.Action("CheckShippingInfo", "Order", new { area = "Admin" })',
+			type: 'POST',
+			dataType: 'json',
+			data: { id: orderId },
+			success: function (response) {
+				if (!response.success) {
+					$("#status-btn").prop("disabled", true);
+					$("#shippingModal").modal('show');
+				}
+			},
+			error: function () {
+				alert('Đã xảy ra lỗi khi kiểm tra thông tin giao hàng.');
+			}
+		});
+	}
+
+	function updateShippingInfo(formData) {
+		$.ajax({
+			url: '@Url.Action("UpdateShippingInfo", "Order", new { area = "Admin" })',
+			type: 'POST',
+			dataType: 'json',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function (response) {
+				alertMessage(response.message, response.type);
+				if (response.success) {
+					$("#shippinginfoModal").modal("hide");
+					setTimeout(() => location.reload(), 1500);
+				}
+			},
+			error: function () {
+				alert('Đã xảy ra lỗi khi cập nhật thông tin giao hàng.');
+			}
+		});
+	}
+
+	function updateOrderStatus(currentStatus) {
+		return statusMapping[currentStatus]?.next || currentStatus;
+	}
+
+	$(document).ready(function () {
+		const token = $('input[name="__RequestVerificationToken"]').val();
+		let currentStatus = parseInt(@ctdh.TrangThaiDonHang.Matrangthai);
+		const orderId = '@ctdh.MaDonHang';
+
+		$("#cancelBtn")
+			.toggle(currentStatus === 0 || currentStatus === 1)
+			.click(() => {
+				sendOrderStatus(orderId, 8, token);
+			});
+
+		// Hiển thị nút status-btn và đảm bảo nó hoạt động khi trạng thái không phải 7
+		$("#status-btn")
+			.text(statusMapping[currentStatus]?.name || '')
+			.show()  // Hiển thị nút nếu trạng thái không phải 7
+			.prop("disabled", currentStatus === 7); // Disable nếu trạng thái là 7
+
+		if (currentStatus === 5) {
+			checkShippingInfo(orderId);
+		}
+
+		// Gắn sự kiện click cho nút status-btn
+		$("#status-btn").click(function () {
+			const newStatus = updateOrderStatus(currentStatus);
+			console.log(currentStatus);
+			console.log(newStatus);
+			if (newStatus && statusMapping[newStatus]) {
+				currentStatus = newStatus;
+				$("#status-btn").text(statusMapping[currentStatus]?.name || '');
+
+				sendOrderStatus(orderId, currentStatus, token);
+
+				if (currentStatus === 7) {
+					$("#status-btn").hide();
+				}
+	} else {
+		console.log("Invalid newStatus:", newStatus);
+	}
+		});
+
+		$('#shippinginfoForm').on('submit', function (e) {
+			e.preventDefault();
+			const formData = new FormData(this);
+			updateShippingInfo(formData);
+		});
+	});
+
+</script>
+
+

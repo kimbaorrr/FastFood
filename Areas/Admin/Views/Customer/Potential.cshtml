@@ -1,0 +1,130 @@
+﻿@using FastFood.DB
+@using FastFood.Models;
+@{
+    IEnumerable<FastFood_KhachHang_DanhSachKhachHang>? dsKhachHang = ViewBag.KhachHang as IEnumerable<FastFood_KhachHang_DanhSachKhachHang>;
+    int khachDaDat = FastFood_DonHang.countKhachDaDatHang();
+    int tongDonHang = FastFood_DonHang.countTongDonHang();
+    int tongDoanhThuDonHang = FastFood_DonHang.tongDoanhThuDonHang();
+    double trungBinhDonHang = FastFood_DonHang.trungBinhDonHang();
+}
+
+<!-- Start Container Fluid -->
+<div class="container-xxl">
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="d-flex card-header justify-content-between align-items-center">
+                    <div>
+                        <h4 class="card-title">@ViewBag.Title</h4>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover table-centered">
+                            <thead class="bg-light-subtle">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ và tên</th>
+                                    <th>Thời gian gắn bó</th>
+                                    <th>Số lần mua</th>
+                                    <th>Lần mua gần nhất</th>
+                                    <th>Lần truy cập gần nhất</th>
+                                    <th>Tổng chi tiêu</th>
+                                    <th>Lần chi tiêu lớn nhất</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var kh in dsKhachHang!)
+                                {
+                                    <tr>
+                                        <td><a href="@Url.Action("Detail", "Customer", new {area = "Admin", id = kh.MaKhachHang })">@kh.MaKhachHang</a></td>
+                                        <td>@kh.HoTenKhachHang</td>
+                                        @{ 
+                                            if (kh.ThoiGianGanBo < 1000)
+                                            {
+                                                <td>@kh.ThoiGianGanBo ngày</td>
+                                            } else
+                                            {
+                                                <td><box-icon name='infinite'></box-icon></td>
+                                            }
+                                        }
+                                        <td>@kh.SoLanMua</td>
+                                        <td> @kh.LanMuaGanNhat </td>
+                                        <td>@kh.LanTruyCapCuoi</td>
+                                        <td class="text-red fw-bold">@kh.TongHoaDon đ</td>
+                                        <td class="text-red fw-bold">@kh.HoaDonLonNhat đ</td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="@Url.Action("Detail", "Customer", new {area = "Admin", id = kh.MaKhachHang })" class="btn btn-light btn-sm"><iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table-responsive -->
+                </div>
+                <div class="card-footer border-top">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end mb-0">
+                            <!-- Previous Page Link -->
+                            @if (ViewBag.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Potential", "Customer", new { area = "Admin", page = ViewBag.CurrentPage - 1 })">
+                                        Trước đây
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Trước đây</span>
+                                </li>
+                            }
+
+                            <!-- Page Numbers -->
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@i</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Potential", "Customer", new { area = "Admin", page = i })">@i</a>
+                                    </li>
+                                }
+                            }
+
+                            <!-- Next Page Link -->
+                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Potential", "Customer", new { area = "Admin", page = ViewBag.CurrentPage + 1 })">
+                                        Tiếp theo
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Tiếp theo</span>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- End Container Fluid -->

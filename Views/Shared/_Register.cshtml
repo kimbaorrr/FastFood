@@ -1,0 +1,76 @@
+﻿<div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #f7f1e1;">
+            <div class="modal-header">
+                <h5 class="modal-title page-title" id="registrationModalLabel">Đăng ký tài khoản</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { id = "registrationForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <div class="me-2">
+                            @Html.Label("HoDem", "Họ đệm", new { @style = "font-size: 18px; font-weight: 500;" })
+                            @Html.TextBox("HoDem", null, new { @class = "form_control", @required = "required", @style = "padding: 6px 1rem;", id = "HoDem" })
+                        </div>
+                        <div class="">
+                            @Html.Label("TenKhachHang", "Tên khách hàng", new { @style = "font-size: 18px; font-weight: 500;" })
+                            @Html.TextBox("TenKhachHang", null, new { @class = "form_control", @required = "required", @style = "padding: 6px 1rem;", id = "TenKhachHang" })
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        @Html.Label("TenDangNhap", "Tên đăng nhập", new { @style = "font-size: 18px; font-weight: 500;" })
+                        @Html.TextBox("TenDangNhap", null, new { @class = "form_control", @required = "required", @style = "padding: 6px 1rem;", id = "TenDangNhap" })
+                    </div>
+                    <div class="mb-2">
+                        @Html.Label("MatKhau", "Mật khẩu", new { @style = "font-size: 18px; font-weight: 500;" })
+                        @Html.Password("MatKhau", null, new { @class = "form_control", @required = "required", @style = "padding: 6px 1rem;", id = "MatKhau" })
+                    </div>
+                    <div class="mb-2">
+                        @Html.Label("DiaChiGiaoHang", "Địa chỉ giao hàng", new { @style = "font-size: 18px; font-weight: 500;" })
+                        @Html.TextBox("DiaChiGiaoHang", null, new { @class = "form_control", @style = "padding: 6px 1rem;", id = "DiaChiGiaoHang" })
+                    </div>
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <div class="me-2">
+                            @Html.Label("Email", "Email", new { @style = "font-size: 18px; font-weight: 500;" })
+                            @Html.TextBox("Email", null, new { @class = "form_control", @type = "email", @style = "padding: 6px 1rem;", id = "Email" })
+                        </div>
+                        <div class="">
+                            @Html.Label("SoDienThoai", "Số điện thoại", new { @style = "font-size: 18px; font-weight: 500;" })
+                            @Html.TextBox("SoDienThoai", null, new { @class = "form_control", @type = "tel", @style = "padding: 6px 1rem;", id = "SoDienThoai" })
+                        </div>
+                    </div>
+
+                    <button type="submit" class="theme-btn style-one w-100" style="padding: 10px;">Đăng ký</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#registrationForm').on('submit', function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                var formUrl = $(this).attr('action');
+
+                $.ajax({
+                    url: formUrl,
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        alertMessage(response.type, response.message);
+                        $("#registrationModal").modal("hide");
+                        $('.modal').modal('hide');
+                        $("#loginModal").modal("show");
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.");
+                    }
+                });
+            });
+    });
+</script>

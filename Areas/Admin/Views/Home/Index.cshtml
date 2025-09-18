@@ -1,0 +1,510 @@
+﻿@using FastFood.Models;
+@using FastFood.DB;
+@using X.PagedList;
+@using X.PagedList.Mvc;
+@{
+    int donHangHomNay = FastFood_DonHang.countDonHangHomNay();
+    int doanhThuToday = FastFood_DonHang.doanhThuHomNay();
+    int khachHangMoi = FastFood_KhachHang.countKhachHangMoi();
+    int nhapKhoHomNay = FastFood_NguyenLieu.countNhapKhoHomNay();
+    double soSanhDoanhThuNgay = FastFood_DonHang.soSanhDoanhThuNgay();
+    double soSanhDonHangNgay = FastFood_DonHang.soSanhDonHangNgay();
+    double soSanhKhachHangNgay = FastFood_KhachHang.soSanhKhachHangNgay();
+    double soSanhNhapKhoNgay = 0;
+    IEnumerable<Donhang>? donHangs = ViewBag.DonHang as IEnumerable<Donhang>;
+}
+
+<div class="container-fluid">
+    <!-- Start here.... -->
+    <div class="row">
+        <div class="col-xxl-12">
+            <div class="row">
+
+                <div class="col-md-3">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="avatar-md bg-soft-primary rounded">
+                                        <i class="bx bxs-cart avatar-title text-primary fs-24"></i>
+                                    </div>
+                                </div> <!-- end col -->
+                                <div class="col-9 text-end">
+                                    <p class="text-muted mb-0 text-truncate">Đơn hàng hôm nay</p>
+                                    <h3 class="text-dark mt-1 mb-0">@donHangHomNay</h3>
+                                </div> <!-- end col -->
+                            </div> <!-- end row-->
+                        </div> <!-- end card body -->
+                        <div class="card-footer py-2 bg-light bg-opacity-50">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    @{
+                                        if (soSanhDonHangNgay > 0)
+                                        {
+                                            <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i> @soSanhDonHangNgay%</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger"> <i class="bx bxs-down-arrow fs-12"></i> @soSanhDonHangNgay%</span>
+                                        }
+                                    }
+
+                                    <span class="text-muted ms-1 fs-12">Ngày trước</span>
+                                </div>
+                                <a href="#" class="text-reset fw-semibold fs-12">Xem thêm</a>
+                            </div>
+                        </div> <!-- end card body -->
+                    </div> <!-- end card -->
+                </div> <!-- end col -->
+                <div class="col-md-3">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="avatar-md bg-soft-primary rounded">
+                                        <i class="bx bx-dollar-circle avatar-title text-primary fs-24"></i>
+                                    </div>
+                                </div> <!-- end col -->
+                                <div class="col-9 text-end">
+                                    <p class="text-muted mb-0 text-truncate">Doanh thu hôm nay</p>
+                                    <h3 class="text-dark mt-1 mb-0">@doanhThuToday</h3>
+                                </div> <!-- end col -->
+                            </div> <!-- end row-->
+                        </div> <!-- end card body -->
+                        <div class="card-footer py-2 bg-light bg-opacity-50">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    @if (soSanhDoanhThuNgay > 0)
+                                    {
+                                        <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i> @soSanhDoanhThuNgay%</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger"> <i class="bx bxs-down-arrow fs-12"></i> @soSanhDoanhThuNgay%</span>
+                                    }
+                                    <span class="text-muted ms-1 fs-12">Ngày trước</span>
+                                </div>
+                                <a href="#" class="text-reset fw-semibold fs-12">Xem thêm</a>
+                            </div>
+                        </div> <!-- end card body -->
+                    </div> <!-- end card -->
+                </div> <!-- end col -->
+                <div class="col-md-3">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="avatar-md bg-soft-primary rounded">
+                                        <i class="bx bxs-user-circle avatar-title fs-24 text-primary"></i>
+                                    </div>
+                                </div> <!-- end col -->
+                                <div class="col-9 text-end">
+                                    <p class="text-muted mb-0 text-truncate">Khách hàng mới</p>
+                                    <h3 class="text-dark mt-1 mb-0">@khachHangMoi</h3>
+                                </div> <!-- end col -->
+                            </div> <!-- end row-->
+                        </div> <!-- end card body -->
+                        <div class="card-footer py-2 bg-light bg-opacity-50">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+
+                                    @{
+                                        if (soSanhKhachHangNgay > 0)
+                                        {
+                                            <span class="text-success">
+                                                <i class="bx bxs-up-arrow fs-12"></i> @soSanhKhachHangNgay%
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">
+                                                <i class="bx bxs-down-arrow fs-12"></i> @soSanhKhachHangNgay%
+                                            </span>
+                                        }
+                                    }
+
+                                    <span class="text-muted ms-1 fs-12">Ngày trước</span>
+                                </div>
+                                <a href="#" class="text-reset fw-semibold fs-12">Xem thêm</a>
+                            </div>
+                        </div> <!-- end card body -->
+                    </div> <!-- end card -->
+                </div> <!-- end col -->
+                <div class="col-md-3">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="avatar-md bg-soft-primary rounded">
+                                        <i class="bx bxs-error-circle avatar-title text-primary fs-24"></i>
+                                    </div>
+                                </div> <!-- end col -->
+                                <div class="col-9 text-end">
+                                    <p class="text-muted mb-0 text-truncate">Lần nhập kho hôm nay</p>
+                                    <h3 class="text-dark mt-1 mb-0">@nhapKhoHomNay</h3>
+                                </div> <!-- end col -->
+                            </div> <!-- end row-->
+                        </div> <!-- end card body -->
+                        <div class="card-footer py-2 bg-light bg-opacity-50">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    @{
+                                        if (soSanhNhapKhoNgay > 0)
+                                        {
+                                            <span class="text-success">
+                                                <i class="bx bxs-up-arrow fs-12"></i> @soSanhNhapKhoNgay%
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">
+                                                <i class="bx bxs-down-arrow fs-12"></i> @soSanhNhapKhoNgay%
+                                            </span>
+                                        }
+                                    }
+                                    <span class="text-muted ms-1 fs-12">Ngày trước</span>
+                                </div>
+                                <a href="#" class="text-reset fw-semibold fs-12">Xem thêm</a>
+                            </div>
+                        </div> <!-- end card body -->
+                    </div> <!-- end card -->
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </div> <!-- end col -->
+
+        <div class="col-xxl-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="card-title">Biểu đồ doanh thu theo thời gian</h4>
+                        <div id="doanhThuChartBtn">
+                            <button type="button" class="btn btn-sm btn-outline-light active" data-id="30_days">30D</button>
+                            <button type="button" class="btn btn-sm btn-outline-light" data-id="6_months">6M</button>
+                            <button type="button" class="btn btn-sm btn-outline-light" data-id="1_year">1Y</button>
+                        </div>
+                    </div> <!-- end card-title-->
+
+                    <div dir="ltr">
+                        <div id="doanh-thu-chart" class="apex-charts"></div>
+                    </div>
+                </div> <!-- end card body -->
+            </div> <!-- end card -->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="card-title">Biểu đồ thống kê đơn hàng trong tuần</h4>
+                    </div> <!-- end card-title-->
+
+                    <div dir="ltr">
+                        <div id="don-hang-chart" class="apex-charts"></div>
+                    </div>
+                </div> <!-- end card body -->
+            </div> <!-- end card -->
+        </div> <!-- end left chart card -->
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Top 10 sản phẩm bán chạy trong tuần</h4>
+                    <div id="sanpham-banchay" class="apex-charts"></div>
+                </div>
+
+            </div>
+        </div>
+    </div> <!-- end row -->
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="card-title">
+                            Lịch sử đặt đơn & thanh toán
+                        </h4>
+                    </div>
+                </div>
+                <!-- end card body -->
+                <div class="table-responsive table-centered">
+                    <table class="table mb-0">
+                        <thead class="bg-light bg-opacity-50">
+                            <tr>
+                                <th class="ps-3">
+                                    Mã đơn
+                                </th>
+                                <th>
+                                    Ngày đặt
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Số điện thoại
+                                </th>
+                                <th>
+                                    Địa chỉ giao hàng
+                                </th>
+                                <th>
+                                    Trạng thái đơn
+                                </th>
+                            </tr>
+                        </thead>
+                        <!-- end thead-->
+                        <tbody>
+                            @foreach (Donhang dh in donHangs!)
+                            {
+                                <tr>
+                                    <td class="ps-3">
+                                        <a href="@Url.Action("Detail", "Order", new { area = "Admin", id = dh.Madonhang })">@dh.Madonhang</a>
+                                    </td>
+                                    <td>@dh.Ngaydat</td>
+                                    <td>@dh.NguoimuaNavigation.Email</td>
+                                    <td>@dh.NguoimuaNavigation.Sodienthoai</td>
+                                    <td>@dh.NguoimuaNavigation.Diachi</td>
+                                    <td>
+                                        @FastFood_DonHang.getTenTrangThai(dh.Trangthaidon)
+                                    </td>
+                                </tr>
+
+                            }
+
+                        </tbody>
+                        <!-- end tbody -->
+                    </table>
+                    <!-- end table -->
+                </div>
+                <!-- table responsive -->
+
+                <div class="card-footer border-top">
+                    <div class="row g-3 justify-content-end">
+
+                        <div class="col-sm-auto">
+                            <ul class="pagination m-0">
+                                <!-- Previous Page Link -->
+                                @if (ViewBag.CurrentPage > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", "Home", new { area = "Admin", page = ViewBag.CurrentPage - 1 })">
+                                            Trước đây
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Trước đây</span>
+                                    </li>
+                                }
+
+                                <!-- Page Numbers -->
+                                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                {
+                                    if (i == ViewBag.CurrentPage)
+                                    {
+                                        <li class="page-item active">
+                                            <span class="page-link">@i</span>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="@Url.Action("Index", "Home", new { area = "Admin", page = i })">@i</a>
+                                        </li>
+                                    }
+                                }
+
+                                <!-- Next Page Link -->
+                                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", "Home", new { area = "Admin", page = ViewBag.CurrentPage + 1 })">
+                                            Tiếp theo
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Next</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div> <!-- end row -->
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#doanhThuChartBtn button').click(function () {
+            $('button').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        var chartDoanhThu, chartSanPhamBanChay;
+        loadDoanhThuChart("30_days");
+
+        $('.btn-outline-light').click(function() {
+            var type = $(this).data('id');
+            loadDoanhThuChart(type);
+        });
+
+        function loadDoanhThuChart(type) {
+            $.ajax({
+                url: '@Url.Action("DoanhThuTheoThoiGian", "Home", new {area = "Admin"})',
+                method: 'GET',
+                dataType: 'json',
+                data: { type: type },
+                success: function(json_data) {
+                    const dates = Object.keys(json_data);
+                    const doanhThuValues = Object.values(json_data);
+
+                    if (chartDoanhThu) {
+                        chartDoanhThu.destroy();
+                    }
+
+                    var options = {
+                        series: [{
+                            name: 'Doanh thu',
+                            data: doanhThuValues
+                        }],
+                        chart: {
+                            height: 350,
+                            type: 'bar'
+                        },
+                        plotOptions: {
+                            bar: {
+                                borderRadius: 10,
+                                dataLabels: { position: 'top' }
+                            }
+                        },
+                        colors: ["#ff6c2f", "#22c55e"],
+                        dataLabels: {
+                            enabled: false,
+                            formatter: val => val + " VNĐ",
+                            offsetY: -20,
+                            style: { fontSize: '12px', colors: ["#304758"] }
+                        },
+                        xaxis: {
+                            categories: dates,
+                            position: 'top',
+                            axisBorder: { show: false },
+                            axisTicks: { show: false },
+                        },
+                        yaxis: {
+                            axisBorder: { show: false },
+                            axisTicks: { show: false },
+                            labels: { show: true, formatter: val => val + " VNĐ" }
+                        },
+                        title: {
+                            text: 'Tổng doanh thu ' + type.replace('_', ' ').toUpperCase(),
+                            floating: true,
+                            offsetY: 330,
+                            align: 'center',
+                            style: { color: '#444' }
+                        }
+                    };
+
+                    chartDoanhThu = new ApexCharts(document.querySelector("#doanh-thu-chart"), options);
+                    chartDoanhThu.render();
+                },
+                error: function(error) {
+                    console.error('Lỗi khi lấy dữ liệu doanh thu:', error);
+                }
+            });
+        }
+
+        loadTopSanPhamBanChay();
+
+        function loadTopSanPhamBanChay() {
+            $.ajax({
+                url: '@Url.Action("TopSanPhamBanChay", "Home", new {area = "Admin"})',
+                method: 'GET',
+                dataType: 'json',
+                data: { take: 10 },
+                success: function(json_data) {
+                    updateSanPhamChart(json_data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+
+        function updateSanPhamChart(data) {
+            const categories = data.map(item => item.TenSanPham);
+            const seriesData = data.map(item => item.SoLuongDaBan);
+
+            var options = {
+                chart: { height: 380, type: "bar", toolbar: { show: false } },
+                plotOptions: { bar: { borderRadius: 10, horizontal: true } },
+                dataLabels: { enabled: false },
+                series: [{ data: seriesData }],
+                colors: ["#ef4444", "#60a5fa"],
+                xaxis: {
+                    categories: categories,
+                    labels: {
+                        formatter: function (value) {
+                            return value.length > 15 ? value.slice(0, 15) + '...' : value;
+                        }
+                    }
+                },
+                states: { hover: { filter: "none" } },
+                grid: { borderColor: "#f1f3fa" },
+            };
+
+            if (chartSanPhamBanChay) {
+                chartSanPhamBanChay.destroy();
+            }
+            chartSanPhamBanChay = new ApexCharts(document.querySelector("#sanpham-banchay"), options);
+            chartSanPhamBanChay.render();
+        }
+
+        $.ajax({
+            url: '@Url.Action("DonHangTrongTuan", "Home", new {area = "Admin"})',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var dates = [];
+                var orderCounts = [];
+
+                data.forEach(function (item) {
+                    dates.push(item.Date);
+                    orderCounts.push(item.OrderCount);
+                });
+
+                var options = {
+                    chart: {
+                        type: 'line',
+                        height: 350
+                    },
+                    colors: ["#22c55e", "#8b5cf6"],
+                    series: [{
+                        name: 'Số đơn hàng',
+                        data: orderCounts
+                    }],
+                    xaxis: {
+                        categories: dates
+                    }
+                };
+
+                var chart = new ApexCharts(document.querySelector("#don-hang-chart"), options);
+                chart.render();
+            },
+            error: function (xhr, status, error) {
+                console.error("Có lỗi khi lấy dữ liệu: " + error);
+            }
+        });
+    });
+</script>
+
+

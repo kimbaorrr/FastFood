@@ -1,0 +1,367 @@
+﻿@    using FastFood.Models;
+    using FastFood.Models.ViewModels;
+@{
+    @model FastFood_SanPham_ThemSanPham
+}
+
+<!-- Start Container Fluid -->
+<div class="container-xxl">
+    @Html.AntiForgeryToken()
+    @using (Html.BeginForm("Create", "Product", FormMethod.Post, new { area = "Admin", id = "productForm" }))
+    {
+
+        <div class="row">
+            <div class="col-xl-3 col-lg-4">
+                <div class="card mx-auto shadow-sm">
+                    <img id="previewImage" src="https://static.vecteezy.com/system/resources/previews/004/141/669/non_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg" class="card-img-top" alt="Product Image">
+                    <div class="card-body">
+                        <h5 id="previewName" class="card-title text-primary fw-bold">Tên sản phẩm</h5>
+                        <p id="previewDescription" class="card-text text-muted">Mô tả ngắn gọn về sản phẩm để thu hút người mua.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 id="previewOriginalPrice" class="text-decoration-line-through text-muted">Giá gốc: 0 VND</h6>
+                            <span id="previewDiscount" class="badge bg-danger">0% OFF</span>
+                        </div>
+                        <h5 id="previewDiscountedPrice" class="text-danger fw-bold">Giá sau khuyến mãi: 0 VND</h5>
+                    </div>
+                </div>
+                <div class="card mx-auto shadow-sm">
+                    <div class="card-header">
+                        <h4 class="card-title">Tải ảnh lên</h4>
+                    </div>
+                    <div class="card-body">
+                        @Html.TextBox("HinhAnh", null, new { @class = "form-control", @multiple = "", @type = "file", id = "HinhAnh", @accept = "image/*" })
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-xl-9 col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Thông tin sản phẩm</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+
+                                <div class="mb-3">
+                                    @Html.LabelFor(m => m.TenSanPham, new { @class = "form-label" }) <span class="text-red"> *</span>
+                                    @Html.TextBoxFor(m => m.TenSanPham, new { @class = "form-control", @required = "" })
+                                    @Html.ValidationMessageFor(m => m.TenSanPham, null, new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.LabelFor(m => m.MaDanhMuc, new { @class = "form-label" }) <span class="text-red"> *</span>
+                                @Html.DropDownListFor(m => m.MaDanhMuc, Model.DanhMuc, "Chọn danh mục", new
+                                {
+                                   @class = "form-control mt-1",
+                                   @data_choices = "true",
+                                   @data_choices_groups = "true",
+                                   @data_placeholder = "Chọn danh mục",
+                                   @required = ""
+                                })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+
+                                <div class="mb-3">
+                                    @Html.LabelFor(m => m.NgayTao, new { @class = "form-label" })
+                                    @Html.TextBoxFor(m => m.NgayTao, new { @class = "form-control", @readonly = "true" })
+                                </div>
+
+                            </div>
+                            <div class="col-lg-4">
+
+                                <div class="mb-3">
+                                    @Html.LabelFor(m => m.NgayCapNhat, new { @class = "form-label" })
+                                    @Html.TextBoxFor(m => m.NgayCapNhat, new { @class = "form-control", @readonly = "true" })
+                                </div>
+
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-3">
+                                    @Html.LabelFor(m => m.NguoiTao, new { @class = "form-label" })
+                                    @Html.TextBoxFor(m => m.NguoiTao, new { @class = "form-control", @readonly = "true" })
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    @Html.LabelFor(m => m.MoTaNgan, new { @class = "form-label" }) 
+                                    @Html.TextAreaFor(m => m.MoTaNgan, new { @class = "form-control bg-light-subtle", @rows = "7" })
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(m => m.MoTaDai, new { @class = "form-label" })
+                                    @Html.TextAreaFor(m => m.MoTaDai, new { @class = "form-control bg-light-subtle", @rows = "7" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Thông tin giá bán</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4">
+
+                                @Html.LabelFor(m => m.GiaGoc, new { @class = "form-label" }) <span class="text-red"> *</span>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
+                                    @Html.TextBoxFor(m => m.GiaGoc, new { @class = "form-control", @required = "", @type = "number" })
+                                </div>
+
+                            </div>
+                            <div class="col-lg-4">
+                                @Html.LabelFor(m => m.KhuyenMai, new { @class = "form-label" }) <span class="text-red"> *</span>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text fs-20"><i class='bx bxs-discount'></i></span>
+                                    @Html.TextBoxFor(m => m.KhuyenMai, new { @class = "form-control", @required = "", @type = "number" })
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+
+
+                                @Html.LabelFor(x => x.GiaSauKhuyenMai, new { @class = "form-label" })
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text fs-20"><i class='bx bxs-file-txt'></i></span>
+                                    @Html.TextBoxFor(m => m.GiaSauKhuyenMai, new { @class = "form-control", @readonly = "", @disabled = "", @type = "number" })
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">Thông tin nguyên liệu</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="ingredientDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Chọn nguyên liệu
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="ingredientDropdown" id="ingredient-dropdown-menu">
+                                </ul>
+                            </div>
+                        </div>
+                        <ul class="list-group" id="selected-ingredients-list">
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-light mb-3 rounded p-3">
+                    <div class="row justify-content-end g-2">
+                        <div class="col-lg-2">
+                            <button type="submit" class="btn btn-outline-secondary w-100">Xác nhận</button>
+                        </div>
+                        <div class="col-lg-2">
+                            <button type="reset" class="btn btn-primary w-100">Hủy bỏ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+<!-- End Container Fluid -->
+
+<script>
+    const donViTinhList = ["cái"];
+    const menuDropdownNguyenLieu = $('#ingredient-dropdown-menu');
+    const danhSachNguyenLieuDuocChon = $('#selected-ingredients-list');
+
+    function layNguyenLieu() {
+        $.ajax({
+            url: '@Url.Action("Get", "Ingredient", new {area = "Admin"})',
+            method: 'GET',
+            dataType: 'json',
+            success: function (nguyenLieuList) {
+                $.each(nguyenLieuList, function (index, nguyenLieu) {
+                    const itemDropdown = $('<li></li>').append(`
+                        <a class="dropdown-item" href="#"
+                           data-id="${nguyenLieu.MaNguyenLieu}"
+                           data-name="${nguyenLieu.TenNguyenLieu}"
+                           data-description="${nguyenLieu.MoTa}">
+                            ${nguyenLieu.TenNguyenLieu}
+                        </a>
+                    `);
+                    menuDropdownNguyenLieu.append(itemDropdown);
+                });
+                updateDropdownState();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Lỗi khi lấy nguyên liệu:', textStatus, errorThrown);
+            }
+        });
+    }
+
+    function disableDropdownItem(maNguyenLieu) {
+        menuDropdownNguyenLieu.find(`a[data-id="${maNguyenLieu}"]`).addClass('disabled').css('pointer-events', 'none');
+    }
+
+    function enableDropdownItem(maNguyenLieu) {
+        menuDropdownNguyenLieu.find(`a[data-id="${maNguyenLieu}"]`).removeClass('disabled').css('pointer-events', 'auto');
+    }
+
+    function updateDropdownState() {
+        $('#selected-ingredients-list .list-group-item').each(function () {
+            const maNguyenLieuCode = $(this).attr('id').split('-')[1];
+            disableDropdownItem(maNguyenLieuCode);
+        });
+    }
+
+    layNguyenLieu();
+
+    menuDropdownNguyenLieu.on('click', 'a', function (event) {
+        event.preventDefault();
+        const maNguyenLieu = $(this).data('id');
+        const tenNguyenLieu = $(this).data('name');
+        const moTaNguyenLieu = $(this).data('description');
+
+        if ($('#ingredient-' + maNguyenLieu).length === 0) {
+            const itemDanhSach = $(`
+                <li class="list-group-item d-flex justify-content-between align-items-center" id="ingredient-${maNguyenLieu}">
+                    <div>
+                        <h5 class="mb-1">${tenNguyenLieu}</h5>
+                        <p class="mb-1">${moTaNguyenLieu}</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <input type="text" class="form-control form-control-sm input-so-luong me-2" value="1" placeholder="Số lượng">
+                        <select class="form-select form-select-sm don-vi-tinh me-2" aria-label="Đơn vị tính">
+                            ${donViTinhList.map(donVi => `<option value="${donVi}">${donVi}</option>`).join('')}
+                        </select>
+                        <button class="btn btn-outline-danger btn-sm btn-xoa">Xóa</button>
+                    </div>
+                </li>
+            `);
+            danhSachNguyenLieuDuocChon.append(itemDanhSach);
+            disableDropdownItem(maNguyenLieu);
+        } else {
+            alert("Nguyên liệu đã có trong danh sách.");
+        }
+    });
+
+    danhSachNguyenLieuDuocChon.on('change', '.don-vi-tinh', function () {
+        const selectedUnit = $(this).val();
+        $(this).closest('.list-group-item').data('donViTinh', selectedUnit);
+    });
+
+    danhSachNguyenLieuDuocChon.on('click', '.btn-xoa', function () {
+        const maNguyenLieuCode = $(this).closest('.list-group-item').attr('id').split('-')[1];
+        $(this).closest('.list-group-item').remove();
+        enableDropdownItem(maNguyenLieuCode);
+        updateDropdownState();
+    });
+
+    $('#productForm').on('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData();
+        const duLieuFormArray = $(this).serializeArray();
+        $.each(duLieuFormArray, function (index, item) {
+            formData.append(`SanPham.${item.name}`, item.value);
+        });
+
+        const antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+        formData.append("__RequestVerificationToken", antiForgeryToken);
+
+
+
+        let index = 0;
+        $('#selected-ingredients-list .list-group-item').each(function () {
+            const maNguyenLieuCode = $(this).attr('id').split('-')[1];
+            let soLuong = parseInt($(this).find('.input-so-luong').val(), 10) || 0;
+            const donViTinh = $(this).find('.don-vi-tinh').val();
+
+            formData.append(`DanhSachNguyenLieu[${index}].MaNguyenLieu`, maNguyenLieuCode);
+            formData.append(`DanhSachNguyenLieu[${index}].SoLuong`, soLuong);
+            formData.append(`DanhSachNguyenLieu[${index}].DonViTinh`, donViTinh);
+            index++;
+        });
+
+        const hinhAnh = $('#HinhAnh')[0].files;
+        for (let i = 0; i < hinhAnh.length; i++) {
+            formData.append("HinhAnh", hinhAnh[i]);
+        }
+
+        formData.forEach((value, key) => {
+            console.log(key, value);
+        });
+
+        $.ajax({
+            url: '@Url.Action("Create", "Product", new { area = "Admin" })',
+            method: 'POST',
+            dataType: 'json',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                alertMessage(response.message, response.type);
+                if (response.success) {
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                }
+            },
+            error: function (jqXHR) {
+                console.error('Error submitting ingredients:', jqXHR.statusText);
+                alertMessage("An error occurred while submitting data!", "red");
+            }
+        });
+    });
+
+    $(document).ready(() => {
+        $("#GiaGoc, #KhuyenMai").on("change keyup", function () {
+            const giaGoc = parseInt($("#GiaGoc").val()) || 0;
+            const khuyenMai = parseInt($("#KhuyenMai").val()) || 0;
+
+            const discountAmount = (khuyenMai / 100) * giaGoc;
+            const giaSauKhuyenMai = giaGoc - discountAmount;
+
+            $("#GiaSauKhuyenMai").val(giaSauKhuyenMai);
+        });
+    });
+
+    function updatePreview() {
+        const name = $('#TenSanPham').val() || "Tên sản phẩm";
+        const description = $('#MoTa').val() || "Mô tả ngắn gọn về sản phẩm để thu hút người mua.";
+        const originalPrice = parseFloat($('#GiaGoc').val()) || 0;
+        const discount = parseFloat($('#KhuyenMai').val()) || 0;
+        const imageInput = $('#HinhAnh')[0];
+        let imageUrl = "https://static.vecteezy.com/system/resources/previews/004/141/669/non_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg";
+
+        if (imageInput.files && imageInput.files.length > 0) {
+            const file = imageInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                imageUrl = e.target.result;
+                $('#previewImage').attr('src', imageUrl);
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            $('#previewImage').attr('src', imageUrl);
+        }
+
+        const discountedPrice = originalPrice * (1 - discount / 100);
+
+        $('#previewName').text(name);
+        $('#previewDescription').text(description);
+        $('#previewOriginalPrice').text(`Giá gốc: ${originalPrice.toLocaleString()} VND`);
+        $('#previewDiscount').text(`${discount}% OFF`);
+        $('#previewDiscountedPrice').text(`Giá sau khuyến mãi: ${discountedPrice.toLocaleString()} VND`);
+    }
+
+    $('#TenSanPham, #MoTa, #GiaGoc, #KhuyenMai, #HinhAnh').on('input keyup change', updatePreview);
+</script>
+
+
+

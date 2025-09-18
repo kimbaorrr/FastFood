@@ -1,0 +1,69 @@
+﻿@using FastFood.Models;
+
+<div class="modal fade" id="editArticleModal" tabindex="-1" aria-labelledby="editArticleModalLabel" aria-hidden="true">
+	@using (Html.BeginForm("Edit", "Article", null, FormMethod.Post, true, new { @area = "Admin", @id = "editArticleForm", }))
+	{
+		@model FastFood_BaiViet_SuaBaiViet
+		@Html.AntiForgeryToken()
+		
+
+		<div class="modal-dialog modal-lg modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title h4" id="editArticleModalLabel">Sửa bài viết <span></span></h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+
+				<div class="modal-body">
+					@Html.Hidden("MaBaiViet", "")
+					<div class="form-group mb-2">
+						@Html.LabelFor(x => x.TieuDe, new { @class = "form-label" }) <span class="text-red"> *</span>
+						@Html.TextBoxFor(x => x.TieuDe, new { @class = "form-control article-title" })
+					</div>
+					<div class="form-group mb-2">
+						@Html.LabelFor(x => x.MoTaNgan, new { @class = "form-label" })
+						@Html.TextBoxFor(x => x.MoTaNgan, new { @class = "form-control article-description" })
+					</div>
+					<div class="form-group mb-2">
+						@Html.LabelFor(x => x.NoiDung, new { @class = "form-label" })
+						@Html.TextAreaFor(x => x.NoiDung, new { @class = "form-control article-content" })
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+					<button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+				</div>
+
+
+			</div>
+		</div>
+	}
+</div>
+
+<script>
+	$(document).ready(function () {
+		$("#editArticleForm").on("submit", function (e) {
+			e.preventDefault();
+			const formData = $(this).serialize();
+			const url = $(this).attr("action");
+
+			$.ajax({
+			url: url,
+			type: "POST",
+			dataType: "json",
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function (response) {
+				alertMessage(response.message, response.type);
+				setTimeout(() => {
+					location.reload();
+				}, 1500);
+
+			},
+			error: function (xhr) {
+				console.log("Lỗi sửa article !");
+			}
+		});
+	});
+</script>

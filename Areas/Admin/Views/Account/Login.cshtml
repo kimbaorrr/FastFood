@@ -1,0 +1,50 @@
+﻿@using FastFood.Models;
+@{
+    ViewBag.Title = "Đăng nhập hệ thống";
+    Layout = "~/Areas/Admin/Views/Shared/_AuthLayout.cshtml";
+    @model FastFood_NhanVienDangNhap
+}
+
+<div class="mb-4">
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "authentication-form", id = "loginForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            @Html.LabelFor(m => m.TenDangNhap, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.TenDangNhap, new { @class = "form-control bg-", @autofocus = "", @required = "" })
+            @Html.ValidationMessageFor(m => m.TenDangNhap, null, new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            <a href="@Url.Action("ForgetPassword", "Account", new {area = "Admin"})" class="float-end text-muted text-unline-dashed ms-1">Quên mật khẩu ?</a>
+            @Html.LabelFor(m => m.MatKhau, new { @class = "form-label" })
+            @Html.PasswordFor(m => m.MatKhau, new { @class = "form-control bg-", @required = "" })
+            @Html.ValidationMessageFor(m => m.MatKhau, null, new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            <div class="form-check">
+                @Html.LabelFor(m => m.GhiNhoDangNhap, new { @class = "form-check-label" })
+                @Html.CheckBoxFor(m => m.GhiNhoDangNhap, new { @class = "form-check-input" })
+                @Html.ValidationMessageFor(m => m.GhiNhoDangNhap, null, new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="mb-1 text-center d-grid">
+            <button class="btn btn-soft-primary" type="submit" id="submitBtn">
+                Đăng nhập
+                <div class="spinner-border text-secondary ms-1 mt-1" style="height: 12px; width: 12px; display: none;" id="loadingSpinner"></div>
+            </button>
+        </div>
+        @Html.Partial("_AlertMessage")
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#loginForm').on('submit', function () {
+            $('#loadingSpinner').show();
+            $('#submitBtn').prop('disabled', true);
+        });
+    });
+</script>
+
+

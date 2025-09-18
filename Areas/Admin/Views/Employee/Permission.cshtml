@@ -1,0 +1,124 @@
+﻿@using FastFood.Models
+
+@{
+	var dsQuyenHan = FastFood_NhanVienDangNhap.getQuyenHanNhanVien();
+
+}
+
+
+<div class="container-fluid">
+	<div class="row mt-3">
+		<div class="col-12 col-lg-4">
+			<!-- Form tạo tài khoản nhân viên -->
+			@Html.Partial("_Create")
+
+		</div>
+		<div class="col-12 col-lg-8">
+			<!-- Bảng phân quyền nhân viên -->
+			@Html.Partial("_PermissionTable")
+
+		</div>
+	</div>
+
+	<!-- Edit Modal -->
+	@Html.Partial("_Edit")
+</div>
+
+<script>
+
+	function loadListPermission() {
+		$.ajax({
+			url: '@Url.Action("GetListPermission", "Employee", new { area = "Admin" })',
+			type: 'GET',
+			dataType: 'json',
+			success: function(data) {
+				var permission = $('.listPermission');
+				permission.empty();
+
+				$.each(data, function(index, item) {
+					permission.append(
+						`
+						<div class="col-md-4 mb-1">
+								 <div class="form-check">
+									 <input class="form-check-input choosePermission" type="checkbox" value="${item.MaQuyenHan}">
+									 <label class="form-check-label">
+										 ${item.MoTa}
+									 </label>
+								 </div>
+						</div>
+
+						`
+					);
+				});
+			},
+			error: function(xhr, status, error) {
+				alert("Có lỗi khi tải lại bảng dữ liệu: " + error);
+			}
+		});
+	}
+
+	$(document).ready(function () {
+		loadListPermission();
+		$(document).on("click", "button.deleteEmployeeLogin", function () {
+			const employeeId = $(this).data("employee-id");
+			const token = $('input[name="__RequestVerificationToken"]').val();
+
+			$.ajax({
+				url: '@Url.Action("Delete", "Employee", new { area = "Admin" })',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					employeeId: employeeId,
+					__RequestVerificationToken: token
+				},
+				success: function (response) {
+					alertMessage(response.message, response.type);
+					loadTableData();
+					loadEmployeeData();
+				},
+				error: function (xhr, status, error) {
+					console.log("Lỗi xóa tài khoản !");
+				}
+			});
+		});
+
+		$(document).on("click", ".editEmployeeLogin", function () {
+			const employeeId = $(this).data("employee-id");
+			const userName = $(this).data("user-name");
+
+			$("#editModal input[name='employeeId']").val(employeeId);
+			$("#editModal span[name='employeeId']").text(employeeId);
+			$("#editModal input[name='TenDangNhap']").val(userName);
+		});
+
+		$('#editEmployeeForm').on('submit', function (e) {
+			e.preventDefault();
+			let formData = $(this).serialize();
+			const url = $(this).attr("action");
+			const role = $(this).find("select").val();
+			let selectedPermissions = [];
+
+			$(this).find(".choosePermission:checked").each(function () {
+				selectedPermissions.push($(this).val());
+			});
+
+			formData += '&permissions=' + JSON.stringify(selectedPermissions);
+			formData += '&role=' + role;
+			$.ajax({
+				url: url,
+				type: 'POST',
+				data: formData,
+				dataType: 'json',
+				success: function (response) {
+					alertMessage(response.message, response.type);
+					loadTableData();
+					$("#editModal").modal("hide");
+				},
+				error: function (xhr, status, error) {
+					alert('Đã xảy ra lỗi khi sửa tài khoản.');
+				}
+			});
+		});
+	});
+</script>
+

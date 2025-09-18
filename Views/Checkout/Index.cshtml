@@ -1,0 +1,125 @@
+﻿@using FastFood.Models;
+@{
+    @model FastFood_ThanhToan_ThemDot
+}
+
+<!--====== Start Page Section ======-->
+<section class="page-banner">
+    <div class="page-bg-wrapper p-r z-1 bg_cover pt-100 pb-110" style="background-image: url(/public_page/assets/images/bg/page-bg.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--=== Page Banner Content ===-->
+                    <div class="page-banner-content text-center">
+                        <h1 class="page-title">@ViewBag.Title</h1>
+                        <ul class="breadcrumb-link">
+                            <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                            <li class="active">@ViewBag.Title</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--====== End Page Section ======-->
+<!--====== Start Checkout Section ======-->
+<section class="checkout-section pt-130 pb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!--=== Checkout Wrapper ===-->
+                <div class="checkout-wrapper mt-50 wow fadeInUp">
+                    <!--=== Checkout Form ===-->
+                    @using (Html.BeginForm("Index", "Checkout", FormMethod.Post, new { @class = "checkout-form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(x => x.IDMaKhuyenMai)
+                        @Html.HiddenFor(x => x.TongTienSanPham)
+                        @Html.HiddenFor(x => x.PhiVanChuyen)
+                        @Html.HiddenFor(x => x.TongThanhToan)
+                        <div class="row">
+                            <div class="col-xl-8">
+                                <h4 class="title mb-15">Thông tin giao hàng</h4>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form_group">
+                                            @Html.LabelFor(x => x.HoDem)
+                                            @Html.TextBoxFor(x => x.HoDem, new { @class = "form_control", @readonly = "" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form_group">
+                                            @Html.LabelFor(x => x.TenKhachHang)
+                                            @Html.TextBoxFor(x => x.TenKhachHang, new { @class = "form_control", @readonly = "" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form_group">
+                                            @Html.LabelFor(x => x.DiaChiGiaoHang)
+                                            @Html.TextBoxFor(x => x.DiaChiGiaoHang, new { @class = "form_control", @required = "" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form_group">
+                                            @Html.LabelFor(x => x.ThanhPho)
+                                            @Html.TextBoxFor(x => x.ThanhPho, new { @class = "form_control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form_group">
+                                            @Html.LabelFor(x => x.MaBuuDien)
+                                            @Html.TextBoxFor(x => x.MaBuuDien, new { @class = "form_control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form_group">
+                                            <label>Thông tin liên hệ</label>
+                                            @Html.TextBoxFor(x => x.Email, new { @class = "form_control" })
+                                            @Html.TextBoxFor(x => x.SoDienThoai, new { @class = "form_control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form_group">
+                                            @Html.LabelFor(x => x.GhiChuDonHang)
+                                            @Html.TextAreaFor(x => x.GhiChuDonHang, new { @class = "form_control", @rows = 3 })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4">
+                                <div class="shopping-cart-area mb-50 wow fadeInDown">
+                                    <h4 class="title mb-15">Thông tin thanh toán</h4>
+                                    <div class="shopping-cart-total">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Tổng tiền sản phẩm</td>
+                                                    <td>@Html.DisplayTextFor(x => x.TongTienSanPham)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Phí vận chuyển</td>
+                                                    <td>+@Html.DisplayTextFor(x => x.PhiVanChuyen)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mã khuyến mãi</td>
+                                                    <td>-@Html.DisplayTextFor(x => x.MaKhuyenMai)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="total"><span>Tổng thanh toán</span></td>
+                                                    <td class="total price"><span>@Html.DisplayTextFor(x => x.TongThanhToan)</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <button class="theme-btn style-one mt-4 d-block mx-auto">Thanh toán</button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--====== End Checkout Section ======-->

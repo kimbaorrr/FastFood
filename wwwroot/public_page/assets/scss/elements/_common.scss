@@ -1,0 +1,498 @@
+
+/*---==================
+    02. Elements  
+    
+        # 01 Common CSS
+=================----*/
+
+
+/*====== Extra CSS ======*/
+
+.bg_cover{
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.slick-slide {
+    outline: 0;
+}
+.form_group{
+    position: relative;
+}
+.form_control{
+    width: 100%;
+    border: none;
+}
+textarea.form_control{
+    padding-top: 15px;
+    display: inherit;
+}
+ul.social-link{
+    & li{
+        display: inline-block;
+    }
+}
+.p-r{
+    position: relative;
+}
+.z-1{
+    z-index: 1;
+}
+.z--1{
+    z-index: -1;
+}
+.z-2{
+    z-index: 2;
+}
+
+
+/*=== Preloader ===*/
+
+.fd-preloader {
+    bottom: 0;
+    height: 100vh;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 100vw;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @extend %white-bg;
+    & .loader {
+        position: relative;
+        overflow: hidden;
+    }
+}
+.loader {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    border: 3px solid;
+    border-color: $secondary-color $secondary-color transparent transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+  .loader::after,
+  .loader::before {
+    content: '';  
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border: 3px solid;
+    border-color: transparent transparent $primary-color $primary-color;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: rotationBack 0.5s linear infinite;
+    transform-origin: center center;
+  }
+  .loader::before {
+    width: 50px;
+    height:50px;
+    border-color: $secondary-color $secondary-color transparent transparent;
+    animation: rotation 1.5s linear infinite;
+  }
+      
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  } 
+  @keyframes rotationBack {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(-360deg);
+    }
+  }
+      
+
+/*====== Start Back to top css ======*/
+
+.back-to-top {
+    border-radius: 50%;
+    bottom: 30px;
+    @extend %white-color;
+    cursor: pointer;
+    display: none;
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    position: fixed;
+    right: 30px;
+    text-align: center;
+    text-decoration: none;
+    transition: .3s;
+    z-index: 337;
+    @extend %primary-bg;
+    &:hover{
+        @extend %white-color;
+    }
+}
+
+
+/*===== All Bg =====*/
+
+.primary-dark-bg{
+    @extend %primary-dark-bg;
+}
+.gray-bg{
+    @extend %gray-bg;
+}
+
+/*===== Button Style =====*/
+
+.theme-btn{
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: 700 20px $body-font;
+    padding: 17px 46px;
+    @include transition(.3s);
+    &.style-one{
+        background-color: $primary-color;
+        color: $white-color;
+        border-radius: 10px;
+        & i{
+            margin-right: 10px;
+        }
+        &:hover{
+            @extend %secondary-bg;
+        }
+    }
+    &.style-two{
+        background-color: transparent;
+        border: 1px solid $primary-color;
+        border-radius: 10px;
+    }
+}
+
+.read-more{
+    &.style-one{
+        font: 700 18px $body-font;
+        @extend %primary-color;
+    }
+}
+
+.circle-button{
+    & a{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 110px;
+        height: 110px;
+        @extend %primary-bg;
+        border-radius: 50%;
+        @extend %white-color;
+        flex-direction: column;
+        font: 700 18px $body-font;
+        & span{
+            margin-bottom: 5px;
+        }
+        &:hover{
+            @extend %white-color;
+        }
+    }
+}
+
+/* Sub Title */ 
+
+.sub-title{
+    @extend %primary-color;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+/* Section Title */ 
+
+.section-title{
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    & h2{
+        text-transform: uppercase;
+        font: 800 60px $heading-font;
+        margin-bottom: 15px;
+        @media #{$lm}{
+            font-size: 42px;
+            line-height: 55px;
+        }
+        @media #{$xs}{
+            font-size: 36px;
+            line-height: 45px;
+        }
+    }
+    & p{
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 27px;
+    }
+    &.section-title-left{
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/* Text White */ 
+
+.text-white{
+    & h1,
+    & h2,
+    & h3,
+    & h4,
+    & h5,
+    & h6,
+    & p{
+        @extend %white-color;
+    }
+    & .sub-title{
+        @extend %white-color;
+    }
+    &.section-title{
+        & p{
+            color: rgba(255, 255, 255, 0.7);
+        }
+    }
+}
+
+/* Viddeo Popup */ 
+
+.video-popup{
+    position: relative;
+    width: 80px;
+    height: 80px;
+    @extend %flex-center;
+    display: inline-flex;
+    @extend %secondary-bg;
+    border-radius: 50%;
+    @extend %white-color;
+    &:hover{
+        @extend %white-color;
+    }
+    &:after,
+    &:before{
+        position: absolute;
+        left: 0;
+        top: 0;
+        content: '';
+        @include border-radius(50%);
+        width: 100%;
+        height: 100%;
+        border: 1px solid $gray-color;
+        animation: playpopup infinite ease-in 2s;
+    }
+    &:before{
+        animation: playpopup infinite ease-in-out 3s;
+    }
+}
+@keyframes playpopup {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Ratings */
+
+.ratings{
+    line-height: 1;
+    &.rating-one{
+        & li{
+            &:nth-child(2),
+            &:nth-child(3),
+            &:nth-child(4),
+            &:nth-child(5){
+                color: #C8C8C8;
+            }
+        }
+    }
+    &.rating-two{
+        & li{
+            &:nth-child(3),
+            &:nth-child(4),
+            &:nth-child(5){
+                color: #C8C8C8;
+            }
+        }
+    }
+    &.rating-three{
+        & li{
+            &:nth-child(4),
+            &:nth-child(5){
+                color: #C8C8C8;
+            }
+        }
+    }
+    &.rating-four{
+        & li{
+            &:last-child{
+                color: #C8C8C8;
+            }
+        }
+    }
+    & li{
+        display: inline-block;
+        color: #FEA400;
+    }
+}
+
+/* Slick Dots */ 
+
+ul.slick-dots{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    & li{
+        & button{
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.2);
+            transition: all .3s;
+        }
+        &.slick-active{
+            & button{
+                @extend %primary-bg;
+                width: 28px;
+                border-radius: 20px;
+            }
+        }
+    }
+}
+
+
+/* Form Control */ 
+
+.form_control{
+    width: 100%;
+    padding: 17px 30px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.30);
+    background-color: #FFF;
+    font-size: 18px;
+    margin-bottom: 30px;
+    @include transition(.3s);
+    &:focus{
+        border-color: $primary-color;
+    }
+}
+
+
+/* Quantity Input */ 
+
+.quantity-input{
+    border: 1px solid $primary-color;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    justify-content: center;
+    padding: 14px 20px;
+    max-width: 170px;
+    @media #{$xss}{
+        padding: 14px 15px;
+        max-width: 100px;
+    }
+    & input{
+        border: none;
+        text-align: center;
+        max-width: 100px;
+        font-weight: 500;
+        @extend %heading-color;
+        @media #{$xss}{
+            max-width: 50px;
+        }
+    }
+    & button{
+        background-color: transparent;
+        & i{
+            font-size: 18px;
+            @media #{$xss}{
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+/* Foodix Pagination */ 
+
+.foodix-pagination{
+    gap: 15px;
+    & li{
+        & a{
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            @extend %flex-center;
+            border: 1px solid rgba(35, 35, 35, 0.3);
+            font-weight: 500;
+            &:hover{
+                @extend %primary-bg;
+                @extend %white-color;
+            }
+        }
+    }
+}
+
+/* Home Four */
+.home-four{
+    & .sub-title{
+        display: inline-flex;
+        align-items: center;
+        @extend %orange-color;
+        & i{
+            margin-right: 10px;
+            line-height: 1;
+        }
+    }
+    & .about-section{
+        & .section-content-box{
+            @media #{$lm}{
+                max-width: 575px;
+                margin: 0 auto 50px;
+            }
+        }
+    }
+    & .booking-wrapper{
+        & .section-content-box{
+            & .booking-button{
+                & p{
+                    @extend %orange-color;
+                    margin-bottom: 20px;
+                }
+                & .theme-btn{
+                    &.style-one{
+                        @extend %secondary-bg;
+                        &:hover{
+                            @extend %orange-bg;
+                        }
+                    }
+                }
+            }
+        }
+    }
+} 

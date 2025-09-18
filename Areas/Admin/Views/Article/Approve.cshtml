@@ -1,0 +1,252 @@
+﻿@using FastFood.DB;
+@using FastFood.Models
+@{
+    IEnumerable<Baiviet>? dsBaiViet = ViewBag.BaiViet as IEnumerable<Baiviet>;
+}
+
+@Html.AntiForgeryToken()
+<!-- Start Container Fluid -->
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center gap-1">
+                    <h4 class="card-title flex-grow-1">@ViewBag.Title</h4>
+
+                    <div class="d-flex gap-2 mb-2">
+                        <button id="approve-selected" class="btn btn-success d-none btn-sm">Phê duyệt được chọn</button>
+                        <button id="reject-selected" class="btn btn-danger d-none btn-sm">Từ chối được chọn</button>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover table-centered">
+                            <thead class="bg-light-subtle">
+                                <tr>
+                                    <th style="width: 20px;">
+                                        <div class="form-check ms-1">
+                                            <input type="checkbox" class="form-check-input" id="select-all">
+                                            <label class="form-check-label" for="select-all"></label>
+                                        </div>
+                                    </th>
+                                    <th>Tiêu đề</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Ngày cập nhật</th>
+                                    <th>Đã duyệt</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var bv in dsBaiViet!)
+                                {
+                                    string[] anhSplitted = FastFood_Tools.SplitAnh(bv.Hinhanh!);
+                                    <tr>
+                                        <td>
+                                                    <div class="form-check ms-1">
+                                                        <input type="checkbox" class="form-check-input article-checkbox" data-id="@bv.Mabaiviet">
+                                                        <label class="form-check-label">&nbsp;</label>
+                                                    </div>
+                                        </td>
+                                        <td>@bv.Tieude</td>
+                                        <td> @bv.Ngaytao</td>
+                                        <td> @bv.Ngaycapnhat</td>
+                                        <td>
+                                            @{
+                                                if (bv.Daduyet)
+                                                {
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#09ee2e" fill-rule="evenodd" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20m10.742-26.33a1 1 0 1 0-1.483-1.34L21.28 29.567l-6.59-6.291a1 1 0 0 0-1.382 1.446l7.334 7l.743.71l.689-.762z" clip-rule="evenodd" /></svg>
+                                                }
+                                                else
+                                                {
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#e92241" fill-rule="evenodd" d="M44 24c0 11.046-8.954 20-20 20S4 35.046 4 24S12.954 4 24 4s20 8.954 20 20m-27.778 7.778a1 1 0 0 1 0-1.414L22.586 24l-6.364-6.364a1 1 0 0 1 1.414-1.414L24 22.586l6.364-6.364a1 1 0 0 1 1.414 1.414L25.414 24l6.364 6.364a1 1 0 0 1-1.414 1.414L24 25.414l-6.364 6.364a1 1 0 0 1-1.414 0" clip-rule="evenodd" /></svg>
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                                    <div class="d-flex gap-2">
+                                                        <button type="button" class="btn btn-green btn-sm action-btn" data-id="@bv.Mabaiviet" data-action="accept">
+                                                            Phê duyệt
+                                                        </button>
+                                                        <button type="button" class="btn btn-red btn-sm action-btn" data-id="@bv.Mabaiviet" data-action="refuse">
+                                                            Từ chối
+                                                        </button>
+                                                    </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table-responsive -->
+                </div>
+                <div class="card-footer border-top">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end mb-0">
+                            <!-- Previous Page Link -->
+                            @if (ViewBag.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Approve", "Article", new { area = "Admin", page = ViewBag.CurrentPage - 1 })">
+                                        Trước đây
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Trước đây</span>
+                                </li>
+                            }
+
+                            <!-- Page Numbers -->
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@i</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Approve", "Article", new { area = "Admin", page = i })">@i</a>
+                                    </li>
+                                }
+                            }
+
+                            <!-- Next Page Link -->
+                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Approve", "Article", new { area = "Admin", page = ViewBag.CurrentPage + 1 })">
+                                        Tiếp theo
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Tiếp theo</span>
+                                </li>
+                            }
+                        </ul>
+
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!-- End Container Fluid -->
+
+<script>
+    $(document).ready(function () {
+        const token = $('input[name="__RequestVerificationToken"]').val();
+
+        $('.action-btn').click(function () {
+            const articleId = $(this).data('id');
+            const action = $(this).data('action');
+            $.ajax({
+                url: '@Url.Action("Approve", "Article", new {area = "Admin"})',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    articleId: articleId,
+                    action: action,
+                    __RequestVerificationToken: token
+                },
+                success: function (response) {
+                    alertMessage(response.message, response.type);
+                    if (response.success) {
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
+                    }
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi khi thực hiện yêu cầu.');
+                }
+            });
+        });
+
+        $('#select-all').on('change', function () {
+            $('.article-checkbox').prop('checked', this.checked);
+            toggleActionButtons();
+        });
+
+        $('.article-checkbox').on('change', function () {
+            toggleActionButtons();
+        });
+
+        function toggleActionButtons() {
+            const anyChecked = $('.article-checkbox:checked').length > 0;
+            $('#approve-selected, #reject-selected').toggleClass('d-none', !anyChecked);
+        }
+
+        $('#approve-selected').on('click', function () {
+            let selectedIds = [];
+            $('.article-checkbox:checked').each(function () {
+                let row = $(this).closest('tr');
+                if (row.find('.action-btn').length) {
+                    selectedIds.push($(this).data('id'));
+                }
+            });
+
+            if (selectedIds.length > 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ApproveMultiple", "Article", new {area = "Admin"})',
+                    dataType: 'json',
+                    data: { articleIds: selectedIds, action: 'accept', __RequestVerificationToken: token },
+                    success: function (response) {
+                        alertMessage(response.message, response.type);
+                        if (response.success) {
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        }
+                    },
+                    error: function () {
+                        alert('Đã xảy ra lỗi khi thực hiện yêu cầu.');
+                    }
+                });
+            }
+        });
+
+        $('#reject-selected').on('click', function () {
+            let selectedIds = [];
+            $('.article-checkbox:checked').each(function () {
+                let row = $(this).closest('tr');
+                if (row.find('.action-btn').length) {
+                    selectedIds.push($(this).data('id'));
+                }
+            });
+
+            if (selectedIds.length > 0) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '@Url.Action("ApproveMultiple", "Article", new {area = "Admin"})',
+                    data: { articleIds: selectedIds, action: 'refuse', __RequestVerificationToken: token },
+                    success: function (response) {
+                        alertMessage(response.message, response.type);
+                        if (response.success) {
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        }
+                    },
+                    error: function () {
+                        alert('Đã xảy ra lỗi khi thực hiện yêu cầu.');
+                    }
+                });
+            }
+        });
+
+        
+    });
+</script>

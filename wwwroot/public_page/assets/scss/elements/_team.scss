@@ -1,0 +1,155 @@
+
+/*---==================
+    02. Elements  
+    
+        # 09 Team CSS
+=================----*/
+
+.team-item{
+    &.style-one{
+        &:hover{
+            & .member-image{
+                
+                & ul.social-link{
+                    bottom: 0;
+                }
+            }
+        }
+        & .member-image{
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            & ul.social-link{
+                position: absolute;
+                bottom: -55%;
+                left: 0;
+                padding: 10px;
+                @extend %primary-bg;
+                @include transition(.3s);
+                & li{
+                    display: block;
+                    &:not(:last-child){
+                        margin-bottom: 10px;
+                    }
+                    & a{
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        @extend %flex-center;
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        @extend %white-color;
+                    }
+                }
+            }
+        }
+        & .member-info{
+            & span.position{
+                font-size: 18px;
+                font-weight: 500;
+                color: rgba(0, 0, 0, 0.6);
+            }
+        }
+    }
+    &.style-two{
+        & .member-info{
+            @extend %primary-bg;
+            text-align: center;
+            padding: 20px 40px 25px;
+            & h4{
+                @extend %white-color;
+                margin-bottom: 5px;
+            }
+            & span.position{
+                @extend %white-color;
+                font: 500 18px $body-font;
+                margin-bottom: 20px;
+                text-transform: capitalize;
+            }
+            & ul.social-link{
+                & li{
+                    margin-left: 5px;
+                    margin-right: 5px;
+                    & a{
+                        @extend %white-color;
+                        width: 35px;
+                        height: 35px;
+                        border-radius: 50%;
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        &:hover{
+                            @extend %white-bg;
+                            @extend %primary-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    &.style-three{
+        &:hover{
+            & .member-image{
+                & .hover-content{
+                    & .social-box{
+                        left: 30px;
+                    }
+                    & .member-info{
+                        @extend %primary-bg;
+                        & h4.title{
+                            @extend %white-color
+                        }
+                        & span.position{
+                            color:rgba(255, 255, 255, 0.7);
+                        }
+                    }
+                }
+            }
+        }
+        & .member-image{
+            position: relative;
+            overflow: hidden;
+            & .hover-content{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+                padding: 30px;
+                & .social-box{
+                    position: absolute;
+                    top: 30px;
+                    left: -20%;
+                    @include transition(.3s);
+                    & .social-link{
+                        & li{
+                            display: block;
+                            &:not(:last-child){
+                                margin-bottom: 10px;
+                            }
+                            & a{
+                                width: 40px;
+                                height: 40px;
+                                border-radius: 50%;
+                                @extend %flex-center;
+                                @extend %white-bg;
+                                @extend %primary-color;
+                                &:hover{
+                                    @extend %primary-bg;
+                                    @extend %white-color;
+                                }
+                            }
+                        }
+                    }
+                }
+                & .member-info{
+                    padding: 20px 30px;
+                    text-align: center;
+                    @extend %white-bg;
+                    width: 100%;
+                    @include transition(.3s);
+                }
+            }
+        }
+    }
+}

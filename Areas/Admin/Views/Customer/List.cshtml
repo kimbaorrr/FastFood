@@ -1,0 +1,113 @@
+﻿@using FastFood.Models;
+@using FastFood.DB;
+@{
+    IEnumerable<Khachhang>? dsKhachHang = ViewBag.KhachHang as IEnumerable<Khachhang>;
+}
+
+<!-- Start Container Fluid -->
+<div class="container-xxl">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="d-flex card-header justify-content-between align-items-center">
+                    <div>
+                        <h4 class="card-title">@ViewBag.Title</h4>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover table-centered">
+                            <thead class="bg-light-subtle">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ và tên</th>
+                                    <th>Ngày sinh</th>
+                                    <th>Email</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Địa chỉ giao hàng</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (Khachhang? kh in dsKhachHang!)
+                                {
+                                    <tr>
+                                        <td><a href="@Url.Action("Detail", "Customer", new {area = "Admin", id = kh.Makhachhang })">@kh.Makhachhang</a></td>
+                                        <td>@kh.Hodem @kh.Tenkhachhang</td>
+                                        <td>@(kh.Ngaysinh.HasValue ? kh.Ngaysinh.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                                        <td>@kh.Email</td>
+                                        <td> @kh.Sodienthoai </td>
+                                        <td>@kh.Diachi</td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="@Url.Action("Detail", "Customer", new {area = "Admin", id = kh.Makhachhang })" class="btn btn-light btn-sm"><iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table-responsive -->
+                </div>
+                <div class="card-footer border-top">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end mb-0">
+                            <!-- Previous Page Link -->
+                            @if (ViewBag.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("List", "Customer", new { area = "Admin", page = ViewBag.CurrentPage - 1 })">
+                                        Trước đây
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Trước đây</span>
+                                </li>
+                            }
+
+                            <!-- Page Numbers -->
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@i</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("List", "Customer", new { area = "Admin", page = i })">@i</a>
+                                    </li>
+                                }
+                            }
+
+                            <!-- Next Page Link -->
+                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("List", "Customer", new { area = "Admin", page = ViewBag.CurrentPage + 1 })">
+                                        Tiếp theo
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Tiếp theo</span>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- End Container Fluid -->

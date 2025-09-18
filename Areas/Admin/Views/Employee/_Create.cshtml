@@ -1,0 +1,115 @@
+﻿@using FastFood.Models;
+@model FastFood_NhanVienDangNhap_TaoTaiKhoan
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4 class="m-0 card-title">Tạo tài khoản</h4>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("Create", "Employee", FormMethod.Post, new { area = "Admin", id = "createEmployeeForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <select id="MaNhanVien" name="MaNhanVien" class="form-control mt-1" required>
+                            <option value="">Chọn nhân viên</option>
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
+                        @Html.LabelFor(x => x.TenDangNhap, new { @class = "form-label" }) <span class="text-red"> *</span>
+                        @Html.TextBoxFor(x => x.TenDangNhap, new { @class = "form-control", @autocomplete = "off", @required = "" })
+                    </div>
+                    <div class="form-group mt-2">
+                        @Html.LabelFor(x => x.MatKhau, new { @class = "form-label" }) <span class="text-red"> *</span>
+                        @Html.PasswordFor(x => x.MatKhau, new { @class = "form-control", @autocomplete = "off", @required = "" })
+                    </div>
+                    <div class="form-group mt-2">
+                        @Html.LabelFor(x => x.VaiTro, new { @class = "form-label" }) <span class="text-red"> *</span>
+                        <select name="VaiTro" class="form-control">
+                            <option value="true">Quản trị viên</option>
+                            <option value="false" selected>Người dùng</option>
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label class="form-label">Chọn Quyền:</label> <span class="text-red"> *</span>
+                        <div class="row mt-1 listPermission"></div>
+                    </div>
+                    <button type="submit" class="btn btn-success mt-3 w-100">Tạo tài khoản</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+
+    function loadEmployeeData() {
+        $.ajax({
+            url: '@Url.Action("GetNonInfo", "Employee", new { area = "Admin" })',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (Array.isArray(data)) {
+                    var $employeeSelect = $('#createEmployeeForm #MaNhanVien');
+                    $employeeSelect.empty();
+                    $employeeSelect.append('<option value="">Chọn nhân viên</option>');
+
+                    data.forEach(function (employee) {
+                        if (employee.MaNhanVien && employee.HoTen) {
+                            $employeeSelect.append(
+                                $('<option>', {
+                                    value: employee.MaNhanVien,
+                                    text: employee.HoTen
+                                })
+                            );
+                        }
+                    });
+                } else {
+                    console.error("Data is not in the expected array format:", data);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Có lỗi xảy ra khi tải danh sách nhân viên: " + error);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        loadEmployeeData();
+        
+
+        $('#createEmployeeForm').on('submit', function (e) {
+            e.preventDefault();
+            let selectedPermissions = [];
+            let formData = $(this).serialize();
+            const url = $(this).attr("action");
+
+            $(this).find(".choosePermission:checked").each(function () {
+                selectedPermissions.push($(this).val());
+            });
+
+            formData += '&permissions=' + JSON.stringify(selectedPermissions);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: formData,
+                success: function (response) {
+                    alertMessage(response.message, response.type);
+                    loadTableData();
+                    loadEmployeeData();
+                    $(this).find("input").val("");
+                    $(this).find('input:first').focus();
+                },
+                error: function (xhr, status, error) {
+                    alert('Đã xảy ra lỗi khi tạo tài khoản.');
+                }
+            });
+        });
+
+        
+    });
+</script>

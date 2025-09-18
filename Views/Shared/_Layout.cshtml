@@ -1,0 +1,470 @@
+﻿@using FastFood.Models;
+@using FastFood.DB;
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    ISession _session = this.HttpContextAccessor.HttpContext!.Session;
+    Thongtincuahang? thongTinCuaHang = FastFood_CuaHang.GetThongTin();
+    IEnumerable<Khachhang> dsKhachHang = FastFood_KhachHang.getKhachHang().AsEnumerable();
+    string maKH = _session.GetString("CustomerId") ?? string.Empty;
+    string anhDD = _session.GetString("CustomerAvatar") ?? string.Empty;
+    string hoTenKH = FastFood_KhachHang.getHoTen(maKH);
+    string email = dsKhachHang.Where(x => x.Makhachhang.ToString().Equals(maKH)).Select(x => x.Email).FirstOrDefault() ?? string.Empty;
+
+}
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <!--====== Required meta tags ======-->
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="Insurance, Health, Agency">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--====== Title ======-->
+    <title>@ViewBag.Title</title>
+    <!--====== Favicon Icon ======-->
+    <link rel="shortcut icon" href="/public_page/assets/images/favicon.png" type="image/png">
+    <!--====== Google Fonts ======-->
+    <link href="https://fonts.bunny.net/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!--====== FontAwesome css ======-->
+    <link rel="stylesheet" href="/public_page/assets/fonts/fontawesome/css/all.min.css">
+    <!--====== Bootstrap css ======-->
+    <link rel="stylesheet" href="/public_page/assets/vendor/bootstrap/css/bootstrap.min.css">
+    <!--====== Slick-popup css ======-->
+    <link rel="stylesheet" href="/public_page/assets/vendor/slick/slick.css">
+    <!--====== Nice Select css ======-->
+    <link rel="stylesheet" href="/public_page/assets/vendor/nice-select/css/nice-select.css">
+    <!--====== magnific-popup css ======-->
+    <link rel="stylesheet" href="/public_page/assets/vendor/magnific-popup/dist/magnific-popup.css">
+    <!--====== Jquery UI css ======-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/themes/base/jquery-ui.min.css">
+    <!--====== Animate css ======-->
+    <link rel="stylesheet" href="/public_page/assets/vendor/animate.css">
+    <!--====== Default css ======-->
+    <link rel="stylesheet" href="/public_page/assets/css/default.css">
+    <!--====== Style css ======-->
+    <link rel="stylesheet" href="/public_page/assets/css/style.css">
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.css">
+    <!--====== Jquery js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/rater-jquery@1.0.0/rater.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        .modal form_control {
+            padding: 6px .75rem;
+        }
+    </style>
+
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    <!--====== Start Loader Area ======-->
+    <div class="fd-preloader">
+        <div class="overflow-hidden d-flex align-items-center justify-content-center" style="min-width: 25vh; min-height: 25vh;max-width: 45vh; max-height: 45vh;">
+            <img src="~/public_page/assets/images/loader.gif" width="100%" height="100%" class="object-fit-fill" />
+        </div>
+
+    </div><!--====== End Loader Area ======-->
+    <!--====== Start Overlay ======-->
+    <div class="offcanvas__overlay"></div>
+    <!--====== End Overlay ======-->
+    <!--====== Start Sidemenu-wrapper-cart Area ======-->
+    <div class="sidemenu-wrapper-cart">
+        <div class="sidemenu-content">
+            <div class="widget widget-shopping-cart">
+                <h4>Giỏ hàng của tôi</h4>
+                <div class="sidemenu-cart-close"><i class="far fa-times"></i></div>
+                <div class="widget-shopping-cart-content">
+                    <ul class="foodix-mini-cart-list" style="max-height: 55vh;overflow-y: scroll;"></ul>
+                    <div class="cart-mini-total" style="margin-top: 25px!important;padding-bottom: 0;">
+                        <div class="cart-total">
+                            <span><strong>Tạm tính:</strong></span>
+                            <span class="amount">
+                                <span class="cart-total-product">
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="cart-button mt-3">
+                        <a href="@Url.Action("Index", "Cart")" class="theme-btn style-one">Đi đến giỏ hàng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--====== End Sidemenu-wrapper-cart Area ======-->
+    <!--====== Start Header Area ======-->
+    <header class="header-area header-one navigation-white transparent-header">
+        <div class="container">
+            <div class="header-navigation">
+                <div class="nav-overlay"></div>
+                <div class="primary-menu">
+                    <!--=== Site Branding ===-->
+                    <div class="site-branding">
+                        <a href="@Url.Action("Index", "Home")" class="brand-logo"><img height="50" src="@thongTinCuaHang.Logo" alt="Logo"></a>
+                    </div>
+                    <div class="nav-inner-menu">
+                        <!--=== Foodix Nav Menu ===-->
+                        <div class="foodix-nav-menu">
+                            <!--=== Mobile Logo ===-->
+                            <div class="mobile-logo mb-30 d-block d-xl-none text-center">
+                                <a href="@Url.Action("Index", "Home")" class="brand-logo"><img height="50" src="@thongTinCuaHang.Logo" alt="Site Logo"></a>
+                            </div>
+                            <!--=== Main Menu ===-->
+                            <nav class="main-menu">
+                                <ul>
+                                    <li class="menu-item">
+                                        <a href="@Url.Action("Index", "Home")">Trang chủ</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="@Url.Action("Index", "Menu")">Thực đơn</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="@Url.Action("Index", "Article")">Tin tức</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="@Url.Action("Index", "Contact")">Liên hệ</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="@Url.Action("Index", "About")">Về chúng tôi</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <!--=== Nav Button ===-->
+                            <div class="nav-button mt-50 d-block d-xl-none  text-center">
+                                <a href="@Url.Action("Index", "Menu")" class="theme-btn style-one">Đặt món ngay</a>
+                            </div>
+                        </div>
+                        <!--=== Nav Right Item ===-->
+                        <div class="nav-right-item">
+                            <div class="nav-button d-none d-xl-block">
+                                <a href="@Url.Action("Index", "Menu")" class="theme-btn style-one">Đặt món ngay</a>
+                            </div>
+                            <div class="cart-button">
+                                <i class="far fa-shopping-cart"></i>
+                            </div>
+                            <button type="button" class="login-button" id="userChoose">
+                                <i class="far fa-user"></i>
+                            </button>
+                            <div class="navbar-toggler">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header><!--====== End Header Area ======-->
+
+    @RenderBody()
+
+    <!-- Login Modal -->
+    @Html.Partial("_Login")
+
+    <!-- User Info Modal -->
+    @Html.Partial("_UserInfo")
+
+    <!-- Registration Modal -->
+    @Html.Partial("_Register")
+
+    <!--====== Start Footer ======-->
+    @Html.Partial("_Footer")
+
+    <!--====== Back To Top  ======-->
+    <a href="#" class="back-to-top"><i class="far fa-angle-up"></i></a>
+
+    <!--====== Popper js ======-->
+    <script src="/public_page/assets/vendor/popper/popper.min.js"></script>
+    <!--====== Bootstrap js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/js/bootstrap.min.js"></script>
+    <!--====== Slick js ======-->
+    <script src="/public_page/assets/vendor/slick/slick.min.js"></script>
+    <!--====== Magnific js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.2.0/jquery.magnific-popup.min.js"></script>
+    <!--====== Nice-select js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+    <!--====== Parallax js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+    <!--====== jquery UI js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js"></script>
+    <!--====== WOW js ======-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <!--====== Main js ======-->
+    <script src="/public_page/assets/js/theme.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.js"></script>
+    <!--Custom JS-->
+    <script>
+                var $responseData = [];
+        const csrfToken = $('input[name="__RequestVerificationToken"]').val();
+        function loadCartItems(callback) {
+            $.ajax({
+                url: '@Url.Action("GetItem", "Cart")',
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    $responseData = response;
+                    summaryCheckout("");
+                    if (callback) callback();
+                },
+                error: function (error) {
+                    console.error('Lỗi khi tải giỏ hàng:', error);
+                }
+            });
+        }
+
+        function updateToSubCart() {
+            loadCartItems(function () {
+                const cartList = $('.foodix-mini-cart-list');
+                cartList.empty();
+
+                if ($responseData.length === 0) {
+                    cartList.append('<p class="fw-bold text-danger text-center mt-3">Giỏ hàng rỗng!</p>');
+                } else {
+                    $responseData.forEach(function (item) {
+                        cartList.append(`
+                                    <li class="foodix-menu-cart">
+                                        <button type="button" class="remove-cart remove-cart-btn bg-white" data-product-id="${item.MaSanPham}"><i class="far fa-trash-alt"></i></button>
+                                        <a href="#">
+                                            <img src="${item.HinhAnh}" alt="cart image">
+                                            ${item.TenSanPham}
+                                        </a>
+                                        <span class="quantity">${item.SoLuong} × <span>${item.GiaBan} VNĐ</span></span>
+                                    </li>
+                                `);
+                    });
+                }
+            });
+        }
+
+        function updateToCartPage() {
+            loadCartItems(function () {
+                const cartTable = $('.cart-table table tbody');
+                cartTable.empty();
+
+                if ($responseData.length === 0) {
+                    cartTable.append('<tr><td class="fw-bold text-danger text-center mt-3">Giỏ hàng rỗng!</td></tr>');
+                } else {
+                    $responseData.forEach(function (item) {
+                        cartTable.append(`
+                                   <tr>
+                                        <td class="thumbnail-title">
+                                            <img src="${item.HinhAnh}" alt="Cart Image">
+                                            <span class="title"><a href="menu-details.html">${item.TenSanPham}</a></span>
+                                        </td>
+                                        <td class="price">$${item.GiaBan}</td>
+                                        <td class="quantity">
+                                            <div class="quantity-input">
+                                                <button class="quantity-down" data-product-id="${item.MaSanPham}"><i class="far fa-minus"></i></button>
+                                                <input class="quantity" type="text" value="${item.SoLuong}" name="quantity">
+                                                <button class="quantity-up" data-product-id="${item.MaSanPham}"><i class="far fa-plus"></i></button>
+                                            </div>
+                                        </td>
+                                        <td class="subtotal">$${item.ThanhTien}</td>
+                                        <td class="remove">
+                                            <button type="button" class="remove-cart-btn bg-white" data-product-id="${item.MaSanPham}"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                `);
+                    });
+                }
+            });
+        }
+
+        function addToCart(productId, quantity) {
+            $.ajax({
+                url: '@Url.Action("AddItem", "Cart")',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    productId: productId,
+                    quantity: quantity,
+                    __RequestVerificationToken: csrfToken,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alertMessage(response.type, response.message);
+                        updateToSubCart();
+                    }
+                },
+                error: function (error) {
+                    console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error);
+                }
+            });
+        }
+
+        function removeFromCart(productId) {
+            $.ajax({
+                url: '@Url.Action("RemoveItem", "Cart")',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    productId: productId,
+                    __RequestVerificationToken: csrfToken,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alertMessage(response.type, response.message);
+                        updateToSubCart();
+                        updateToCartPage();
+                    }
+                },
+                error: function (error) {
+                    console.error('Lỗi khi xóa sản phẩm khỏi giỏ hàng:', error);
+                }
+            });
+        }
+
+        function decreaseQuantity(productId) {
+            $.ajax({
+                url: '@Url.Action("DecreaseQuantity", "Cart")',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    productId: productId,
+                    __RequestVerificationToken: csrfToken,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        updateToSubCart();
+                    }
+                },
+                error: function (error) {
+                    console.error('Lỗi khi giảm số lượng sản phẩm:', error);
+                }
+            });
+        }
+
+        function cartIsEmpty() {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: '@Url.Action("IsEmpty", "Cart")',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
+                        __RequestVerificationToken: csrfToken,
+                    },
+                    success: function (response) {
+                        console.log(response.success);
+                        resolve(response);
+                    },
+                    error: function (error) {
+                        console.error('Lỗi khi kiểm tra giỏ hàng rỗng!', error);
+                        reject(error);
+                    }
+                });
+            });
+        }
+
+        function summaryCheckout(couponCode) {
+            $.ajax({
+                url: '@Url.Action("GetSummaryCheckout", "Cart")',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    couponCode: couponCode,
+                    __RequestVerificationToken: csrfToken,
+                },
+                success: function (response) {
+                    if (!response.success) {
+                        alertMessage(response.type, response.message);
+                    };
+
+                    $(".cart-total-product").text(response.data.TongTienSanPham);
+                    $(".cart-total-product").append('<span class="currency ps-1">VNĐ</span>');
+                    $(".cart-shipping-fee").text(`+${response.data.PhiVanChuyen}`);
+                    $(".cart-shipping-fee").append('<span class="currency ps-1">VNĐ</span>');
+                    $(".cart-coupon-code").text(`-${response.data.MaKhuyenMai}`);
+                    $(".cart-coupon-code").append('<span class="currency ps-1">VNĐ</span>');
+                    $(".cart-total-pay").text(response.data.TongThanhToan);
+                    $(".cart-total-pay").append('<span class="currency ps-1">VNĐ</span>');
+                },
+                error: function (error) {
+                    console.error('Lỗi tóm tắt thanh toán. Thử lại !', error);
+                }
+            });
+        }
+
+        function alertMessage(type, message) {
+            Toastify({
+                text: message,
+                duration: 2000,
+                newWindow: true,
+                close: true,
+                gravity: "top",
+                position: "center",
+                stopOnFocus: true,
+                style: {
+                    background: type,
+                }
+            }).showToast();
+        }
+
+        function checkLogged(maKhachHang) {
+            return maKhachHang !== null && maKhachHang !== "" && maKhachHang !== undefined;
+        }
+
+
+        // Khởi chạy khi load xong DOM
+        $(document).ready(function () {
+            const maKhachHang = '@maKH';
+            const anhDD = '@anhDD';
+            const hoTenKhachHang = '@Html.Raw(hoTenKH)';
+            const email = '@email';
+            updateToSubCart();
+
+            $(document).on('click', '.add-to-cart-btn', function () {
+                const productId = $(this).data('product-id');
+                const quantity = $(this).data('quantity');
+                addToCart(productId, quantity);
+
+            });
+
+            $(document).on('click', '.remove-cart-btn', function () {
+                const productId = $(this).data('product-id');
+                removeFromCart(productId);
+            });
+
+            $(document).on('click', '.cart-button', function () {
+                updateToSubCart();
+            });
+
+            $(document).on('click', '#openRegistrationModal', function () {
+                $('.modal').modal('hide');
+                $("#registrationModal").modal("show");
+            });
+
+            $("#userChoose").on("click", () => {
+
+                if (maKhachHang && anhDD) {
+                    $('#userInfoModal #userInfoName').text(hoTenKhachHang);
+                    $('#userInfoModal #userInfoEmail').text(email);
+                    $('#userInfoModal img').attr("src", anhDD);
+                    $('#userInfoModal').modal('show');
+                } else {
+                    $('#loginModal').modal('show');
+
+                }
+            });
+
+            $(document).on('click', '#paymentPage', function () {
+                if (!checkLogged(maKhachHang)) {
+                    $('#loginModal').modal('show');
+                } else {
+                    cartIsEmpty().then(function (response) {
+                        if (response.success) {
+                            alertMessage(response.type, response.message);
+                        }
+                        else {
+                            window.location.replace("@Url.Action("Index", "Checkout")");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+﻿@using FastFood.DB
+@using FastFood.Models;
+@{
+    Thongtincuahang? thongTinCuaHang = FastFood_CuaHang.GetThongTin();
+}
+<footer class="footer-default p-r z-1">
+    <div class="footer-shape f-shape_one scene"><span data-depth=".3"><img src="/public_page/assets/images/shape/shape-2.png" alt="shape"></span></div>
+    <div class="footer-shape f-shape_two scene"><span data-depth=".4"><img src="/public_page/assets/images/shape/shape-3.png" alt="shape"></span></div>
+    <div class="footer-shape f-shape_three scene"><span data-depth=".5"><img src="/public_page/assets/images/shape/shape-4.png" alt="shape"></span></div>
+    <div class="footer-shape f-shape_four scene"><span data-depth=".6"><img src="/public_page/assets/images/shape/shape-5.png" alt="shape"></span></div>
+    <div class="footer-shape f-shape_five scene"><span data-depth=".7"><img src="/public_page/assets/images/shape/shape-6.png" alt="shape"></span></div>
+    <div class="footer-shape f-shape_six scene"><span data-depth=".8"><img src="/public_page/assets/images/shape/shape-7.png" alt="shape"></span></div>
+    <div class="footer-shape f-shape_seven scene"><span data-depth=".9"><img src="/public_page/assets/images/shape/shape-8.png" alt="shape"></span></div>
+    <div class="container">
+        <!--=== Footer Widget Area ===-->
+        <div class="footer-widget-area pt-120 pb-75">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <!--=== Footer Widget ===-->
+                    <div class="footer-widget footer-about-widget mb-40 wow fadeInUp">
+                        <div class="widget-content">
+                            <div class="footer-logo mb-25">
+                                <a href="@Url.Action("Index", "Home")"><img height="70" src="@thongTinCuaHang.Logo" alt="Brand Logo"></a>
+                            </div>
+                            <p>
+                                @thongTinCuaHang.Slogan
+                            </p>
+                            <ul class="social-link">
+                                <li><a href="@thongTinCuaHang.Facebookurl"><i class="fab fa-facebook-f"></i></a></li>
+                                <li><a href="@thongTinCuaHang.Xurl"><i class="fab fa-twitter"></i></a></li>
+                                <li><a href="@thongTinCuaHang.Instagramurl"><i class="fab fa-instagram"></i></a></li>
+                                <li><a href="@thongTinCuaHang.Youtubeurl"><i class="fab fa-youtube"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <!--=== Footer Widget ===-->
+                    <div class="footer-widget footer-contact-widget mb-40 wow fadeInUp">
+                        <div class="widget-content">
+                            <h4 class="widget-title">Liên hệ chúng tôi</h4>
+                            <ul class="address-list">
+                                <li>@thongTinCuaHang.Diachi</li>
+                                <li><a href="tel:@thongTinCuaHang.Hotline">Tel:@thongTinCuaHang.Hotline</a></li>
+                                <li><a href="mailto:@thongTinCuaHang.Email">@thongTinCuaHang.Email</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <!--=== Footer Widget ===-->
+                    <div class="footer-widget footer-nav-widget mb-40 wow fadeInUp">
+                        <div class="widget-content">
+                            <h4 class="widget-title">Truy cập nhanh</h4>
+                            <ul class="widget-menu">
+                                <li>
+                                    <a href="@Url.Action("Index", "Home")">Trang chủ</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Index", "Menu")">Thực đơn</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Index", "News")">Tin tức</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Index", "Contact")">Liên hệ</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Index", "About")">Về chúng tôi</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <!--=== Footer Widget ===-->
+                    <div class="footer-widget footer-opening-widget mb-40 wow fadeInUp">
+                        <div class="widget-content">
+                            <h4 class="widget-title">Giờ mở cửa</h4>
+                            <ul class="opening-schedule">
+                                @foreach (var op in FastFood_CuaHang.GetGioLamViec())
+                                {
+                                    <li>@op.Ngaylamviec: <span>@op.Thoigianlamviec </span></li>
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--=== Copyright Area ===-->
+    <div class="copyright-area text-center">
+        <div class="container">
+            <div class="copyright-text">
+                <p>&copy; @DateTime.Now.Year BaoIT. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer><!--====== End Footer ======-->

@@ -1,0 +1,39 @@
+﻿@using FastFood.Models;
+
+<div class="modal fade" id="viewArticleModal" tabindex="-1" aria-labelledby="viewArticleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title h4" id="viewArticleModalLabel">Xem bài viết <span></span></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div class="container">
+					<div class="row">
+						<div class="col-12">
+							<h2 class="view-article-title"></h2>
+							<div class="view-article-content"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	$(document).ready(function () {
+		$(".btn-view").on("click", function () {
+			const articleTitle = $(this).data("article-title");
+			const articleId = $(this).data("article-id");
+			const articleContent = $(this).data("article-content")
+
+			const viewArticle = $("#viewArticleModal")
+			viewArticle.find(".view-article-content").empty().append(articleContent);
+			viewArticle.find("#viewArticleModalLabel").find("span").empty().text(articleId);
+			viewArticle.find(".view-article-title").empty().text(articleTitle);
+		});
+	});
+</script>

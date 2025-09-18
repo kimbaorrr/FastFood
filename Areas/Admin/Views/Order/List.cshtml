@@ -1,0 +1,259 @@
+﻿@using FastFood.Models;
+
+@{
+    IEnumerable<FastFood_DonHang_DanhSachDonHang>? donHangs = ViewBag.DonHang as IEnumerable<FastFood_DonHang_DanhSachDonHang>;
+    SortedList<string, int>? donHangCards = ViewBag.DonHangCards as SortedList<string, int>;
+}
+
+<!-- Start Container Fluid -->
+<div class="container-xxl">
+
+    <div class="row">
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-2">Chờ giao hàng</h4>
+                            <p class="text-muted fw-medium fs-22 mb-0">@donHangCards["ChoGiao"]</p>
+                        </div>
+                        <div>
+                            <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                                <iconify-icon icon="solar:chat-round-money-broken" class="fs-32 text-primary avatar-title"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-2">Đơn bị hủy</h4>
+                            <p class="text-muted fw-medium fs-22 mb-0">@donHangCards["DaHuy"]</p>
+                        </div>
+                        <div>
+                            <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                                <iconify-icon icon="solar:cart-cross-broken" class="fs-32 text-primary avatar-title"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-2">Đã giao hàng</h4>
+                            <p class="text-muted fw-medium fs-22 mb-0">@donHangCards["DaGiao"]</p>
+                        </div>
+                        <div>
+                            <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                                <iconify-icon icon="solar:box-broken" class="fs-32 text-primary avatar-title"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-2">Đang giao hàng</h4>
+                            <p class="text-muted fw-medium fs-22 mb-0">@donHangCards["DangGiao"]</p>
+                        </div>
+                        <div>
+                            <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                                <iconify-icon icon="solar:tram-broken" class="fs-32 text-primary avatar-title"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-2">Đang thực hiện món</h4>
+                            <p class="text-muted fw-medium fs-22 mb-0">@donHangCards["DangThucHien"]</p>
+                        </div>
+                        <div>
+                            <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                                <iconify-icon icon="solar:clipboard-remove-broken" class="fs-32 text-primary avatar-title"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-2">Đã xác nhận</h4>
+                            <p class="text-muted fw-medium fs-22 mb-0">@donHangCards["DaXacNhan"]</p>
+                        </div>
+                        <div>
+                            <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                                <iconify-icon icon="solar:clock-circle-broken" class="fs-32 text-primary avatar-title"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-2">Chờ xác nhận</h4>
+                            <p class="text-muted fw-medium fs-22 mb-0">@donHangCards["ChoXacNhan"]</p>
+                        </div>
+                        <div>
+                            <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                                <iconify-icon icon="solar:clipboard-check-broken" class="fs-32 text-primary avatar-title"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-2">Đã thanh toán</h4>
+                            <p class="text-muted fw-medium fs-22 mb-0">@donHangCards["DaThanhToan"]</p>
+                        </div>
+                        <div>
+                            <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                                <iconify-icon icon="solar:inbox-line-broken" class="fs-32 text-primary avatar-title"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="d-flex card-header justify-content-between align-items-center">
+                    <div>
+                        <h4 class="card-title">@ViewBag.Title</h4>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover table-centered">
+                            <thead class="bg-light-subtle">
+                                <tr>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Người mua</th>
+                                    <th>Người bán</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Đã mua</th>
+                                    <th>Trạng thái đơn</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (FastFood_DonHang_DanhSachDonHang dh in donHangs!)
+                                {
+                                    <tr>
+                                        <td>@dh.MaDonHang</td>
+                                        <td>@dh.NgayDat</td>
+                                        <td>@dh.NguoiMua</td>
+                                        <td>@dh.NguoiBan</td>
+                                        <td class="text-red fw-bold">@dh.TongTienSanPham đ</td>
+                                        <td>@dh.TongSanPham</td>
+                                        <td> <span class="badge border text-light @dh.TrangThaiDonHang.Mausac px-2 py-1 fs-13">@dh.TrangThaiDonHang.Tentrangthai</span></td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="@Url.Action("Detail", "Order", new {area = "Admin", id = dh.MaDonHang })" class="btn btn-light btn-sm"><iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table-responsive -->
+                </div>
+                <div class="card-footer border-top">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end mb-0">
+                            <!-- Previous Page Link -->
+                            @if (ViewBag.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("List", "Order", new { area = "Admin", page = ViewBag.CurrentPage - 1 })">
+                                        Trước đây
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Trước đây</span>
+                                </li>
+                            }
+
+                            <!-- Page Numbers -->
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@i</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("List", "Order", new { area = "Admin", page = i })">@i</a>
+                                    </li>
+                                }
+                            }
+
+                            <!-- Next Page Link -->
+                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("List", "Order", new { area = "Admin", page = ViewBag.CurrentPage + 1 })">
+                                        Tiếp theo
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Tiếp theo</span>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!-- End Container Fluid -->

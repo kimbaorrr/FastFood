@@ -1,0 +1,57 @@
+﻿<div class="card">
+	<div class="card-header">
+		<h3 class="card-title">Bảng tồn kho nguyên liệu</h3>
+	</div>
+	<div class="card-body" style="max-height: 50vh;overflow-y: scroll;">
+		<table class="table table-striped" id="inventory">
+			<thead class="thead-dark" style="position: sticky;top: -25px;background-color: whitesmoke;">
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">Tên nguyên liệu</th>
+					<th scope="col">Số lượng tồn</th>
+					<th scope="col">Mức đặt hàng lại</th>
+					<th scope="col">Đạt giới hạn</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<script>
+	function loadInventory() {
+		$.ajax({
+			url: '@Url.Action("GetListInventory", "Ingredient", new { area = "Admin" })',
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				var tableBody = $('#inventory tbody');
+				tableBody.empty();
+
+				$.each(data, function (index, item) {
+					var row = $('<tr></tr>');
+					row.append('<td>' + item.MaNguyenLieu + '</td>');
+					row.append('<td>' + item.TenNguyenLieu + '</td>');
+					row.append('<td>' + item.SoLuongTon + '</td>');
+					row.append('<td>' + item.MucDatHangLai + '</td>');
+					if (item.DatGioiHan === true) {
+						row.append('<td><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#09ee2e" fill-rule="evenodd" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20m10.742-26.33a1 1 0 1 0-1.483-1.34L21.28 29.567l-6.59-6.291a1 1 0 0 0-1.382 1.446l7.334 7l.743.71l.689-.762z" clip-rule="evenodd"/></svg></td>');
+					} else {
+						row.append('<td><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#e92241" fill-rule="evenodd" d="M44 24c0 11.046-8.954 20-20 20S4 35.046 4 24S12.954 4 24 4s20 8.954 20 20m-27.778 7.778a1 1 0 0 1 0-1.414L22.586 24l-6.364-6.364a1 1 0 0 1 1.414-1.414L24 22.586l6.364-6.364a1 1 0 0 1 1.414 1.414L25.414 24l6.364 6.364a1 1 0 0 1-1.414 1.414L24 25.414l-6.364 6.364a1 1 0 0 1-1.414 0" clip-rule="evenodd"/></svg></td>')
+					}
+
+					tableBody.append(row);
+				});
+			},
+			error: function (xhr, status, error) {
+				alert("Có lỗi khi tải lại bảng dữ liệu: " + error);
+			}
+		});
+	}
+
+	$(document).ready(function () {
+		loadInventory();
+	});
+</script>

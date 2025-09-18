@@ -1,0 +1,142 @@
+﻿@using FastFood.DB
+
+@{
+    @model FastFood.Models.FastFood_BaiViet_ThemBaiViet
+    IEnumerable<Baiviet>? dsBaiViet = ViewBag.BaiViet as IEnumerable<Baiviet>;
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewBag.Title</h3>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("Create", "Article", null, FormMethod.Post, true, new { area = "Admin", id = "createArticleForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(x=>x.MaNguoiTao)
+                    <div class="form-group mb-2">
+                        @Html.LabelFor(x => x.TieuDe, new { @class = "form-label" }) <span class="text-red"> *</span>
+                        @Html.TextBoxFor(x => x.TieuDe, new { @class = "form-control", @autofocus = "" })
+                    </div>
+                    <div class="form-group mb-2">
+                        @Html.LabelFor(x => x.MoTaNgan, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.MoTaNgan, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group mb-2">
+                        @Html.LabelFor(x => x.NoiDung, new { @class = "form-label" })
+                        @Html.TextAreaFor(x => x.NoiDung)
+                    </div>
+                    <div class="form-group mb-2">
+                        <div class="col-12 col-md-6">
+                            @Html.LabelFor(x => x.HinhAnh, new { @class = "form-label" }) <span class="text-red"> *</span>
+                            @Html.TextBoxFor(x => x.HinhAnh, new { @class = "form-control", id = "HinhAnh", @type = "file", @accept = "image/*", @required = "" })
+                        </div>
+                    </div>
+                    <div class="row justify-content-end g-2 mt-1">
+                        <div class="col-lg-2">
+                            <button type="submit" class="btn btn-outline-secondary w-100">Xác nhận</button>
+                        </div>
+                        <div class="col-lg-2">
+                            <button type="reset" class="btn btn-primary w-100">Hủy bỏ</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="d-flex flex-column">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title">Bài viết chưa duyệt của tôi</h6>
+                </div>
+                <div class="card-body">
+                    <div id="listNonApprove"></div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadNonApprove() {
+        $.ajax({
+            url: '@Url.Action("GetListNonApprove", "Article", new {area = "Admin"})',
+            method: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                $('#listNonApprove').empty();
+                response.forEach(function (article) {
+                    var articleRow = `
+                    <div class="row mb-4">
+                        <div class="col-12 col-md-4">
+                            <a href='#' class="w-100 overflow-hidden">
+                                <img src="${article.HinhAnh}" alt="${article.TieuDe}" class="w-100 h-100 object-fit-fill rounded-2">
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-8">
+                            <h4 class="mb-2">
+                                <a href="#" class="text-decoration-none text-dark">${article.TieuDe}</a>
+                            </h4>
+                            <p class="text-muted mb-0" style="text-align: justify;">${article.MoTaNgan}</p>
+                        </div>
+                    </div>
+                `;
+                    $('#listNonApprove').append(articleRow);
+                });
+            },
+            error: function (error) {
+                console.log('Error fetching data:', error);
+            }
+        });
+    }
+    $(document).ready(function () {
+        loadNonApprove();
+
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'lists link image code',
+            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright',
+            height: 400
+        });
+
+        $("#listContent a, #listContent p").each(function () {
+            var text = $(this).text();
+            if (text.length > 50) {
+                $(this).text(text.substring(0, 50) + "...");
+            }
+        });
+
+        $("#createArticleForm").on("submit", function (e) {
+            e.preventDefault();
+            const url = $(this).attr("action");
+            const formData = new FormData(this);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: formData,
+                dataType: "json",
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    alertMessage(response.message, response.type);
+                    if (response.success) {
+                        $("#createArticleForm .form-group :input").val("");
+                        $("#createArticleForm .form-group :input:first").focus();
+                        loadNonApprove();
+                    }
+                    
+                },
+                error: function (xhr) {
+                    console.log("Lỗi tạo article mới !");
+                }
+            });
+        })
+    })
+</script>

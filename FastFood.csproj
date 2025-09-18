@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="bootstrap" Version="5.3.8" />
+    <PackageReference Include="jQuery" Version="3.7.1" />
+    <PackageReference Include="jQuery.Validation" Version="1.21.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="VNPAY.NET" Version="8.5.0" />
+    <PackageReference Include="X.PagedList" Version="10.5.9" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="10.5.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Models\ViewComponents\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\chart.js\docs\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\choices.js\public\types\cypress\integration\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\choices.js\public\types\src\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\choices.js\src\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\daterangepicker\example\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\flatpickr\types\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\flatpickr\utils\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\gmaps\docs\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\gmaps\examples\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\gmaps\test\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\gridjs\src\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\rater-js\example\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\rater-js\test\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\swiper\angular\angular\src\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\swiper\angular\esm2020\angular\src\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\swiper\types\modules\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\toastify-js\example\" />
+    <Folder Include="wwwroot\admin_page\assets\vendor\toastify-js\src\" />
+    <Folder Include="wwwroot\admin_page\uploads\categories\thumbnail\" />
+  </ItemGroup>
+
+</Project>

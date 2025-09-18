@@ -1,0 +1,395 @@
+
+
+
+/*---==================
+    02. Elements  
+    
+        # 02 Header CSS
+=================----*/
+
+/* Transparent Header  */ 
+
+.transparent-header {
+    position: absolute;
+    background-color: transparent;
+    top: 20px;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    @media #{$lm}{
+        top: 0;
+    }
+}
+
+/* Header Navigation */
+
+.header-navigation{
+    @media #{$lm}{
+        padding: 20px 0;
+    }
+    & .nav-overlay{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        @include transition(.3s);
+        visibility: hidden;
+        opacity: 0;
+        z-index: 9999;
+        &.active{
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+    & .primary-menu{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    & .site-branding{
+        max-width: 200px;
+    }
+    & .nav-inner-menu{
+        display: flex;
+        align-items: center;
+        & .nav-right-item{
+            margin-left: 40px;
+        }
+    }
+    & .main-menu{
+        & ul{
+            & > li{
+                display: inline-block;
+                position: relative;
+                margin-left: 17px;
+                margin-right: 17px;
+                & > a {
+                    position: relative;
+                    display: block;
+                    font: 600 20px $heading-font;
+                    padding: 30px 0;
+                    text-transform: capitalize;
+                    line-height: 1;
+                    @extend %heading-color;
+                    & span.dd-trigger{
+                        margin-left: 5px;
+                    }
+                }
+                & .sub-menu {
+                    position: absolute;
+                    left: 0;
+                    top: 120%;
+                    width: 250px;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: all 0.2s;
+                    z-index: 99;
+                    padding: 15px 30px;
+                    background-color: $white-color;
+                    height: auto;
+                    text-align: left;
+                    box-shadow: 0px 30px 80px 15px rgba(0, 0, 0, 0.09);
+                    & li {
+                        display: block;
+                        margin: 0;
+                        border-bottom: 1px solid rgb(48 34 34 / 10%);
+                        & a {
+                            display: flex;
+                            align-items: center;
+                            padding: 0;
+                            position: relative;
+                            line-height: 2.5;
+                            margin: 0;
+                            color: $heading-color;
+                            @include transition(.3s);
+                            &:before{
+                                display: inline-flex;
+                                content: '';
+                                width: 0;
+                                height: 1px;
+                                @extend %primary-bg;
+                                @include transition(.35s);
+                            }
+                            & span.dd-trigger{
+                                margin-left: auto;
+                            }
+                            &:hover {
+                                color: $primary-color;
+                                &:before{
+                                    width: 10px;
+                                    margin-right: 5px;
+                                }
+                            }
+                        }
+                        &:last-child{
+                            border-bottom: 0;
+                            margin-bottom: 0;
+                            & a{
+                                padding-bottom: 0;
+                            }
+                        }
+                        & .sub-menu {
+                            left: 100%;
+                            top: 50%;
+                        }
+                        &:hover {
+                            & .sub-menu {
+                                top: 0%;
+                            }
+                            & > a{
+                                color: $primary-color;
+                            }
+                        }
+                    }
+                }
+                &:hover {
+                    & > a{
+                        color: $primary-color;
+                    }
+                    & > .sub-menu {
+                        opacity: 1;
+                        visibility: visible;
+                        top: 100%;
+                    }
+                }
+            }
+		}
+    }
+    & .navbar-toggler {
+		padding: 11px 7px;
+		border: 1px solid $heading-color;
+		background-color: transparent;
+		cursor: pointer;
+        display: none;
+        border-radius: 5px;
+        margin-left: 20px;
+		& span {
+			position: relative;
+			border-radius: 3px;
+			display: block;
+			height: 2px;
+			padding: 0;
+			width: 30px;
+			cursor: pointer;
+			display: block;
+            @include transition(.3s);
+            background-color: $heading-color;
+            &:not(:first-child){
+                margin-top: 5px;
+            }
+		}
+		&.active {
+			span:nth-of-type(1) {
+				transform: rotate3d(0, 0, 1, 45deg);
+				top: 7px;
+			}
+			span:nth-of-type(2) {
+				opacity: 0;
+			}
+			span:nth-of-type(3) {
+				transform: rotate3d(0, 0, 1, -45deg);
+				top: -7px;
+			}
+		}
+	}
+    @media #{$lm}{
+        & .foodix-nav-menu{
+            text-align: left;
+            position: fixed;
+            top: 0;
+            left: -290px;
+            width: 290px;
+            height: 100%;
+            transition-duration: 500ms;
+            padding: 30px 20px;
+            display: block;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            z-index: 9999;
+            background-color: $white-color;
+            &.menu-on {
+                left: 0;
+            }
+            & .main-menu {
+                & ul li {
+                    display: block;
+                    margin: 0;
+                    &:not(:last-child){
+                        border-bottom: 1px solid #2e2e2e;
+                    }
+                    & a {
+                        display: block;
+                        padding: 12px 0;
+                        font-size: 18px;
+                    }   
+                    & .sub-menu {
+                        width: 100%;
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                        padding: 0;
+                        box-shadow: none;
+                        background-color: transparent;
+                        visibility: visible;
+                        opacity: 1;
+                        display: none;
+                        transition: none;
+                        border-top: 1px solid #2e2e2e;
+                        & > li {
+                            & > a{
+                                padding: 5px 20px;
+                            }
+                        }
+                    }
+                    & .dd-trigger {
+                        position: absolute;
+                        right: 0;
+                        top: 10px;
+                        height: 25px;
+                        width: 25px;
+                        border-radius: 3px;
+                        z-index: 2;
+                        cursor: pointer;
+                        font-size: 16px;
+                    }
+                }
+                &.menu-on {
+                    left: 0;
+                }
+            }
+        }
+        & .navbar-toggler{
+            display: block;
+        }
+    }
+}
+
+.nav-right-item{
+    display: flex;
+    align-items: center;
+    & .cart-button{
+        width: 60px;
+        height: 60px;
+        @extend %flex-center;
+        background-color: $secondary-color;
+        color: $white-color;
+        border-radius: 10px;
+        margin-left: 20px;
+        cursor: pointer;
+        @media #{$lm}{
+            width: 40px;
+            height: 40px;
+        }
+    }
+}
+
+.navigation-white{
+    & .header-navigation{
+        & .main-menu{
+            & ul{
+                & li{
+                    & > a{
+                        color: $white-color;
+                    }
+                    &:hover{
+                        & > a{
+                            color: $primary-color;
+                        }
+                    }
+                }
+            }
+        }
+        @media #{$lm}{
+            & .foodix-nav-menu{
+                & .main-menu{
+                    & ul{
+                        & li{
+                            & > a{
+                                color: $heading-color;
+                            }
+                        }
+                    }
+                }
+            }
+            & .navbar-toggler{
+                border-color: $white-color;
+                & span{
+                    background-color: $white-color;
+                }
+            }
+        }
+    }
+   
+}
+
+.header-three{
+    & .header-navigation{
+        & .main-menu{
+            & ul{
+                & li{
+                    & > a{
+                        color: $white-color;
+                    }
+                    &:hover{
+                        & > a{
+                            color: $secondary-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    & .nav-right-item{
+        & .theme-btn{
+            &.style-one{
+                @extend %white-bg;
+                @extend %secondary-color;
+                &:hover{
+                    @extend %secondary-bg;
+                    @extend %white-color;
+                }
+            }
+        }
+    }
+}
+
+/* Header Sticky */
+
+.header-area {
+    &.sticky{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        border-color: transparent;
+        @extend %white-bg;
+        box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.08);
+        animation: sticky 1.2s;
+    }
+    &.header-three,
+    &.header-one{
+        &.sticky{
+            @extend %primary-dark-bg;
+        } 
+    }
+}
+
+@-webkit-keyframes sticky {
+    0% {
+      top: -200px;
+    }
+    100% {
+      top: 0;
+    }
+}
+@keyframes sticky {
+    0% {
+      top: -200px;
+    }
+    100% {
+      top: 0;
+    }
+}

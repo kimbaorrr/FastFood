@@ -1,0 +1,120 @@
+﻿@using FastFood.Models;
+@using FastFood.DB;
+@{
+    IEnumerable<Nhanvien>? dsNhanVien = ViewBag.NhanVien as IEnumerable<Nhanvien>;
+}
+
+<!-- Start Container Fluid -->
+<div class="container-xxl">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="d-flex card-header justify-content-between align-items-center">
+                    <div>
+                        <h4 class="card-title">@ViewBag.Title</h4>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover table-centered">
+                            <thead class="bg-light-subtle">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ và tên</th>
+                                    <th>Email</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Đã có tài khoản</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (Nhanvien? nv in dsNhanVien!)
+                                {
+                                    <tr>
+                                        <td>@nv.Manhanvien</td>
+                                        <td>@nv.Hodem @nv.Tennhanvien</td>
+                                        <td>@nv.Email</td>
+                                        <td> @nv.Sodienthoai </td>
+                                        <td>@nv.Diachi</td>
+                                        <td>@nv.Ngaytao</td>
+                                        <td>
+                                            @{
+                                                if (nv.Nhanviendangnhap != null)
+                                                {
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#09ee2e" fill-rule="evenodd" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20m10.742-26.33a1 1 0 1 0-1.483-1.34L21.28 29.567l-6.59-6.291a1 1 0 0 0-1.382 1.446l7.334 7l.743.71l.689-.762z" clip-rule="evenodd" /></svg>
+                                                }
+                                                else
+                                                {
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#e92241" fill-rule="evenodd" d="M44 24c0 11.046-8.954 20-20 20S4 35.046 4 24S12.954 4 24 4s20 8.954 20 20m-27.778 7.778a1 1 0 0 1 0-1.414L22.586 24l-6.364-6.364a1 1 0 0 1 1.414-1.414L24 22.586l6.364-6.364a1 1 0 0 1 1.414 1.414L25.414 24l6.364 6.364a1 1 0 0 1-1.414 1.414L24 25.414l-6.364 6.364a1 1 0 0 1-1.414 0" clip-rule="evenodd" /></svg>
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table-responsive -->
+                </div>
+                <div class="card-footer border-top">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end mb-0">
+                            <!-- Previous Page Link -->
+                            @if (ViewBag.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("List", "Employee", new { area = "Admin", page = ViewBag.CurrentPage - 1 })">
+                                        Trước đây
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Trước đây</span>
+                                </li>
+                            }
+
+                            <!-- Page Numbers -->
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@i</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("List", "Employee", new { area = "Admin", page = i })">@i</a>
+                                    </li>
+                                }
+                            }
+
+                            <!-- Next Page Link -->
+                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("List", "Employee", new { area = "Admin", page = ViewBag.CurrentPage + 1 })">
+                                        Tiếp theo
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Tiếp theo</span>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- End Container Fluid -->

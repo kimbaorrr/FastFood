@@ -1,0 +1,85 @@
+﻿<style>
+    .quyen-han-key {
+        cursor: pointer;
+    }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title flex-grow-1">Danh sách nhân viên đã có tài khoản</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive" style="overflow-y: scroll;max-height: 50vh;">
+                    <table class="table table-bordered align-middle table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Họ tên nhân viên</th>
+                                <th>Tên đăng nhập</th>
+                                <th>Quyền hạn</th>
+                                <th>Vai trò</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function loadTableData() {
+        $.ajax({
+            url: '@Url.Action("GetList", "Employee", new { area = "Admin" })',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                var tableBody = $('table tbody');
+                tableBody.empty();
+
+                $.each(data, function(index, item) {
+                    let quyenHanHtml = Object.entries(item.QuyenHan).map(function([key, value]) {
+                        return `<span class="quyen-han-key" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${value}">${key}</span>`;
+                    }).join(', ');
+                    var row = $('<tr></tr>');
+                    row.append('<td>' + item.MaNhanVien + '</td>');
+                    row.append('<td>' + item.HoTen + '</td>');
+                    row.append('<td>' + item.TenDangNhap + '</td>');
+                    row.append('<td>' + quyenHanHtml + '</td>');
+                    row.append('<td>' + item.VaiTro + '</td>');
+                    row.append(`
+                    <td>
+                        <button class="btn btn-warning btn-sm editEmployeeLogin"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal"
+                                data-employee-id="${item.MaNhanVien}"
+                                data-user-name="${item.TenDangNhap}"
+                                >
+                            Sửa
+                        </button>
+                        <button class="btn btn-danger btn-sm deleteEmployeeLogin" data-employee-id="${item.MaNhanVien}">Xóa</button>
+                    </td>`);
+
+                    tableBody.append(row);
+                });
+
+                const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+                const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+            },
+            error: function(xhr, status, error) {
+                alert("Có lỗi khi tải lại bảng dữ liệu: " + error);
+            }
+        });
+    }
+    $(document).ready(function () {
+        
+        loadTableData();
+            
+    });
+</script>
