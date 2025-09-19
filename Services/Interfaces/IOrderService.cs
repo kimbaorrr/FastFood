@@ -1,4 +1,6 @@
-﻿using FastFood.Models.ViewModels;
+﻿using FastFood.DB;
+using FastFood.Models.ViewModels;
+using X.PagedList;
 
 namespace FastFood.Services.Interfaces
 {
@@ -11,5 +13,6 @@ namespace FastFood.Services.Interfaces
         Task<string> GetRevenueByTimeRange(string timeRange);
         Task<string> GetOrdersByDate(DateTime fromTime, DateTime toTime);
         Task<List<CustomOrderViewModel>> GetCustomOrderViewModels();
+        Task<IPagedList<Order>> GetOrdersPagedList(int page, int size);
     }
 }

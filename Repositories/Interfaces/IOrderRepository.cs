@@ -7,9 +7,10 @@ namespace FastFood.Repositories.Interfaces
         Task<List<Order>> GetOrders();
         Task<List<Order>> GetOrdersDelivered();
         Task<int> CountOrders();
-        Task<int> CalculateTotalOrdersRevenue();
-        Task<double> CalculateAverageOrdersRevenue();
+        Task<int> GetTotalOrdersRevenue();
+        Task<double> GetAverageOrdersRevenue();
         Task<List<Order>> GetOrdersWithDetails();
+        Task<List<Order>> GetOrdersByCustomerId(int customerId);
 
     }
 }

@@ -6,7 +6,7 @@ using System.Net;
 
 namespace FastFood.Areas.Admin.Controllers
 {
-    [Route("auth")]
+    [Route("admin/auth")]
     public class AccountController : BaseController
     {
         private readonly IEmployeeService _employeeService;

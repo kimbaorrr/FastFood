@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using X.PagedList.Extensions;
 namespace FastFood.Areas.Admin.Controllers
 {
-    [Route("article")]
+    [Route("admin/articles")]
     public class ArticleController : BaseController
     {
         private readonly IArticleService _articleService;

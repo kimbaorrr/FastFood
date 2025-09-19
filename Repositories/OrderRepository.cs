@@ -1,11 +1,6 @@
 ﻿using FastFood.DB;
 using FastFood.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-
 namespace FastFood.Repositories;
 
 public class OrderRepository : CommonRepository, IOrderRepository
@@ -15,6 +10,10 @@ public class OrderRepository : CommonRepository, IOrderRepository
     public async Task<List<Order>> GetOrders()
     {
         return await this._fastFoodEntities.Orders.ToListAsync();
+    }
+    public async Task<List<Order>> GetOrdersByCustomerId(int customerId)
+    {
+        return await this._fastFoodEntities.Orders.Where(x=>x.Buyer == customerId).ToListAsync();
     }
 
     public async Task<List<Order>> GetOrdersWithDetails()
@@ -32,12 +31,12 @@ public class OrderRepository : CommonRepository, IOrderRepository
         return await this._fastFoodEntities.Orders.CountAsync();
     }
 
-    public async Task<int> CalculateTotalOrdersRevenue()
+    public async Task<int> GetTotalOrdersRevenue()
     {
         return await this._fastFoodEntities.Orders.SumAsync(x => x.TotalPrice);
     }
 
-    public async Task<double> CalculateAverageOrdersRevenue()
+    public async Task<double> GetAverageOrdersRevenue()
     {
         return await this._fastFoodEntities.Orders.AverageAsync(x => x.TotalPrice);
     }

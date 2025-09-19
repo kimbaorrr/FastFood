@@ -1,4 +1,6 @@
-﻿using FastFood.Models.ViewModels;
+﻿using FastFood.DB;
+using FastFood.Models.ViewModels;
+using X.PagedList;
 
 namespace FastFood.Services.Interfaces
 {
@@ -6,6 +8,9 @@ namespace FastFood.Services.Interfaces
     {
         Task<double> CompareCustomersByDateTime(DateTime currentTime, DateTime previousTime);
         Task<List<PotentialCustomersViewModel>> GetPotentialCustomers();
+        Task<IPagedList<Customer>> GetCustomersPagedList(int page, int size);
+        Task<IPagedList<PotentialCustomersViewModel>> GetPotentialCustomersPagedList(int page, int size);
+        Task<(CustomerDetailViewModel, IPagedList<Order>)> GetCustomerDetailWithOrdersPagedList(int customerId, int page, int size);
 
     }
 }

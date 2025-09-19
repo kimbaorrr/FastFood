@@ -9,7 +9,7 @@ using X.PagedList.Extensions;
 namespace FastFood.Areas.Admin.Controllers
 {
 
-    [Route("categories")]
+    [Route("admin/categories")]
     public class CategoriesController : BaseController
     {
         private readonly ICategoryService _categoryService;

@@ -1,8 +1,11 @@
-﻿using FastFood.Models;
+﻿using FastFood.DB;
+using FastFood.Models;
 using FastFood.Models.ViewModels;
 using FastFood.Repositories.Interfaces;
 using FastFood.Services.Interfaces;
 using Newtonsoft.Json;
+using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace FastFood.Services
 {
@@ -157,6 +160,12 @@ namespace FastFood.Services
             }).ToList();
 
             return customOrderViewModels;
+        }
+
+        public async Task<IPagedList<Order>> GetOrdersPagedList(int page, int size)
+        {
+            var orders = await this._orderRepository.GetOrders();
+            return orders.OrderBy(x => x.OrderId).ToPagedList();
         }
     }
 }

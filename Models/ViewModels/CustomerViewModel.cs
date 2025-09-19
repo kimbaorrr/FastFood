@@ -9,6 +9,10 @@ namespace FastFood.Models.ViewModels
         public string FullName { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateOnly? Bod { get; set; }
+        public string Avatar { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
     }
     public class PotentialCustomersViewModel : BaseCustomerViewModel
     {
@@ -17,17 +21,10 @@ namespace FastFood.Models.ViewModels
         public int? BiggestOrder { get; set; }
         public DateTime? RecentPurchase { get; set; }
         public DateTime? LastAccessedTime { get; set; }
+        
     }
-    public class CustomerDetailViewModel : BaseCustomerViewModel
+    public class CustomerDetailViewModel : PotentialCustomersViewModel
     {
-        public string Avatar { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public string Address { get; set; } = string.Empty;
-
-        public int TotalSpending { get; set; } = 0;
-        public int TotalOrder { get; set; } = 0;
-        public int? BiggestSpending { get; set; }
         public int RecentActivities { get; set; } = 0;
 
         public List<Order> Orders { get; set; } = new List<Order>();
