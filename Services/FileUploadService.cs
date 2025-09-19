@@ -12,10 +12,10 @@ namespace FastFood.Services
                 return (false, "Chưa chọn tệp tải lên !", string.Empty);
 
             if (formFile.Length == 0 || formFile.Length > 10000000)
-                return (false, "Kích thước các tệp phải khác 0 & <= 10MB !", string.Empty);
+                return (false, $"Kích thước tệp {formFile.FileName} phải khác 0 & <= 10MB !", string.Empty);
 
             if (!formFile.ContentType.Contains("image/"))
-                return (false, "Các tệp tải lên phải là định dạng ảnh !", string.Empty);
+                return (false, $"Tệp {formFile.FileName} phải là định dạng ảnh !", string.Empty);
 
             string randomName = Guid.NewGuid().ToString();
             string newUploadFileName = randomName + Path.GetExtension(formFile!.FileName);
@@ -41,10 +41,10 @@ namespace FastFood.Services
                     return (false, "Chưa chọn tệp tải lên !", string.Empty);
 
                 if (formFile.Length == 0 || formFile.Length > 10000000)
-                    return (false, "Kích thước các tệp phải khác 0 & <= 10MB !", string.Empty);
+                    return (false, $"Kích thước tệp {formFile.FileName} phải khác 0 & <= 10MB !", string.Empty);
 
                 if (!formFile.ContentType.Contains("image/"))
-                    return (false, "Các tệp tải lên phải là định dạng ảnh !", string.Empty);
+                    return (false, $"Tệp {formFile.FileName} phải là định dạng ảnh !", string.Empty);
 
                 string randomName = Guid.NewGuid().ToString();
                 string newUploadFileName = randomName + Path.GetExtension(formFile!.FileName);

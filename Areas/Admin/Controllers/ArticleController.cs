@@ -68,8 +68,7 @@ namespace FastFood.Areas.Admin.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Approve([FromForm] int articleId, [FromForm] bool action)
         {
-            var employee = this.GetEmployeeFromClaim();
-            (bool success, string message) = await this._articleService.ApproveArticle(articleId, employee!.EmployeeId, action);
+            (bool success, string message) = await this._articleService.ApproveArticle(articleId, this._employeeId, action);
             return CreateJsonResult(success, message);
         }
 
@@ -77,8 +76,7 @@ namespace FastFood.Areas.Admin.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> MultipleApprove([FromForm] int[] articleIds, [FromForm] bool action)
         {
-            var employee = this.GetEmployeeFromClaim();
-            (bool success, string message) = await this._articleService.ApproveArticles(articleIds, employee!.EmployeeId, action);
+            (bool success, string message) = await this._articleService.ApproveArticles(articleIds, this._employeeId, action);
             return CreateJsonResult(success, message);
         }
 

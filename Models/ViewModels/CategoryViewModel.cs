@@ -19,15 +19,16 @@ namespace FastFood.Models.ViewModels
 
         [Display(Name = "Ảnh đại diện")]
         [DataType(DataType.Text)]
-        public IFormFile? ThumbnailImage { get; set; }
+        public FormFile? ThumbnailImage { get; set; }
         [Display(Name = "Ảnh nền")]
         [DataType(DataType.Text)]
-        public IFormFile? BackgroundImage { get; set; }
+        public FormFile? BackgroundImage { get; set; }
+        public int? CreatedBy { get; set; } = -1;
 
     }
     public class EditCategoryViewModel : BaseCategoryViewModel
     {
-        public int CategoryId { get; set; } = -1;
+        public int? CategoryId { get; set; } = -1;
 
     }
 }

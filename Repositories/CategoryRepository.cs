@@ -37,4 +37,29 @@ public class CategoryRepository : CommonRepository, ICategoryRepository
             .FirstOrDefaultAsync() 
             ?? string.Empty;
     }
+
+    public async Task AddCategory(Category category)
+    {
+        await this._fastFoodEntities.AddAsync(category);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
+
+    public async Task UpdateCategory(Category category)
+    {
+        this._fastFoodEntities.Update(category);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
+
+    public async Task<Category> GetCategoryById(int categoryId)
+    {
+        return await this._fastFoodEntities.Categories
+            .Where(x => x.CategoryId == categoryId)
+            .FirstOrDefaultAsync() ?? new Category();
+    }
+
+    public async Task DeleteCategory(Category category)
+    {
+        this._fastFoodEntities.Remove(category);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
 }

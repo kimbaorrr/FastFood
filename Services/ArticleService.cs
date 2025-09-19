@@ -74,18 +74,17 @@ namespace FastFood.Services
             int totalDeleted = 0;
             foreach (var articleId in articleIds)
             {
-                var article = await this._articleRepository.GetArticleById(articleId);
-
-                if (article != null)
+                (bool success, string message) = await this.DeleteArticle(articleId);
+                if (!success)
                 {
-                    await this._articleRepository.DeleteArticle(article);
-                    CommonHelper.DeleteFile(article.CoverImage!);
-                    totalDeleted++;
+                    return (false, message);
                 }
+
+                totalDeleted++;
             }
             return (true, $"Đã xóa thành công {totalDeleted} bài viết !");
         }
-        public async Task<(bool, string)> ApproveArticle(int articleId, int approverId, bool isApproved)
+        public async Task<(bool, string)> ApproveArticle(int articleId, int? approverId, bool isApproved)
         {
             var article = await this._articleRepository.GetArticleById(articleId);
             if (article != null)
@@ -104,29 +103,22 @@ namespace FastFood.Services
             }
             return (false, $"Không tìm thấy bài viết {articleId} !");
         }
-        public async Task<(bool, string)> ApproveArticles(int[] articleIds, int approverId, bool isApproved)
+        public async Task<(bool, string)> ApproveArticles(int[] articleIds, int? approverId, bool isApproved)
         {
-            List<int> articleNulls = new List<int>();
-            foreach(var articleId in articleIds)
-            {
-                var article = await this._articleRepository.GetArticleById(articleId);
-                if (article != null)
-                {
-                    if (!isApproved)
-                    {
-                        CommonHelper.DeleteFile(article.CoverImage!);
-                        return (true, $"Bài viết {articleId} đã được rút lại !");
-                    }
+            int totalPublished = 0;
+            int totalRefused = 0;
 
-                    article.ApproverId = approverId;
-                    article.ApproveAt = DateTime.Now;
-                    article.IsApproved = true;
-                    await this._articleRepository.UpdateArticle(article);
-                    return (true, $"Bài viết {articleId} đã được xuất bản !");
+            foreach (var articleId in articleIds)
+            {
+                (bool success, string message) = await this.ApproveArticle(articleId, approverId, isApproved);
+                if (!success)
+                {
+                    return (false, message);
                 }
-                
+
+                if (isApproved) { totalPublished++; } else { totalRefused++; }
             }
-            return (false, $"Không tìm thấy các bài viết {string.Join(",", articleNulls)} !");
+            return (true, $"Đã xuất bản {totalPublished} bài & thu hồi {totalRefused} bài !");
 
         }
         public async Task<List<Article>> GetArticlesNotApprove()

@@ -12,6 +12,7 @@ namespace FastFood.Areas.Admin.Controllers
     [Area("Admin")]
     public abstract class BaseController : Controller
     {
+        protected int? _employeeId => this.GetEmployeeFromClaim()?.EmployeeId ?? -1;
         protected BaseController()
         {
 
