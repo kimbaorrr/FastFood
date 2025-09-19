@@ -89,5 +89,10 @@ namespace FastFood.Areas.Admin.Controllers
 
             return absoluteUri;
         }
+
+        protected IActionResult RoleChecker()
+        {
+            if this._employeeId
+        }
     }
 }

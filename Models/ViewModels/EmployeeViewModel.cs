@@ -54,4 +54,10 @@ namespace FastFood.Models.ViewModels
         public string Avatar { get; set; } = string.Empty;
 
     }
+
+    public class CustomEmployeePermissions : EmployeeViewModel
+    {
+        public string UserName { get; set; } = string.Empty;
+        public bool Role { get; set; } = false;
+    }
 }

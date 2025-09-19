@@ -57,7 +57,7 @@ namespace FastFood.Models.ViewModels
         public new string Email { get; set; } = string.Empty;
     }
 
-    public class EmployeeRegisterViewModel : BaseEmployeeAccountViewModel
+    public class EmployeeRegisterLoginAccountViewModel : BaseEmployeeAccountViewModel
     {
         public int EmployeeId { get; set; } = -1;
 

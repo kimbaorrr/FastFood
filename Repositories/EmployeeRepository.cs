@@ -13,7 +13,7 @@ public class EmployeeRepository : CommonRepository, IEmployeeRepository
     public async Task<List<Employee>> GetEmployees()
     {
         return await this._fastFoodEntities.Employees.ToListAsync();
-    }
+    }   
 
     public string GetFullName(int employeeId)
     {
@@ -21,5 +21,35 @@ public class EmployeeRepository : CommonRepository, IEmployeeRepository
             .Where(x => x.EmployeeId == employeeId)
             .Select(x => x.LastName + " " + x.FirstName)
             .FirstOrDefault() ?? string.Empty;
+    }
+
+    public async Task<Employee> GetEmployeeById(int employeeId)
+    {
+        return await this._fastFoodEntities.Employees
+            .FirstOrDefaultAsync(x => x.EmployeeId == employeeId) 
+            ?? new Employee();
+    }
+
+    public async Task AddEmployee(Employee employee)
+    {
+        await this._fastFoodEntities.AddAsync(employee);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
+
+    public async Task UpdateEmployee(Employee employee)
+    {
+        this._fastFoodEntities.Update(employee);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
+
+    public async Task DeleteEmployee(Employee employee)
+    {
+        this._fastFoodEntities.Remove(employee);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
+
+    public async Task<List<Employee>> GetEmployeesNonAccount()
+    {
+        return await this._fastFoodEntities.Employees.Where(x => x.EmployeeAccount == null).ToListAsync();
     }
 }

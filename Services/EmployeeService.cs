@@ -3,21 +3,26 @@ using FastFood.Models.ViewModels;
 using FastFood.Repositories.Interfaces;
 using FastFood.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
+using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace FastFood.Services
 {
     public class EmployeeService : CommonService, IEmployeeService
     {
         private readonly IEmployeeAccountRepository _employeeAccountRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly IPermissionRepository _permissionRepository;
         private readonly PasswordHasher<string> _passwordHasher;
         private readonly IEmailService _emailService;
-        public EmployeeService(IEmployeeAccountRepository employeeAccountRepository, IPermissionRepository permissionRepository, IEmailService emailService)
+        public EmployeeService(IEmployeeAccountRepository employeeAccountRepository, IPermissionRepository permissionRepository, IEmailService emailService, IEmployeeRepository employeeRepository)
         {
             _employeeAccountRepository = employeeAccountRepository;
             _permissionRepository = permissionRepository;
             _passwordHasher = new PasswordHasher<string>();
             _emailService = emailService;
+            _employeeRepository = employeeRepository;
         }
 
         public async Task<bool> CheckPermission(string employeeId, int permissonId)
@@ -149,6 +154,71 @@ namespace FastFood.Services
 
             return (true, "Đã gửi thông tin khôi phục đến email của bạn !");
 
+        }
+
+        public async Task<IPagedList<CustomEmployeePermissions>> GetEmployeesPermissionsPagedList(int page, int size)
+        {
+            var employees = await this._employeeRepository.GetEmployees();
+
+            List<CustomEmployeePermissions> customEmployeePermissionsList = new();
+
+            foreach (var employee in employees)
+            {
+                CustomEmployeePermissions customEmployeePermissions = new();
+                customEmployeePermissions.FirstName = employee.FirstName;
+                customEmployeePermissions.LastName = employee.LastName;
+                customEmployeePermissions.Role = employee.EmployeeAccount!.Role;
+                customEmployeePermissions.UserName = employee.EmployeeAccount!.UserName;
+                customEmployeePermissionsList.Add(customEmployeePermissions);
+
+            }
+
+            return customEmployeePermissionsList.OrderBy(x => x.EmployeeId).ToPagedList(page, size);
+        }
+
+        public async Task<(bool, string)> RegisterLoginAccount(EmployeeRegisterLoginAccountViewModel employeeRegisterViewModel, string selectedPermissions)
+        {
+            employeeRegisterViewModel.UserName = employeeRegisterViewModel.UserName.Trim().ToLower();
+            var employee = await this._employeeRepository.GetEmployeeById(employeeRegisterViewModel.EmployeeId);
+            EmployeeAccount? userExists = await this._employeeAccountRepository.GetEmployeeAccountByUserName(employeeRegisterViewModel.UserName);
+
+            if (employee == null) 
+            {
+                return (false, "ID nhân viên không tồn tại !");
+            }
+
+            if (employee.EmployeeAccount != null)
+            {
+                return (false, "Nhân viên này đã có thông tin đăng nhập !");
+            }
+
+            if (userExists != null)
+            {
+                return (false, "Tên đăng nhập đã tồn tại !");
+            }
+
+            string employeeHasPermissions = string.Empty;
+
+            if (!string.IsNullOrEmpty(selectedPermissions))
+            {
+                string[] permissionArray = JsonConvert.DeserializeObject<string[]>(selectedPermissions)!;
+                employeeHasPermissions = string.Join(",", permissionArray) ?? string.Empty;
+            }
+
+            EmployeeAccount employeeAccount = new()
+            {
+                EmployeeId = employeeRegisterViewModel.EmployeeId,
+                UserName = employeeRegisterViewModel.UserName,
+                Permission = employeeHasPermissions,
+                CreatedAt = DateTime.Now,
+                Role = employeeRegisterViewModel.Role,
+                TemporaryPassword = false,
+                Password = this._passwordHasher.HashPassword(string.Empty, employeeRegisterViewModel.Password)
+            };
+
+            await this._employeeAccountRepository.AddEmployeeAccount(employeeAccount);
+
+            return (true, $"Tạo tài khoản thành công cho nhân viên {employeeRegisterViewModel.EmployeeId} !");
         }
     }
 }

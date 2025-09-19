@@ -22,16 +22,34 @@ public class EmployeeAccountRepository : CommonRepository, IEmployeeAccountRepos
             .FirstOrDefaultAsync() ?? new EmployeeAccount();
     }
 
-    public async Task<EmployeeAccount> GetEmployeeAccountByEmployeeId(int employeeId)
+    public async Task<EmployeeAccount> GetEmployeeAccountById(int employeeId)
     {
         return await this._fastFoodEntities.EmployeeAccounts
             .Where(x => x.EmployeeId == employeeId)
             .FirstOrDefaultAsync() ?? new EmployeeAccount();
     }
 
+    public async Task AddEmployeeAccount(EmployeeAccount employeeAccount)
+    {
+        await this._fastFoodEntities.EmployeeAccounts.AddAsync(employeeAccount);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
+
+    public async Task UpdateEmployeeAccount(EmployeeAccount employeeAccount)
+    {
+        this._fastFoodEntities.EmployeeAccounts.Update(employeeAccount);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
+
+    public async Task DeleteEmployeeAccount(EmployeeAccount employeeAccount)
+    {
+        this._fastFoodEntities.EmployeeAccounts.Remove(employeeAccount);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
+
     public async Task UpdateNewPassword(int employeeId, string newPassword, bool isTempPassword)
     {
-        var employeeAccount = await this.GetEmployeeAccountByEmployeeId(employeeId);
+        var employeeAccount = await this.GetEmployeeAccountById(employeeId);
         employeeAccount.Password = newPassword;
         employeeAccount.TemporaryPassword = isTempPassword;
         this._fastFoodEntities.EmployeeAccounts.Update(employeeAccount);
