@@ -29,7 +29,7 @@ namespace FastFood.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpGet("get/potential")]
+        [HttpGet("potential/get")]
         public async Task<IActionResult> GetPotential([FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var potentialCustomers = await this._customerService.GetPotentialCustomersPagedList(page, size);

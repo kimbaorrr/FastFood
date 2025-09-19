@@ -80,7 +80,7 @@ namespace FastFood.Areas.Admin.Controllers
             return CreateJsonResult(success, message);
         }
 
-        [HttpGet("not-approve")]
+        [HttpGet("not-approve/get")]
         public async Task<IActionResult> GetNotApprove()
         {
             var notApprovedArticles = await this._articleService.GetArticlesNotApprove();
