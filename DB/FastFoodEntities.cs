@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using FastFood.DB.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FastFood.DB;
 
 public partial class FastFoodEntities : DbContext
 {
-    private readonly IConfiguration _configuration;
-    public FastFoodEntities(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
-    public FastFoodEntities(DbContextOptions<FastFoodEntities> options)
-        : base(options)
+    public FastFoodEntities(DbContextOptions<FastFoodEntities> options) : base(options)
     {
     }
 
@@ -63,8 +57,7 @@ public partial class FastFoodEntities : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(this._configuration["ConnectionStrings:Postgres"]);
-        optionsBuilder.UseLazyLoadingProxies();
+        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -412,7 +405,7 @@ public partial class FastFoodEntities : DbContext
             entity.Property(e => e.OrderStatus)
                 .HasDefaultValue(0)
                 .HasColumnName("order_status");
-            entity.Property(e => e.PromoCode).HasColumnName("promo_code");
+            entity.Property(e => e.PromoId).HasColumnName("promo_id");
             entity.Property(e => e.Seller).HasColumnName("seller");
             entity.Property(e => e.ShipperName)
                 .HasMaxLength(100)
@@ -447,7 +440,7 @@ public partial class FastFoodEntities : DbContext
                 .HasConstraintName("fk__donhang__trangth__531856c7");
 
             entity.HasOne(d => d.PromoCodeNavigation).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.PromoCode)
+                .HasForeignKey(d => d.PromoId)
                 .HasConstraintName("fk_makhuyenmai_makhuyenmai");
 
             entity.HasOne(d => d.SellerNavigation).WithMany(p => p.Orders)

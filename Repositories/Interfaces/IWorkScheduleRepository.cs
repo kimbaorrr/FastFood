@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 
 namespace FastFood.Repositories.Interfaces
 {

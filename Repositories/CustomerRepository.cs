@@ -1,4 +1,5 @@
 ﻿using FastFood.DB;
+using FastFood.DB.Entities;
 using FastFood.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -34,6 +35,15 @@ public class CustomerRepository : CommonRepository, ICustomerRepository
             .Where(x=>x.Orders.Any(x=>x.OrderStatus == 7))
             .ToListAsync();
     }
+
+    public async Task<Customer> GetCustomerById(int customerId)
+    {
+        return await this._fastFoodEntities.Customers
+            .FirstOrDefaultAsync(x => x.CustomerId == customerId)
+            ?? new Customer();
+    }
+
+    
 
 
 

@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 using FastFood.Models.ViewModels;
 using X.PagedList;
 
@@ -14,5 +14,6 @@ namespace FastFood.Services
         Task<(bool, string)> ApproveArticles(int[] articleIds, int? approverId, bool isApproved);
         Task<List<Article>> GetArticlesNotApprove();
         Task<(bool, string)> EditArticle(EditArticleViewModel editArticleViewModel);
+        Task<IPagedList<Article>> GetArticlesByApproveStatusPagedList(bool isApproved, int page, int size);
     }
 }

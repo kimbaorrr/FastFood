@@ -1,53 +1,50 @@
 ﻿using FastFood.DB;
 using FastFood.Models.ViewModels;
+using FastFood.Repositories.Interfaces;
+using FastFood.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastFood.Areas.Controllers
 {
-    [Route("thuc-don")]
-    public class MenuController : SessionController
+    [Route("menu")]
+    public class MenuController : BaseController
     {
+        private readonly IProductService _productService;
+        private readonly IProductRepository _productRepository;
+        private readonly IProductReviewService _productReviewService;
+        public MenuController(IProductService productService, IProductRepository productRepository, IProductReviewService productReviewService)
+        {
+            _productService = productService;
+            _productRepository = productRepository;
+            _productReviewService = productReviewService;   
+        }
         [HttpGet("")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             ViewBag.Title = "Thực đơn";
             return View();
         }
-        [HttpGet("chi-tiet-mon-an/{id}")]
-        public IActionResult Detail(int id)
+        [HttpGet("detail/{id}")]
+        public async Task<IActionResult> Detail(int productId)
         {
-            Sanpham? sp = FastFood_SanPham.getSanPhamDaDuyet().FirstOrDefault(x => x.Masanpham == id);
-
-            if (sp == null)
-                return BadRequest();
+            var product = await this._productRepository.GetProductById(productId);
 
             ViewBag.Title = "Thông tin món ăn";
-            ViewBag.SanPham = sp;
+            ViewBag.Product = product;
             ViewBag.ReturnUrl = GetAbsoluteUri();
 
             return View();
 
         }
 
-        [HttpPost("chi-tiet-mon-an/{id}")]
+        [HttpPost("detail/{id}")]
         [ValidateAntiForgeryToken]
-        public IActionResult Detail(int id, [FromForm] FastFood_SanPham_DanhGiaSanPham a)
+        public async Task<IActionResult> Detail(int productId, [FromForm] CustomProductReviewViewModel customProductReviewViewModel)
         {
-            using (FastFoodEntities e = new FastFoodEntities())
-            {
-                Danhgiasanpham dg = new Danhgiasanpham()
-                {
-                    Makhachhang = a.MaKhachHang,
-                    Danhgia = a.NoiDung,
-                    Masanpham = id,
-                    Ngaytao = DateTime.Now,
-                    Xephangsao = a.XepHangSao
-                };
-                e.Danhgiasanphams.Add(dg);
-                e.SaveChanges();
-                return View();
-            }
-
+            (bool success, string message) = await this._productReviewService.AddCustomerProductReview(customProductReviewViewModel);
+            return View();
         }
+
+
     }
 }

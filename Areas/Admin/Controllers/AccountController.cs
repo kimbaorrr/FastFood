@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 using FastFood.Models.ViewModels;
 using FastFood.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +16,14 @@ namespace FastFood.Areas.Admin.Controllers
         }
 
         [HttpGet("login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
             ViewBag.Title = "Đăng nhập hệ thống";
             return View();
         }
 
         [HttpPost("login")]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Login(EmployeeLoginViewModel employeeLoginViewModel)
         {
             if (ModelState.IsValid)

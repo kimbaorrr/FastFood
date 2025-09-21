@@ -1,33 +1,45 @@
 ﻿using FastFood.DB;
 using FastFood.Models;
+using FastFood.Repositories.Interfaces;
+using FastFood.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Transactions;
 using X.PagedList;
 using X.PagedList.Extensions;
 
 namespace FastFood.Areas.Controllers
 {
-    [Route("tin-tuc")]
-    public class ArticleController : SessionController
+    [Route("articles")]
+    public class ArticleController : BaseController
     {
-        [HttpGet("")]
-        public IActionResult Index([FromQuery] int page = 1, [FromQuery] int size = 6)
+        private readonly IArticleService _articleService;
+        private readonly IArticleRepository _articleRepository;
+
+        public ArticleController(IArticleService articleService, IArticleRepository articleRepository)
         {
-            IPagedList<Baiviet> baiViet = FastFood_BaiViet.GetBaiVietDaDuyet().OrderBy(m => m.Mabaiviet).ToPagedList(page, size);
-            ViewBag.BaiViet = baiViet;
-            ViewBag.CurrentPage = baiViet.PageNumber;
-            ViewBag.TotalPages = baiViet.PageCount;
+            _articleService = articleService;
+            _articleRepository = articleRepository;
+        }
+
+        [HttpGet("")]
+        public async Task<IActionResult> Index([FromQuery] int page = 1, [FromQuery] int size = 6)
+        {
+            var articles = await this._articleService.GetArticlesByApproveStatusPagedList(true, page, size);
+
+            ViewBag.Articles = articles;
+            ViewBag.CurrentPage = articles.PageNumber;
+            ViewBag.TotalPages = articles.PageCount;
             ViewBag.Title = "Tin tức";
             return View();
 
         }
-        [HttpGet("chi-tiet/{id}")]
-        public IActionResult Detail(int id)
+        [HttpGet("detail/{id}")]
+        public async Task<IActionResult> Detail([FromQuery] int articleId)
         {
-            Baiviet? bv = FastFood_BaiViet.GetBaiVietDaDuyet().FirstOrDefault(x => x.Mabaiviet == id);
-            if (bv == null)
-                return BadRequest();
+            var article = await this._articleRepository.GetArticleById(articleId);
+
             ViewBag.Title = "Tin tức";
-            ViewBag.BaiViet = bv;
+            ViewBag.Article = article;
             ViewBag.ReturnUrl = GetAbsoluteUri();
             return View();
 

@@ -2,10 +2,10 @@
 
 namespace FastFood.Areas.Controllers
 {
-    public class HomeController : SessionController
+    public class HomeController : BaseController
     {
-        [HttpGet]
-        public IActionResult Index()
+        [HttpGet("")]
+        public async Task<IActionResult> Index()
         {
             ViewBag.Title = "Trang chủ";
             return View();

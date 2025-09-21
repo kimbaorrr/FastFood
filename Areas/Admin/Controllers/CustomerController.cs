@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 using FastFood.Models;
 using FastFood.Models.ViewModels;
 using FastFood.Services.Interfaces;

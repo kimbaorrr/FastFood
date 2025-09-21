@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 using FastFood.Models;
 using FastFood.Models.ViewModels;
 using FastFood.Repositories.Interfaces;
@@ -14,6 +14,7 @@ namespace FastFood.Services
         private readonly IArticleRepository _articleRepository;
         private readonly IFileUploadService _fileUploadService;
         private readonly string _articleVirtualPath;
+
         public ArticleService(IWebHostEnvironment webHostEnvironment, IArticleRepository articleRepository, IFileUploadService fileUploadService)
         {
             _articleRepository = articleRepository;
@@ -21,6 +22,7 @@ namespace FastFood.Services
             _articleVirtualPath = webHostEnvironment.WebRootPath;
             _articleVirtualPath = Path.Combine(this._articleVirtualPath, "admin_page/uploads/articles");
         }
+
         public async Task<(bool, string)> NewArticle(NewArticleViewModel newArticleViewModel)
         {
             var articles = await this._articleRepository.GetArticles();
@@ -51,11 +53,13 @@ namespace FastFood.Services
 
 
         }
+
         public async Task<IPagedList<Article>> GetArticlesPagedList(int page, int size)
         {
             var approvedArticles = await this._articleRepository.GetArticlesByApproved(true);
             return approvedArticles.OrderBy(m => m.ArticleId).ToPagedList(page, size);
         }
+
         public async Task<(bool, string)> DeleteArticle(int articleId)
         {
             var article = await this._articleRepository.GetArticleById(articleId);
@@ -69,21 +73,23 @@ namespace FastFood.Services
 
             return (false, $"Không tìm thấy bài viết {articleId} !");
         }
+
         public async Task<(bool, string)> DeleteArticles(int[] articleIds)
         {
-            int totalDeleted = 0;
+            List<int> successIds = new();
+            List<int> failedIds = new();
+
             foreach (var articleId in articleIds)
             {
                 (bool success, string message) = await this.DeleteArticle(articleId);
-                if (!success)
-                {
-                    return (false, message);
-                }
-
-                totalDeleted++;
+                if (success)
+                    successIds.Add(articleId);
+                else
+                    failedIds.Add(articleId);
             }
-            return (true, $"Đã xóa thành công {totalDeleted} bài viết !");
+            return (true, $"Đã xóa thành công {successIds.Count}/{failedIds.Count} bài viết.\nCác id bài viết lỗi gồm: {failedIds.ToArray()} !");
         }
+
         public async Task<(bool, string)> ApproveArticle(int articleId, int? approverId, bool isApproved)
         {
             var article = await this._articleRepository.GetArticleById(articleId);
@@ -103,28 +109,30 @@ namespace FastFood.Services
             }
             return (false, $"Không tìm thấy bài viết {articleId} !");
         }
+
         public async Task<(bool, string)> ApproveArticles(int[] articleIds, int? approverId, bool isApproved)
         {
-            int totalPublished = 0;
-            int totalRefused = 0;
+            List<int> successIds = new();
+            List<int> failedIds = new();
 
             foreach (var articleId in articleIds)
             {
                 (bool success, string message) = await this.ApproveArticle(articleId, approverId, isApproved);
-                if (!success)
-                {
-                    return (false, message);
-                }
-
-                if (isApproved) { totalPublished++; } else { totalRefused++; }
+                if (success)
+                    successIds.Add(articleId);
+                else
+                    failedIds.Add(articleId);
             }
-            return (true, $"Đã xuất bản {totalPublished} bài & thu hồi {totalRefused} bài !");
+            string isApprovedText = isApproved ? "xuất bản" : "thu hồi";
+            return (true, $"Đã {isApprovedText} {successIds.Count}/{failedIds} bài viết.\nCác id bài viết lỗi gồm: {failedIds.ToArray()} !");
 
         }
+
         public async Task<List<Article>> GetArticlesNotApprove()
         {
             return await this._articleRepository.GetArticlesByApproved(false);
         }
+
         public async Task<(bool, string)> EditArticle(EditArticleViewModel editArticleViewModel)
         {
             var article = await this._articleRepository.GetArticleById(editArticleViewModel.ArticleId);
@@ -138,5 +146,12 @@ namespace FastFood.Services
             }
             return (false, $"Không tìm thấy bài viết {editArticleViewModel.ArticleId} !");
         }
+
+        public async Task<IPagedList<Article>> GetArticlesByApproveStatusPagedList(bool isApproved, int page, int size)
+        {
+            var approvedArticles = await this._articleRepository.GetArticlesByApproved(isApproved);
+            return approvedArticles.OrderBy(m => m.ArticleId).ToPagedList(page, size);
+        }
+
     }
 }

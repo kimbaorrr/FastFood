@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 using FastFood.Models;
 using FastFood.Models.ViewModels;
 using FastFood.Repositories.Interfaces;
@@ -166,6 +166,110 @@ namespace FastFood.Services
         {
             var orders = await this._orderRepository.GetOrders();
             return orders.OrderBy(x => x.OrderId).ToPagedList();
+        }
+
+        public async Task<SortedDictionary<string, int>> GetOrdersStatusCard()
+        {
+            var orders = await this._orderRepository.GetOrders();
+            SortedDictionary<string, int> orderCards = new();
+            string[] orderStatuss = new string[]
+            {
+            "DaThanhToan",
+            "ChoXacNhan",
+            "DaXacNhan",
+            "DangThucHien",
+            "ChoGiao",
+            "DangGiao",
+            "DaGiao",
+            "DaHuy"
+            };
+            byte i = 0;
+            foreach (string orderStatus in orderStatuss)
+            {
+                orderCards[orderStatus] = orders.Count(x => x.OrderStatus == i + 1);
+                i++;
+            }
+            return orderCards;
+        }
+
+        public async Task<IPagedList<Order>> GetOrdersByOrderStatusPagedList(int orderStatusId, int page, int size)
+        {
+            var orderByStatuses = await this._orderRepository.GetOrdersByOrderStatusId(orderStatusId);
+            return orderByStatuses.OrderBy(x => x.OrderId).ToPagedList();
+        }
+
+        public async Task<CustomOrderDetailViewModel> GetOrderDetailViewModel(int orderId)
+        {
+            var order = await this._orderRepository.GetOrderByOrderId(orderId);
+
+            CustomOrderDetailViewModel customOrderDetailViewModel = new()
+            {
+                OrderId = order.OrderId,
+                OrderDate = order.OrderDate,
+                Buyer = order.BuyerNavigation.LastName + " " + order.BuyerNavigation.FirstName,
+                ShipperName = order.ShipperName ?? string.Empty,
+                TotalPrice = order.TotalPrice,
+                TotalPay = order.TotalPay,
+                PaymentId = order.Payments.Select(x => x.PaymentId).FirstOrDefault(),
+                PaymentStatusText = order.Payments.Select(x => x.PaymentStatus).FirstOrDefault() ? "Đã thanh toán" : "Chưa thanh toán",
+                TotalProduct = order.OrderDetails.Count,
+                ShippingFee = order.ShippingFee,
+                ShippingMethod = order.ShippingMethod ?? string.Empty,
+                EstimatedDeliveryTime = order.EstimatedDeliveryTime,
+                ActualDeliveryTime = order.ActualDeliveryTime,
+                OrderDetails = order.OrderDetails.ToList() ?? new List<OrderDetail>(),
+                Customer = order.BuyerNavigation,
+                OrderStatuses = order.OrderStatusNavigation,
+                DiscountAmount = order.PromoCodeNavigation?.DiscountAmount ?? 0,
+                TransactionId = order.Payments.Where(x => x.PaymentStatus).Select(x => x.TransactionId).FirstOrDefault(),
+                PaymentDate = order.Payments.Where(x => x.PaymentStatus).Select(x => x.CreatedAt).FirstOrDefault()
+            };
+            return customOrderDetailViewModel;
+        }
+
+        public async Task<(bool, string)> UpdateOrderStatus(int orderId, int orderStatus)
+        {
+            var order = await this._orderRepository.GetOrderByOrderId(orderId);
+
+            if (order == null)
+            {
+                return (false, "Id đơn hàng không hợp lệ !");
+            }
+
+            order.OrderStatus = orderStatus;
+            await this._orderRepository.UpdateOrder(order);
+
+            return (true, $"Cập nhật trạng thái đơn hàng thành công.\nTrạng thái hiện tại là: {order.OrderStatusNavigation.StatusName}.");
+        }
+
+        public async Task<(bool, string)> AddShippingInfo(NewShippingInfo newShippingInfo)
+        {
+            var order = await this._orderRepository.GetOrderByOrderId(newShippingInfo.OrderId);
+
+            if (order == null)
+            {
+                return (false, "Id đơn hàng không hợp lệ !");
+            }
+
+            order.ShippingFee = 20000;
+            order.ShippingId = newShippingInfo.ShippingId;
+            order.ShippingUnit = newShippingInfo.ShippingUnit;
+            order.EstimatedDeliveryTime = DateOnly.FromDateTime(DateTime.Now).AddDays(newShippingInfo.EstimateDay);
+            order.OrderStatus = 6;
+
+            await this._orderRepository.UpdateOrder(order);
+
+            return (true, $"Cập nhật thông tin vận chuyển cho đơn hàng {newShippingInfo.OrderId} thành công !");
+        }
+
+        public async Task<(bool, string)> IsAddShippingInfo(int orderId)
+        {
+            var order = await this._orderRepository.GetOrderByOrderId(orderId);
+
+            if (order != null && order.OrderStatus >= 6)
+                return (true, string.Empty);
+
+            return (false, string.Empty);
         }
     }
 }

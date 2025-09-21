@@ -1,7 +1,8 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 using FastFood.Models.ViewModels;
 using FastFood.Repositories.Interfaces;
 using FastFood.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
 using X.PagedList.Extensions;
@@ -12,10 +13,14 @@ namespace FastFood.Services
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IOrderRepository _orderRepository;
-        public CustomerService(ICustomerRepository customerRepository, IOrderRepository orderRepository)
+        private readonly IPasswordHasher<string> _passwordHasher;
+        private readonly ICustomerAccountRepository _customerAccountRepository;
+        public CustomerService(ICustomerRepository customerRepository, IOrderRepository orderRepository, ICustomerAccountRepository customerAccountRepository)
         {
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
+            _passwordHasher = new PasswordHasher<string>();
+            _customerAccountRepository = customerAccountRepository;
         }
 
         public async Task<double> CompareCustomersByDateTime(DateTime currentTime, DateTime previousTime)
@@ -99,5 +104,54 @@ namespace FastFood.Services
             var orders = await this._orderRepository.GetOrdersByCustomerId(customerId);
             return (customerDetailViewModel, orders.ToPagedList(page, size));
         }
+
+        public async Task<(bool, Customer?)> LoginChecker(CustomerLoginViewModel customerLoginViewModel)
+        {
+            customerLoginViewModel.UserName = customerLoginViewModel.UserName.Normalize().Trim().ToLower();
+
+            var customerInfo = await this._customerAccountRepository.GetCustomerAccountByUserName(customerLoginViewModel.UserName);
+
+            if (customerInfo == null || customerInfo.CustomerId != -1)
+            {
+                return (false, null);
+            }
+
+            var verifyResult = this._passwordHasher.VerifyHashedPassword(
+                customerLoginViewModel.UserName,
+                customerInfo.Password,
+                customerLoginViewModel.Password
+            );
+
+            if (verifyResult != PasswordVerificationResult.Success ||
+                   verifyResult != PasswordVerificationResult.SuccessRehashNeeded)
+            {
+                return (false, null);
+            }
+
+            return (true, customerInfo.Customer);
+        }
+
+        public async Task<(bool, string)> Register(CustomerRegisterViewModel customerRegisterViewModel)
+        {
+            customerRegisterViewModel.UserName = customerRegisterViewModel.UserName.Trim().ToLower();
+            CustomerAccount? userExists = await this._customerAccountRepository.GetCustomerAccountByUserName(customerRegisterViewModel.UserName);
+
+            if (userExists != null)
+            {
+                return (false, "Tên đăng nhập đã tồn tại !");
+            }
+
+            CustomerAccount customerAccount = new()
+            {
+                UserName = customerRegisterViewModel.UserName,
+                CreatedAt = DateTime.Now,
+                Password = this._passwordHasher.HashPassword(string.Empty, customerRegisterViewModel.Password)
+            };
+
+            await this._customerAccountRepository.AddCustomerAccount(customerAccount);
+
+            return (true, $"Tạo tài khoản thành công !");
+        }
+
     }
 }

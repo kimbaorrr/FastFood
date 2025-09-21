@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 using FastFood.Models.ViewModels;
 using FastFood.Repositories.Interfaces;
 using FastFood.Services.Interfaces;
@@ -99,7 +99,7 @@ namespace FastFood.Services
 
         public async Task<(bool, string)> ChangePassword(EmployeeChangePasswordViewModel employeeChangePasswordViewModel)
         {
-            var employeeAccount = await this._employeeAccountRepository.GetEmployeeAccountByEmployeeId(employeeChangePasswordViewModel.EmployeeId);
+            var employeeAccount = await this._employeeAccountRepository.GetEmployeeAccountById(employeeChangePasswordViewModel.EmployeeId);
 
             var verifyResult = this._passwordHasher.VerifyHashedPassword(
                 string.Empty,
@@ -124,7 +124,7 @@ namespace FastFood.Services
 
             string newPassword = this._passwordHasher.HashPassword(string.Empty, employeeChangePasswordViewModel.NewPassword);
 
-            await this._employeeAccountRepository.UpdateNewPassword(string.Empty, newPassword, false);
+            await this._employeeAccountRepository.UpdateNewPassword(employeeChangePasswordViewModel.EmployeeId, newPassword, false);
 
             return (true, "Đổi mật khẩu mới thành công !");
 
@@ -141,7 +141,7 @@ namespace FastFood.Services
 
             string tempPassword = Guid.CreateVersion7().ToString().Replace("-", "");
             await this._employeeAccountRepository.UpdateNewPassword(
-                employeeForgotPasswordViewModel.UserName,
+                employeeAccount.EmployeeId,
                 tempPassword,
                 true
             );

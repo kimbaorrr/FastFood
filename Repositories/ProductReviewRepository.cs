@@ -1,4 +1,5 @@
 ﻿using FastFood.DB;
+using FastFood.DB.Entities;
 using FastFood.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,5 +34,11 @@ public class ProductReviewRepository : CommonRepository, IProductReviewRepositor
     public async Task<int> GetTotalReviews()
     {
         return await this._fastFoodEntities.ProductReviews.CountAsync();
+    }
+
+    public async Task AddProductReview(ProductReview productReview)
+    {
+        await this._fastFoodEntities.AddAsync(productReview);
+        await this._fastFoodEntities.SaveChangesAsync();
     }
 }

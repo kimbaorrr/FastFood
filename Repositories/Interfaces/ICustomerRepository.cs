@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 
 namespace FastFood.Repositories.Interfaces
 {
@@ -8,6 +8,7 @@ namespace FastFood.Repositories.Interfaces
         Task<List<Customer>> GetCustomers();
         string GetFullName(int customerId);
         Task<List<Customer>> GetCustomersByOrderStatus(int orderStatus);
+        Task<Customer> GetCustomerById(int customerId);
 
     }
 }

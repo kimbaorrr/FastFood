@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 
 namespace FastFood.Repositories.Interfaces
 {
@@ -8,5 +8,6 @@ namespace FastFood.Repositories.Interfaces
         Task<double> GetAverageStarOfProduct(int productId);
         Task<ProductReview> GetProductReviewByProductId(int productId);
         Task<int> GetTotalReviews();
+        Task AddProductReview(ProductReview productReview);
     }
 }

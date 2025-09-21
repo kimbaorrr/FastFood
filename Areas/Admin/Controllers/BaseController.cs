@@ -1,11 +1,11 @@
-﻿using FastFood.DB;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Filters;
+using FastFood.DB.Entities;
 
 namespace FastFood.Areas.Admin.Controllers
 {
@@ -17,15 +17,15 @@ namespace FastFood.Areas.Admin.Controllers
         {
 
         }
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            if (!(User.Identity?.IsAuthenticated ?? false) || !User.HasClaim(c => c.Type == "EmployeeInfo"))
-            {
-                context.Result = new RedirectToActionResult("Login", "Account", new {area = "Admin"});
-            }
+        //public override void OnActionExecuting(ActionExecutingContext context)
+        //{
+        //    if (!(User.Identity?.IsAuthenticated ?? false) || !User.HasClaim(c => c.Type == "EmployeeInfo"))
+        //    {
+        //        context.Result = new RedirectToActionResult("Login", "Account", new {area = "Admin"});
+        //    }
 
-            base.OnActionExecuting(context);
-        }
+        //    base.OnActionExecuting(context);
+        //}
 
         protected JsonResult CreateJsonResult(bool success = false, string message = "", object? data = null)
         {
@@ -88,11 +88,6 @@ namespace FastFood.Areas.Admin.Controllers
             string absoluteUri = $"{Request.Scheme}://{Request.Host}{Request.Path}{Request.QueryString}";
 
             return absoluteUri;
-        }
-
-        protected IActionResult RoleChecker()
-        {
-            if this._employeeId
         }
     }
 }

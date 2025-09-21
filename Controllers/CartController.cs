@@ -1,128 +1,82 @@
 ﻿using FastFood.DB;
 using FastFood.Models;
 using FastFood.Models.ViewModels;
+using FastFood.Services;
+using FastFood.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace FastFood.Areas.Controllers
 {
-    [Route("gio-hang")]
-    public class CartController : SessionController
+    [Route("cart")]
+    public class CartController : BaseController
     {
+        private readonly ICartService _cartService;
+        public CartController(ICartService cartService)
+        {
+            _cartService = cartService;
+            cartService.CustomerCartViewModel = this._customerCartViewModel;
+        }
 
         [HttpGet("")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            ViewBag.Title = "Giỏ hàng";
+            ViewBag.Title = "Giỏ hàng của tôi";
             return View();
         }
 
-        [HttpGet("thong-tin")]
-        public string GetItem()
+        [HttpGet("get-items")]
+        public async Task<IActionResult> GetCartItems()
         {
-            FastFood_GioHang? gioHang = GetGioHang();
-
-            if (gioHang == null)
-                return JsonMessage(message: "Giỏ hàng trống.");
-
-            return JsonConvert.SerializeObject(gioHang!.SanPhamDaChon.Values, Formatting.Indented);
+            if (this._cartService.IsCartEmpty())
+            {
+                return CreateJsonResult(false, "Giỏ hàng rỗng !");
+            }
+            return CreateJsonResult(true, string.Empty, JsonConvert.SerializeObject(this._cartService.CustomerCartViewModel));
         }
 
-        [HttpPost("thanh-toan")]
-        [ValidateAntiForgeryToken]
-        public string GetSummaryCheckout([FromForm] string couponCode)
+        [HttpPost("add-item")]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> AddItem([FromForm] int productId, [FromForm] int quantity = 1)
         {
-            FastFood_GioHang? gioHang = GetGioHang();
+            await this._cartService.AddItem(productId, quantity);
+            return CreateJsonResult(true, "Thêm sản phẩm thành công !");
+        }
 
-            if (gioHang == null)
-                return JsonMessage(message: "Giỏ hàng trống.");
+        [HttpPost("remove-item")]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> RemoveItem([FromForm] int productId)
+        {
+            this._cartService.RemoveItem(productId);
+            return CreateJsonResult(true, $"Đã xóa sản phẩm {productId} khỏi giỏ !");
+        }
 
-            Makhuyenmai? maKhuyenMai = FastFood_SanPham.getMaKhuyenMai()
-                .FirstOrDefault(x => x.Code.Equals(couponCode));
-            int soTienGiamKM = 0;
-            int idKM = 0;
+        [HttpPost("decrease-quantity")]
+        public async Task<IActionResult> DecreaseQuantity([FromForm] int productId)
+        {
+            this._cartService.DecreaseQuantity(productId);
+            return CreateJsonResult(true, "Giảm số lượng thành công !");
 
-            if (maKhuyenMai != null)
+        }
+
+        [HttpPost("check-is-empty")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> IsCartEmpty()
+        {
+            if (this._cartService.IsCartEmpty())
             {
-                if (IsValidCoupon(maKhuyenMai))
-                {
-                    soTienGiamKM = maKhuyenMai.Sotienduocgiam;
-                    idKM = maKhuyenMai.Id;
-                }
-                else
-                {
-                    string message = maKhuyenMai.Ngayketthuc.HasValue && DateTime.Now > maKhuyenMai.Ngayketthuc.Value
-                        ? "Mã khuyến mãi đã hết hạn sử dụng!"
-                        : "Mã khuyến mãi đã hết lượt sử dụng!";
-                    return JsonMessage(message: message);
-                }
+                return CreateJsonResult(true, "Giỏ hàng hiện đang rỗng !");
             }
 
-            FastFood_ThanhToan_TomTatThanhToan checkOut = new FastFood_ThanhToan_TomTatThanhToan
-            {
-                MaKhuyenMai = soTienGiamKM,
-                TongTienSanPham = gioHang!.TongTien(),
-                IDMaKhuyenMai = idKM
-            };
-            SetTomTatThanhToan(checkOut);
-            return JsonMessage(true, data: checkOut);
-
+            return CreateJsonResult(false, "Giỏ hàng hiện đã có ít nhất 1 sản phẩm !");
         }
 
-        [HttpPost("them-vao-gio")]
-        [ValidateAntiForgeryToken]
-        public string AddItem([FromForm] int productId, [FromForm] int quantity = 1)
+        [HttpPost("summary-checkout")]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> GetSummaryCheckout([FromForm] string promoCode)
         {
-            FastFood_GioHang? gioHang = GetGioHang();
-
-            if (gioHang == null)
-                SetGioHang(new FastFood_GioHang());
-
-            gioHang!.ThemVaoGio(productId, quantity);
-            SetGioHang(gioHang);
-            return JsonMessage(true, message: "Đã thêm vào giỏ");
-        }
-
-        [HttpPost("xoa-khoi-gio")]
-        [ValidateAntiForgeryToken]
-        public string RemoveItem([FromForm] int productId)
-        {
-            FastFood_GioHang? gioHang = GetGioHang();
-
-            if (gioHang == null)
-                return JsonMessage(message: "Giỏ hàng trống.");
-
-            gioHang!.XoaKhoiGio(productId);
-            SetGioHang(gioHang);
-            return JsonMessage(true, message: "Đã xóa khỏi giỏ");
-        }
-
-        [HttpPost("giam-so-luong")]
-        public string DecreaseQuantity([FromForm] int productId)
-        {
-            FastFood_GioHang? gioHang = GetGioHang();
-            if (gioHang == null)
-                return JsonMessage(message: "Giỏ hàng trống.");
-
-            gioHang!.GiamSoLuong(productId);
-            SetGioHang(gioHang);
-            return JsonMessage(true, message: "Giảm số lượng thành công");
-
-        }
-        [HttpPost("kiem-tra-gio-hang-rong")]
-        [ValidateAntiForgeryToken]
-        public string IsEmpty()
-        {
-            FastFood_GioHang? gioHang = GetGioHang();
-            return gioHang!.GioHangRong() ? JsonMessage(true, message: "Giỏ hàng hiện đang rỗng !") : JsonMessage();
-        }
-
-        private static bool IsValidCoupon(Makhuyenmai maKhuyenMai)
-        {
-            DateTime now = DateTime.Now;
-            bool isExpired = maKhuyenMai.Ngayketthuc.HasValue && now > maKhuyenMai.Ngayketthuc.Value;
-            bool isUsable = maKhuyenMai.Luotsudung > 0;
-            return !isExpired && isUsable;
+            (bool success, string message, string summaryCheckoutSerialized) = await this._cartService.GetSummaryCheckout(promoCode);
+            return CreateJsonResult(success, message, summaryCheckoutSerialized);
         }
     }
 }

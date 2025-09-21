@@ -1,4 +1,5 @@
 ﻿using FastFood.DB;
+using FastFood.DB.Entities;
 using FastFood.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,7 +16,7 @@ public class EmployeeRepository : CommonRepository, IEmployeeRepository
         return await this._fastFoodEntities.Employees.ToListAsync();
     }   
 
-    public string GetFullName(int employeeId)
+    public string GetFullName(int? employeeId)
     {
         return this._fastFoodEntities.Employees
             .Where(x => x.EmployeeId == employeeId)
@@ -23,7 +24,7 @@ public class EmployeeRepository : CommonRepository, IEmployeeRepository
             .FirstOrDefault() ?? string.Empty;
     }
 
-    public async Task<Employee> GetEmployeeById(int employeeId)
+    public async Task<Employee> GetEmployeeById(int? employeeId)
     {
         return await this._fastFoodEntities.Employees
             .FirstOrDefaultAsync(x => x.EmployeeId == employeeId) 
@@ -48,8 +49,10 @@ public class EmployeeRepository : CommonRepository, IEmployeeRepository
         await this._fastFoodEntities.SaveChangesAsync();
     }
 
-    public async Task<List<Employee>> GetEmployeesNonAccount()
+    public async Task<List<Employee>> GetEmployeesWithAccountStatus(bool isHasAccount)
     {
-        return await this._fastFoodEntities.Employees.Where(x => x.EmployeeAccount == null).ToListAsync();
+        return await this._fastFoodEntities.Employees
+            .Where(x => isHasAccount ? x.EmployeeAccount != null : x.EmployeeAccount == null)
+            .ToListAsync();
     }
 }

@@ -1,6 +1,8 @@
 ﻿using FastFood.DB;
+using FastFood.DB.Entities;
 using FastFood.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,8 +19,14 @@ public class ProductRepository : CommonRepository, IProductRepository
     public async Task<Product> GetProductById(int productId)
     {
         return await this._fastFoodEntities.Products
-            .Where(x => x.ProductId == productId)
-            .FirstOrDefaultAsync() 
+            .FirstOrDefaultAsync(x => x.ProductId == productId) 
+            ?? new Product();
+    }
+
+    public async Task<Product> GetProductByName(string productName)
+    {
+        return await this._fastFoodEntities.Products
+            .FirstOrDefaultAsync(x => x.ProductName.Equals(productName))
             ?? new Product();
     }
 
@@ -64,6 +72,31 @@ public class ProductRepository : CommonRepository, IProductRepository
             .ToList();
     }
 
+    public async Task AddProduct(Product product)
+    {
+        await this._fastFoodEntities.AddAsync(product);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
 
-    
+    public async Task UpdateProduct(Product product)
+    {
+        this._fastFoodEntities.UpdateRange(product);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
+
+
+    public async Task DeleteProduct(Product product)
+    {
+        this._fastFoodEntities.Remove(product);
+        await this._fastFoodEntities.SaveChangesAsync();
+    }
+
+    public async Task<bool> IsProductHasOrder(int productId)
+    {
+        return await this._fastFoodEntities.OrderDetails
+            .Where(x => x.ProductId == productId)
+            .AnyAsync();
+    }
+
+
 }

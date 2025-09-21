@@ -3,27 +3,23 @@
 namespace FastFood.Models
 {
 
-    public abstract class BasePaymentSummary
+    public abstract class BasePaymentViewModel
     {
         public int TotalProductPrice { get; set; } = 0;
         public int ShippingFee { get; set; } = 20000;
         public int PromoAmount { get; set; } = 0;
-        public int PromoId { get; set; } = 0;
+        public string PromoCode { get; set; } = string.Empty;
+        public int PromoId { get; set; } = -1;
 
         public int TotalPay => TotalProductPrice + ShippingFee - PromoAmount;
-
-        protected BasePaymentSummary() { }
-
-        protected BasePaymentSummary(BasePaymentSummary a)
-        {
-            TotalProductPrice = a.TotalProductPrice;
-            ShippingFee = a.ShippingFee;
-            PromoAmount = a.PromoAmount;
-            PromoId = a.PromoId;
-        }
     }
 
-    public class BaseCustomerInfo
+    public class PaymentSummaryViewModel : BasePaymentViewModel
+    {
+
+    }
+
+    public class CustomerInfoViewModel
     {
         [Display(Name = "Họ đệm")]
         [DataType(DataType.Text)]
@@ -33,7 +29,7 @@ namespace FastFood.Models
         [DataType(DataType.Text)]
         public string LastName { get; set; } = string.Empty;
 
-        public string FullName => $"{FirstName} {LastName}";
+        public string FullName => $"{this.LastName} {this.FirstName}";
 
         [Display(Name = "Địa chỉ giao hàng")]
         [DataType(DataType.Text)]
@@ -60,34 +56,12 @@ namespace FastFood.Models
         public string OrderNote { get; set; } = string.Empty;
     }
 
-    public class AddOrderPayment : BasePaymentSummary
+    public class AddPaymentViewModel : BasePaymentViewModel
     {
-        public BaseCustomerInfo Customer { get; set; } = new BaseCustomerInfo();
-
-        public AddOrderPayment() { }
-
-        public AddOrderPayment(AddOrderPayment a) : base()
-        {
-            TotalProductPrice = a.TotalProductPrice;
-            ShippingFee = a.ShippingFee;
-            PromoAmount = a.PromoAmount;
-            PromoId = a.PromoId;
-
-            Customer = new BaseCustomerInfo()
-            {
-                FirstName = a.Customer.FirstName,
-                LastName = a.Customer.LastName,
-                Address = a.Customer.Address,
-                City = a.Customer.City,
-                PostalCode = a.Customer.PostalCode,
-                Email = a.Customer.Email,
-                PhoneNumber = a.Customer.PhoneNumber,
-                OrderNote = a.Customer.OrderNote
-            };
-        }
+        public CustomerInfoViewModel Customer { get; set; } = new();
     }
 
-    public class PaymentResult
+    public class PaymentResultViewModel
     {
         [Display(Name = "Mã đơn hàng")]
         [DataType(DataType.Text)]
@@ -95,7 +69,7 @@ namespace FastFood.Models
 
         [Display(Name = "Tổng thanh toán")]
         [DataType(DataType.Text)]
-        public int TotalPayment { get; set; } = 0;
+        public int TotalPay { get; set; } = 0;
 
         [Display(Name = "Mã giao dịch")]
         [DataType(DataType.Text)]
@@ -108,5 +82,9 @@ namespace FastFood.Models
         [Display(Name = "Trạng thái giao dịch")]
         [DataType(DataType.Text)]
         public string TransactionStatus { get; set; } = string.Empty;
+
+        [Display(Name = "Phương thức thanh toán")]
+        [DataType(DataType.Text)]
+        public string PaymentMethod { get; set; } = string.Empty;
     }
 }

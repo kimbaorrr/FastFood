@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FastFood.DB;
+namespace FastFood.DB.Entities;
 
 public partial class Article
 {

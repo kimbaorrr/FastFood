@@ -1,7 +1,9 @@
+using FastFood.DB;
 using FastFood.Repositories;
 using FastFood.Repositories.Interfaces;
 using FastFood.Services;
 using FastFood.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -12,43 +14,45 @@ builder.Logging.AddConsole();
 
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddDbContext<FastFoodEntities>(options =>
+    options.UseNpgsql(builder.Configuration["ConnectionStrings:Postgres"]));
 
 // Repositories
-builder.Services.AddSingleton<IArticleRepository, ArticleRepository>();
-builder.Services.AddSingleton<ICategoryRepository, CategoryRepository>();
-builder.Services.AddSingleton<ICustomerAccountRepository, CustomerAccountRepository>();
-builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
-builder.Services.AddSingleton<IEmployeeAccountRepository, EmployeeAccountRepository>();
-builder.Services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
-builder.Services.AddSingleton<IFeedbackRepository, FeedbackRepository>();
-builder.Services.AddSingleton<IIngredientRepository, IngredientRepository>();
-builder.Services.AddSingleton<IInventoryInRepository, InventoryInRepository>();
-builder.Services.AddSingleton<ILoggingEventRepository, LoggingEventRepository>();
-builder.Services.AddSingleton<IOrderDetailRepository, OrderDetailRepository>();
-builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
-builder.Services.AddSingleton<IOrdersStatusRepository, OrdersStatusRepository>();
-builder.Services.AddSingleton<IPaymentRepository, PaymentRepository>();
-builder.Services.AddSingleton<IPermissionRepository, PermissionRepository>();
-builder.Services.AddSingleton<IProductIngredientRepository,  ProductIngredientRepository>();
-builder.Services.AddSingleton<IProductRepository,  ProductRepository>();
-builder.Services.AddSingleton<IProductReviewRepository, ProductReviewRepository>();
-builder.Services.AddSingleton<IPromoRepository, PromoRepository>();
-builder.Services.AddSingleton<IStoreInfoRepository,  StoreInfoRepository>();
-builder.Services.AddSingleton<IWorkScheduleRepository, WorkScheduleRepository>();
+builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICustomerAccountRepository, CustomerAccountRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IEmployeeAccountRepository, EmployeeAccountRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
+builder.Services.AddScoped<IInventoryInRepository, InventoryInRepository>();
+builder.Services.AddScoped<ILoggingEventRepository, LoggingEventRepository>();
+builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrdersStatusRepository, OrdersStatusRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+builder.Services.AddScoped<IProductIngredientRepository,  ProductIngredientRepository>();
+builder.Services.AddScoped<IProductRepository,  ProductRepository>();
+builder.Services.AddScoped<IProductReviewRepository, ProductReviewRepository>();
+builder.Services.AddScoped<IPromoRepository, PromoRepository>();
+builder.Services.AddScoped<IStoreInfoRepository,  StoreInfoRepository>();
+builder.Services.AddScoped<IWorkScheduleRepository, WorkScheduleRepository>();
 
 // Services
-builder.Services.AddSingleton<IArticleService, ArticleService>();
-builder.Services.AddSingleton<ICartService, CartService>();
-builder.Services.AddSingleton<ICustomerService, CustomerService>();
-builder.Services.AddSingleton<IEmailService, EmailService>();
-builder.Services.AddSingleton<IEmployeeService, EmployeeService>();
-builder.Services.AddSingleton<IFileUploadService, FileUploadService>();
-builder.Services.AddSingleton<IIngredientService, IngredientService>();
-builder.Services.AddSingleton<IInventoryInService, InventoryInService>();
-builder.Services.AddSingleton<ILoggingEventService, LoggingEventService>();
-builder.Services.AddSingleton<IOrderService, OrderService>();
-builder.Services.AddSingleton<IProductReviewService, ProductReviewService>();
-builder.Services.AddSingleton<IProductService, ProductService>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+builder.Services.AddScoped<IIngredientService, IngredientService>();
+builder.Services.AddScoped<IInventoryInService, InventoryInService>();
+builder.Services.AddScoped<ILoggingEventService, LoggingEventService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 
 WebApplication app = builder.Build();

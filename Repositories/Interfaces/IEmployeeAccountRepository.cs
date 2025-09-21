@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 
 namespace FastFood.Repositories.Interfaces
 {
@@ -6,7 +6,7 @@ namespace FastFood.Repositories.Interfaces
     {
         Task<List<EmployeeAccount>> GetEmployeeAccounts();
         Task<EmployeeAccount> GetEmployeeAccountByUserName(string userName);
-        Task UpdateNewPassword(string userName, string newPassword, bool isTempPassword);
+        Task UpdateNewPassword(int employeeId, string newPassword, bool isTempPassword);
         Task<EmployeeAccount> GetEmployeeAccountById(int employeeId);
         Task AddEmployeeAccount(EmployeeAccount employeeAccount);
         Task UpdateEmployeeAccount(EmployeeAccount employeeAccount);

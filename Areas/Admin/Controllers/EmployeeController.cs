@@ -35,8 +35,8 @@ namespace FastFood.Areas.Admin.Controllers
         [HttpGet("permission")]
         public async Task<IActionResult> Permission()
         {
-            EmployeeRegisterViewModel employeeRegisterViewModel = new EmployeeRegisterViewModel();
-            return View(employeeRegisterViewModel);
+            EmployeeRegisterLoginAccountViewModel employeeRegisterLoginAccountViewModel = new EmployeeRegisterLoginAccountViewModel();
+            return View(employeeRegisterLoginAccountViewModel);
         }
 
         [HttpGet("permission/get")]
@@ -61,21 +61,43 @@ namespace FastFood.Areas.Admin.Controllers
             return CreateJsonResult(true, string.Empty, customPermissions);
         }
 
-        [HttpGet("employee/non-account")]
-        public async Task<IActionResult> GetEmployeesNonAccount()
+        [HttpGet("employee/account/get")]
+        public async Task<IActionResult> GetEmployeesByAccountStatus([FromQuery] bool isHasAccount)
         {
-            var employeesNonAccount = await this._employeeRepository.GetEmployeesNonAccount();
-            var customEmployeesNonAccount = employeesNonAccount.Select(x => new
+            var employeesByAccount = await this._employeeRepository.GetEmployeesWithAccountStatus(isHasAccount);
+
+            if (!isHasAccount)
+            {
+                var customEmployeesNonAccount = employeesByAccount.Select(x => new
+                {
+                    EmployeeId = x.EmployeeId!,
+                    FullName = x.LastName + " " + x.FirstName
+                });
+                return CreateJsonResult(true, string.Empty, customEmployeesNonAccount);
+            }
+
+            var customEmployeesHasAccount = employeesByAccount.Select(x => new
             {
                 EmployeeId = x.EmployeeId!,
-                FullName = x.LastName + " " + x.FirstName
+                FullName = x.LastName + " " + x.FirstName,
+                UserName = x.EmployeeAccount!.UserName!,
+                EmployeeCreatedAt = x.CreatedAt,
+                AccountCreatedAt = x.EmployeeAccount.CreatedAt,
+                Permissions = this._permissionRepository.GetDescriptionByIds(
+                    x.EmployeeAccount.Permission!
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                    .Select(int.Parse)
+                    .ToArray() 
+                    ?? new int[] {}
+                )
             });
-            return CreateJsonResult(true, string.Empty, customEmployeesNonAccount);
+            return CreateJsonResult(true, string.Empty, customEmployeesHasAccount);
+            
         }
 
         [HttpPost("employee/register-account")]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> RegisterLoginAccount([FromForm] EmployeeRegisterLoginAccountViewModel employeeRegisterLoginAccountViewModel, [FromForm] string selectedPermissions) 
+        public async Task<IActionResult> RegisterLoginAccount([FromForm] EmployeeRegisterLoginAccountViewModel employeeRegisterLoginAccountViewModel, [FromForm] string selectedPermissions)
         {
             (bool success, string message) = await this._employeeService.RegisterLoginAccount(employeeRegisterLoginAccountViewModel, selectedPermissions);
             return CreateJsonResult(success, message);

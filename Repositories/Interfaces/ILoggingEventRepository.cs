@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 
 namespace FastFood.Repositories.Interfaces
 {
@@ -6,6 +6,6 @@ namespace FastFood.Repositories.Interfaces
     {
         Task<List<LoggingEvent>> GetLoggingEvents();
         Task<List<LoggingEvent>> GetLoggingEventsByUserType(bool userType);
-        void NewLoggingEvent(bool userType, string userId, string userName, string eventDetail);
+        Task NewLoggingEvent(bool userType, string userId, string userName, string eventDetail);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FastFood.DB;
+namespace FastFood.DB.Entities;
 
 public partial class Order
 {
@@ -31,7 +31,7 @@ public partial class Order
 
     public DateTime? ActualDeliveryTime { get; set; }
 
-    public int? PromoCode { get; set; }
+    public int? PromoId { get; set; }
 
     public int? TotalPay { get; set; }
 

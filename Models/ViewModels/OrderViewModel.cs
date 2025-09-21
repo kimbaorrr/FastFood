@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using FastFood.DB;
+using FastFood.DB.Entities;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 namespace FastFood.Models.ViewModels
@@ -42,7 +42,7 @@ namespace FastFood.Models.ViewModels
         public DateTime? ActualDeliveryTime { get; set; }
         public string ShippingMethod { get; set; } = string.Empty;
         public int PaymentId { get; set; } = -1;
-        public int PromoId { get; set; } = -1;
+        public int DiscountAmount { get; set; } = 0;
         public long? TransactionId { get; set; }
         public DateTime? PaymentDate { get; set; }
     }
@@ -55,7 +55,7 @@ namespace FastFood.Models.ViewModels
         public string ShippingUnit { get; set; } = string.Empty;
         [Display(Name = "Mã vận đơn")]
         [DataType(DataType.Text)]
-        public string shippingId { get; set; } = string.Empty;
+        public string ShippingId { get; set; } = string.Empty;
         [Display(Name = "Số ngày dự kiến")]
         [DataType(DataType.Text)]
         public int EstimateDay { get; set; } = 0;

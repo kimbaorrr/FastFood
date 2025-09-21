@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace FastFood.Models.ViewModels
@@ -30,7 +30,7 @@ namespace FastFood.Models.ViewModels
         public List<Order> Orders { get; set; } = new List<Order>();
     }
 
-    public class CustomerSendQuestionViewModel
+    public class CustomerSendFeedbackViewModel
     {
         [Display(Name = "Tên khách hàng")]
         [DataType(DataType.Text)]

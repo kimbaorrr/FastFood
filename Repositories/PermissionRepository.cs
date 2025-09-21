@@ -1,4 +1,5 @@
 ﻿using FastFood.DB;
+using FastFood.DB.Entities;
 using FastFood.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;

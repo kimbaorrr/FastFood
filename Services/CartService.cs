@@ -1,6 +1,8 @@
-﻿using FastFood.Models.ViewModels;
+﻿using FastFood.Models;
+using FastFood.Models.ViewModels;
 using FastFood.Repositories.Interfaces;
 using FastFood.Services.Interfaces;
+using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
 
 namespace FastFood.Services
@@ -8,11 +10,21 @@ namespace FastFood.Services
     public class CartService : CommonService, ICartService
     {
         private readonly IProductRepository _productRepository;
-        public CartService(IProductRepository productRepository)
+        private readonly IPromoRepository _promoRepository;
+
+        public CartService(IProductRepository productRepository, IPromoRepository promoRepository)
         {
             _productRepository = productRepository;
+            _promoRepository = promoRepository;
         }
-        public Dictionary<int, CustomerCartViewModel> CustomerCartViewModel { get; set; } = new Dictionary<int, CustomerCartViewModel>();
+
+        public CartService(Dictionary<int, CustomerCartViewModel> customerCartViewModel)
+        {
+            this.CustomerCartViewModel = customerCartViewModel;
+        }
+
+        public Dictionary<int, CustomerCartViewModel> CustomerCartViewModel { get; set; }
+            = new Dictionary<int, CustomerCartViewModel>();
 
         /// <summary>
         /// Kiểm tra xem giỏ hàng có rỗng hay không.
@@ -76,5 +88,36 @@ namespace FastFood.Services
         /// </summary>
         /// <returns>Tổng tiền của giỏ hàng.</returns>
         public int TotalPay() => this.CustomerCartViewModel.Values.Sum(x => x.FinalPrice) ?? 0;
+
+        public async Task<(bool, string, string)> GetSummaryCheckout(string promoCode)
+        {
+            var promo = await this._promoRepository.GetPromoByPromoCode(promoCode);
+
+            if (promo != null)
+            {
+                bool isExpired = promo.EndTime.HasValue && DateTime.Now > promo.EndTime.Value;
+                bool isUsable = promo.Usage > 0;
+
+                if (isExpired || !isUsable)
+                {
+                    return (false, "Mã khuyến mãi đã hết hạn hoặc không còn lượt sử dụng !", string.Empty);
+                }
+
+                PaymentSummaryViewModel paymentSummaryViewModel = new()
+                {
+                    PromoCode = promoCode,
+                    PromoId = promo.PromoId,
+                    PromoAmount = promo.DiscountAmount,
+                    ShippingFee = 20000,
+                    TotalProductPrice = this.TotalPay(),
+                    
+                };
+
+                return (true, string.Empty, JsonConvert.SerializeObject(paymentSummaryViewModel));
+            }
+
+            return (false, "Mã khuyến mãi không hợp lệ !", string.Empty); 
+            
+        }
     }
 }

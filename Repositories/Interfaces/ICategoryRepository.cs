@@ -1,4 +1,4 @@
-﻿using FastFood.DB;
+﻿using FastFood.DB.Entities;
 
 namespace FastFood.Repositories.Interfaces
 {
@@ -10,7 +10,7 @@ namespace FastFood.Repositories.Interfaces
         Task<string> GetCategoryName(int categoryId);
         Task AddCategory(Category category);
         Task UpdateCategory(Category category);
-        Task<Category> GetCategoryById(int categoryId);
+        Task<Category> GetCategoryById(int? categoryId);
         Task DeleteCategory(Category category);
 
     }

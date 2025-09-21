@@ -1,4 +1,5 @@
 ﻿using FastFood.DB;
+using FastFood.DB.Entities;
 using FastFood.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -50,7 +51,7 @@ public class CategoryRepository : CommonRepository, ICategoryRepository
         await this._fastFoodEntities.SaveChangesAsync();
     }
 
-    public async Task<Category> GetCategoryById(int categoryId)
+    public async Task<Category> GetCategoryById(int? categoryId)
     {
         return await this._fastFoodEntities.Categories
             .Where(x => x.CategoryId == categoryId)

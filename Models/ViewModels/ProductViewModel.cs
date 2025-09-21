@@ -65,7 +65,7 @@ namespace FastFood.Models.ViewModels
 
     public class NewProductViewModel : BaseProductViewModel
     {
-       
+        public int? EmployeeId { get; set; } = -1;
     }
 
     public class ProductDetailViewModel : BaseProductViewModel
@@ -89,21 +89,21 @@ namespace FastFood.Models.ViewModels
 
     public class CustomProductReviewViewModel : BaseReviewViewModel
     {
-        
+        public int ProductId { get; set; } = -1;
     }
 
     public class NewProductPostViewModel
     {
         public NewProductViewModel NewProduct { get; set; } = null!;
         public List<IngredientsSelectedViewModel> Ingredients { get; set; } = new();
-        public List<IFormFile>? ProductImages { get; set; }
+        public List<FormFile>? ProductImages { get; set; }
     }
 
     public class ProductDetailPostViewModel
     {
         public ProductDetailViewModel ProductDetail { get; set; } = null!;
         public List<IngredientsSelectedViewModel> Ingredients { get; set; } = new();
-        public List<IFormFile>? ProductImages { get; set; }
+        public List<FormFile>? ProductImages { get; set; }
     }
 
     public class IngredientsSelectedViewModel

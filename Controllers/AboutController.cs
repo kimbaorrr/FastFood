@@ -2,11 +2,11 @@
 
 namespace FastFood.Areas.Controllers
 {
-    [Route("ve-chung-toi")]
-    public class AboutController : SessionController
+    [Route("about")]
+    public class AboutController : BaseController
     {
         [HttpGet("")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             ViewBag.Title = "Về chúng tôi";
             return View();
