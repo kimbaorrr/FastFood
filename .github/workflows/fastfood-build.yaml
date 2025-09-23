@@ -1,10 +1,10 @@
-﻿name: ASP.NET Core MVC Build
+﻿name: FastFood Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
   build:

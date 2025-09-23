@@ -53,4 +53,8 @@
     <Folder Include="wwwroot\admin_page\uploads\categories\thumbnail\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include=".github\workflows\fastfood-build.yaml" />
+  </ItemGroup>
+
 </Project>
