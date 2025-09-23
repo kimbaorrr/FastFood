@@ -1,0 +1,42 @@
+﻿@model CustomerCustomHomeViewModel
+
+<section class="foodix-banner-section gray-bg mt-3">
+    <div class="foodix-banner-v1">
+        <div class="container-fluid">
+            <div class="row">
+                @foreach (var (discountProduct, index) in Model.Top2DiscountProducts.Select((p, i) => (p, i)))
+                {
+                    string animationClass = index == 0 ? "fadeInLeft" : "fadeInRight";
+                    string bgImage = discountProduct.Category?.BackgroundImage ?? string.Empty;
+                    <div class="col-xl-6">
+                        <div class="foodix-banner-item style-one wow mb-40 @animationClass">
+                            <div class="banner-inner-wrap bg_cover" style="background-image: url('@bgImage');">
+                                <div class="banner-content">
+                                    <h2>@discountProduct.ProductName</h2>
+                                    <p>@discountProduct.Summary</p>
+                                    <div class="d-flex align-items-center">
+                                        <p class="price">
+                                            <span class="currency">$</span>@discountProduct.FinalPrice
+                                            @if (discountProduct.Discount != 0)
+                                            {
+                                                <span class="text-decoration-line-through ps-2" style="color: #7D7D7D;">
+                                                    @discountProduct.OriginalPrice
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <button type="button"
+                                            class="add-to-cart-btn theme-btn style-one"
+                                            data-product-id="@discountProduct.ProductId"
+                                            data-quantity="1">
+                                        Thêm vào giỏ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

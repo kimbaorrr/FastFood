@@ -16,18 +16,18 @@ public class EmployeeAccountRepository : CommonRepository, IEmployeeAccountRepos
         return await this._fastFoodEntities.EmployeeAccounts.ToListAsync();
     }
 
-    public async Task<EmployeeAccount> GetEmployeeAccountByUserName(string userName)
+    public async Task<EmployeeAccount?> GetEmployeeAccountByUserName(string userName)
     {
         return await this._fastFoodEntities.EmployeeAccounts
             .Where(x => x.UserName.Equals(userName))
-            .FirstOrDefaultAsync() ?? new EmployeeAccount();
+            .FirstOrDefaultAsync();
     }
 
-    public async Task<EmployeeAccount> GetEmployeeAccountById(int employeeId)
+    public async Task<EmployeeAccount?> GetEmployeeAccountById(int employeeId)
     {
         return await this._fastFoodEntities.EmployeeAccounts
             .Where(x => x.EmployeeId == employeeId)
-            .FirstOrDefaultAsync() ?? new EmployeeAccount();
+            .FirstOrDefaultAsync();
     }
 
     public async Task AddEmployeeAccount(EmployeeAccount employeeAccount)

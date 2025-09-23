@@ -15,6 +15,10 @@
             return images.Split(",", StringSplitOptions.RemoveEmptyEntries);
         }
 
+        /// <summary>
+        /// Xóa file tại đường dẫn chỉ định.
+        /// </summary>
+        /// <param name="filePath">Đường dẫn file cần xóa.</param>
         public static void DeleteFile(string filePath)
         {
             if (System.IO.File.Exists(filePath))

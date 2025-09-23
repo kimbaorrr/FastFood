@@ -1,0 +1,41 @@
+﻿@model CustomerCustomHomeViewModel
+
+<section class="blog-section pt-120 pb-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!--=== Section Title ===-->
+                <div class="section-title mb-55 wow fadeInDown text-center">
+                    <span class="sub-title">Xu Hướng Ẩm Thực</span>
+                    <h2>Tin Tức & Xu Hướng Thức Ăn Nhanh</h2>
+                    <p>Cập nhật những xu hướng mới nhất và thông tin hấp dẫn về thế giới thức ăn nhanh. Khám phá công thức, mẹo dinh dưỡng, và các món ăn nổi bật, mang đến trải nghiệm ẩm thực đầy thú vị.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            @foreach (var article in Model.Top3Articles)
+            {
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <!--=== Blog Post Item ===-->
+                    <div class="blog-post-item style-two wow fadeInDown mb-40">
+                        <div class="post-thumbnail">
+                            <div class="d-flex justify-content-center align-items-center overflow-hidden" style="width: 410px;height: 280px;">
+                                <img src="@article.CoverImage" alt="@article.Title" width="100%" height="100%" class="object-fit-fill">
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span><a href="#">@(article.Author.LastName + " " + article.Author.FirstName)</a></span>
+                                <span><a href="#">@article.CreatedAt.ToString("dd MMM, yyyy")</a></span>
+                            </div>
+                            <h4 class="post-title"><a href="@Url.Action("Detail", "Article", new {articleId = article.ArticleId})">@article.Title</a></h4>
+                            <p>@article.Summary</p>
+                            <a href="@Url.Action("Detail", "Article", new {articleId = article.ArticleId})" class="read-more" style="text-transform: none;">Xem thêm<i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>

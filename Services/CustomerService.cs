@@ -105,30 +105,39 @@ namespace FastFood.Services
             return (customerDetailViewModel, orders.ToPagedList(page, size));
         }
 
-        public async Task<(bool, Customer?)> LoginChecker(CustomerLoginViewModel customerLoginViewModel)
+        public async Task<(bool, string, CustomerClaimInfoViewModel?)> LoginChecker(CustomerLoginViewModel customerLoginViewModel)
         {
             customerLoginViewModel.UserName = customerLoginViewModel.UserName.Normalize().Trim().ToLower();
 
-            var customerInfo = await this._customerAccountRepository.GetCustomerAccountByUserName(customerLoginViewModel.UserName);
+            var customerAccount = await this._customerAccountRepository.GetCustomerAccountByUserName(customerLoginViewModel.UserName);
 
-            if (customerInfo == null || customerInfo.CustomerId != -1)
+            if (customerAccount == null)
             {
-                return (false, null);
+                return (false, "Tài khoản không tồn tại", null);
             }
 
             var verifyResult = this._passwordHasher.VerifyHashedPassword(
-                customerLoginViewModel.UserName,
-                customerInfo.Password,
+                string.Empty,
+                customerAccount.Password,
                 customerLoginViewModel.Password
             );
 
-            if (verifyResult != PasswordVerificationResult.Success ||
-                   verifyResult != PasswordVerificationResult.SuccessRehashNeeded)
+            if (verifyResult != PasswordVerificationResult.Success &&
+                verifyResult != PasswordVerificationResult.SuccessRehashNeeded)
             {
-                return (false, null);
+                return (false, "Thông tin xác thực không đúng !", null);
             }
 
-            return (true, customerInfo.Customer);
+            CustomerClaimInfoViewModel customerClaimInfoViewModel = new()
+            {
+                CustomerId = customerAccount.CustomerId,
+                Avatar = customerAccount.Customer.ThumbnailImage ?? string.Empty,
+                LastName = customerAccount.Customer.LastName,
+                FirstName = customerAccount.Customer.FirstName,
+                Email = customerAccount.Customer.Email ?? string.Empty
+            };
+
+            return (true, string.Empty, customerClaimInfoViewModel);
         }
 
         public async Task<(bool, string)> Register(CustomerRegisterViewModel customerRegisterViewModel)
@@ -141,11 +150,13 @@ namespace FastFood.Services
                 return (false, "Tên đăng nhập đã tồn tại !");
             }
 
+            string passwordHashed = this._passwordHasher.HashPassword(string.Empty, customerRegisterViewModel.Password);
+
             CustomerAccount customerAccount = new()
             {
                 UserName = customerRegisterViewModel.UserName,
                 CreatedAt = DateTime.Now,
-                Password = this._passwordHasher.HashPassword(string.Empty, customerRegisterViewModel.Password)
+                Password = passwordHashed
             };
 
             await this._customerAccountRepository.AddCustomerAccount(customerAccount);

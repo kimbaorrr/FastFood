@@ -6,7 +6,7 @@ namespace FastFood.Repositories.Interfaces
     {
         Task<List<ProductReview>> GetProductReviews();
         Task<double> GetAverageStarOfProduct(int productId);
-        Task<ProductReview> GetProductReviewByProductId(int productId);
+        Task<List<ProductReview>> GetProductReviewsByProductId(int productId);
         Task<int> GetTotalReviews();
         Task AddProductReview(ProductReview productReview);
     }

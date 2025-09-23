@@ -1,7 +1,6 @@
-﻿@using FastFood.DB
-@using FastFood.Models;
-@{
-    Thongtincuahang? thongTinCuaHang = FastFood_CuaHang.GetThongTin();
+﻿@{
+    var storeInfo = ViewBag.StoreInfo as StoreInfo ?? new();
+    var workSchedule = ViewBag.WorkSchedule as List<WorkSchedule> ?? new();
 }
 <footer class="footer-default p-r z-1">
     <div class="footer-shape f-shape_one scene"><span data-depth=".3"><img src="/public_page/assets/images/shape/shape-2.png" alt="shape"></span></div>
@@ -17,39 +16,39 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <!--=== Footer Widget ===-->
-                    <div class="footer-widget footer-about-widget mb-40 wow fadeInUp">
+                    <div class="footer-widget footer-about-widget wow fadeInUp mb-40">
                         <div class="widget-content">
                             <div class="footer-logo mb-25">
-                                <a href="@Url.Action("Index", "Home")"><img height="70" src="@thongTinCuaHang.Logo" alt="Brand Logo"></a>
+                                <a href="@Url.Action("Index", "Home")"><img height="70" src="@storeInfo.Logo" alt="Brand Logo"></a>
                             </div>
                             <p>
-                                @thongTinCuaHang.Slogan
+                                @storeInfo.Slogan
                             </p>
                             <ul class="social-link">
-                                <li><a href="@thongTinCuaHang.Facebookurl"><i class="fab fa-facebook-f"></i></a></li>
-                                <li><a href="@thongTinCuaHang.Xurl"><i class="fab fa-twitter"></i></a></li>
-                                <li><a href="@thongTinCuaHang.Instagramurl"><i class="fab fa-instagram"></i></a></li>
-                                <li><a href="@thongTinCuaHang.Youtubeurl"><i class="fab fa-youtube"></i></a></li>
+                                <li><a href="@storeInfo.FacebookUrl"><i class="fab fa-facebook-f"></i></a></li>
+                                <li><a href="@storeInfo.XUrl"><i class="fab fa-twitter"></i></a></li>
+                                <li><a href="@storeInfo.InstagramUrl"><i class="fab fa-instagram"></i></a></li>
+                                <li><a href="@storeInfo.YoutubeUrl"><i class="fab fa-youtube"></i></a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <!--=== Footer Widget ===-->
-                    <div class="footer-widget footer-contact-widget mb-40 wow fadeInUp">
+                    <div class="footer-widget footer-contact-widget wow fadeInUp mb-40">
                         <div class="widget-content">
                             <h4 class="widget-title">Liên hệ chúng tôi</h4>
                             <ul class="address-list">
-                                <li>@thongTinCuaHang.Diachi</li>
-                                <li><a href="tel:@thongTinCuaHang.Hotline">Tel:@thongTinCuaHang.Hotline</a></li>
-                                <li><a href="mailto:@thongTinCuaHang.Email">@thongTinCuaHang.Email</a></li>
+                                <li>@storeInfo.Address</li>
+                                <li><a href="tel:@storeInfo.Hotline">Tel:@storeInfo.Hotline</a></li>
+                                <li><a href="@("mailto:" + storeInfo.Email)">@storeInfo.Email</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <!--=== Footer Widget ===-->
-                    <div class="footer-widget footer-nav-widget mb-40 wow fadeInUp">
+                    <div class="footer-widget footer-nav-widget wow fadeInUp mb-40">
                         <div class="widget-content">
                             <h4 class="widget-title">Truy cập nhanh</h4>
                             <ul class="widget-menu">
@@ -74,13 +73,13 @@
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <!--=== Footer Widget ===-->
-                    <div class="footer-widget footer-opening-widget mb-40 wow fadeInUp">
+                    <div class="footer-widget footer-opening-widget wow fadeInUp mb-40">
                         <div class="widget-content">
                             <h4 class="widget-title">Giờ mở cửa</h4>
                             <ul class="opening-schedule">
-                                @foreach (var op in FastFood_CuaHang.GetGioLamViec())
+                                @foreach (var schedule in workSchedule)
                                 {
-                                    <li>@op.Ngaylamviec: <span>@op.Thoigianlamviec </span></li>
+                                    <li>@schedule.WorkDate: <span>@schedule.WorkTime </span></li>
                                 }
 
                             </ul>

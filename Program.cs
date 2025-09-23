@@ -3,19 +3,46 @@ using FastFood.Repositories;
 using FastFood.Repositories.Interfaces;
 using FastFood.Services;
 using FastFood.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Newtonsoft.Json;
+using VNPAY.NET;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+{
+
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+});
+
+builder.Services.AddAuthentication()
+    .AddCookie("CustomerScheme")
+    .AddCookie("EmployeeScheme");
+
+builder.Services.AddAuthorization();
+
+
 builder.Services.AddMemoryCache();
 builder.Logging.AddConsole();
-
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromDays(7);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+// DbContext
 builder.Services.AddDbContext<FastFoodEntities>(options =>
-    options.UseNpgsql(builder.Configuration["ConnectionStrings:Postgres"]));
+{
+    options.UseNpgsql(builder.Configuration["ConnectionStrings:Postgres"]);
+    options.UseLazyLoadingProxies();
+});
 
 // Repositories
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
@@ -53,11 +80,13 @@ builder.Services.AddScoped<ILoggingEventService, LoggingEventService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IVnpay, Vnpay>();
 
 
 WebApplication app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -67,7 +96,9 @@ app.UseDeveloperExceptionPage();
 app.UseStatusCodePages();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseSession();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAreaControllerRoute(

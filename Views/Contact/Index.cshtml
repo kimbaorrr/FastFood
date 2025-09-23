@@ -1,7 +1,5 @@
-﻿@using FastFood.DB
-@using FastFood.Models;
-@{
-    Thongtincuahang thongTin = FastFood_CuaHang.GetThongTin();
+﻿@{
+    var storeInfo = ViewBag.StoreInfo as StoreInfo;
 }
 
 <!--====== Start Page Section ======-->
@@ -34,19 +32,19 @@
                         <h4 class="pb-2">Thông tin liên hệ</h4>
                         <div class="address-contact d-flex justify-content-start align-items-center mb-2">
                             <img src="https://jollibee.com.vn/media/wysiwyg/ICON_DUI_GA-05.png" alt="" width="20" height="20">
-                            <p style="margin-left: 8px;">@thongTin.Tencuahang</p>
+                            <p style="margin-left: 8px;">@(storeInfo?.StoreName ?? string.Empty)</p>
                         </div>
                         <div class="address-contact d-flex justify-content-start align-items-center mb-2">
                             <img src="https://jollibee.com.vn/media/jollibee/Phone_20x20.png" alt="" width="20" height="20">
-                            <p style="margin-left: 8px;">@thongTin.Hotline</p>
+                            <p style="margin-left: 8px;">@(storeInfo?.Hotline ?? string.Empty)</p>
                         </div>
                         <div class="address-contact d-flex justify-content-start align-items-baseline mb-2">
                             <img src="https://jollibee.com.vn/media/jollibee/Map_20x20.png" alt="" width="20" height="20">
-                            <p style="margin-left: 8px;">@thongTin.Diachi</p>
+                            <p style="margin-left: 8px;">@(storeInfo?.Address ?? string.Empty)</p>
                         </div>
                         <h4>Gửi tin nhắn cho chúng tôi</h4>
                     </div>
-                    @Html.Partial("_Question")
+                    @await Html.PartialAsync("_Feedback")
 
                 </div>
             </div>

@@ -24,11 +24,11 @@ public class ProductReviewRepository : CommonRepository, IProductReviewRepositor
             .AverageAsync(x => x.StarRating) ?? 0; 
     }
 
-    public async Task<ProductReview> GetProductReviewByProductId(int productId)
+    public async Task<List<ProductReview>> GetProductReviewsByProductId(int productId)
     {
         return await this._fastFoodEntities.ProductReviews
             .Where(x => x.ProductId == productId)
-            .FirstOrDefaultAsync() ?? new ProductReview();
+            .ToListAsync();
     }
 
     public async Task<int> GetTotalReviews()

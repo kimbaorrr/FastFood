@@ -1,0 +1,91 @@
+﻿@model CustomerRegisterViewModel
+
+<div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #f7f1e1;">
+            <div class="modal-header">
+                <h5 class="modal-title page-title" id="registrationModalLabel">Đăng ký tài khoản</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { id = "registrationForm" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <div class="me-2">
+                            @Html.LabelFor(m => m.LastName, new { @style = "font-size:18px;font-weight:500;" })
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @required = "required", @style = "padding:6px 1rem;" })
+                            @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                        </div>
+                        <div>
+                            @Html.LabelFor(m => m.FirstName, new { @style = "font-size:18px;font-weight:500;" })
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @required = "required", @style = "padding:6px 1rem;" })
+                            @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        @Html.LabelFor(m => m.UserName, new { @style = "font-size:18px;font-weight:500;" })
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @required = "required", @style = "padding:6px 1rem;" })
+                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-2">
+                        @Html.LabelFor(m => m.Password, new { @style = "font-size:18px;font-weight:500;" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @required = "required", @style = "padding:6px 1rem;" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-2">
+                        @Html.LabelFor(m => m.Address, new { @style = "font-size:18px;font-weight:500;" })
+                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @style = "padding:6px 1rem;" })
+                        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <div class="me-2">
+                            @Html.LabelFor(m => m.Email, new { @style = "font-size:18px;font-weight:500;" })
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @type = "email", @style = "padding:6px 1rem;" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+                        <div>
+                            @Html.LabelFor(m => m.Phone, new { @style = "font-size:18px;font-weight:500;" })
+                            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @type = "tel", @style = "padding:6px 1rem;" })
+                            @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <button type="submit" class="theme-btn style-one w-100" style="padding:10px;">Đăng ký</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#registrationForm').submit(function (e) {
+            e.preventDefault();
+            let $form = $(this);
+
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'POST',
+                data: $form.serialize(),
+                dataType: 'json',
+                success: function (response) {
+                    alertMessage(response.type, response.message);
+
+                    if (response.success) {
+                        $('#registrationModal').modal('hide');
+                        $('#loginModal').modal('show');
+                    }
+                },
+                error: function () {
+                    alert("Đã xảy ra lỗi khi đăng ký. Vui lòng thử lại sau.");
+                }
+            });
+        });
+    });
+</script>

@@ -1,9 +1,4 @@
-﻿@    using FastFood.Models;
-@    using FastFood.DB;
-    using FastFood.Models.ViewModels;
-@{
-    List<Danhmuc> dsDanhMuc = FastFood_SanPham.getDanhMuc().ToList();
-}
+﻿@model List<CustomCategoryViewModel>
 
 <!--====== Start Page Section ======-->
 <section class="page-banner">
@@ -38,16 +33,16 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="foodix-tabs style-two mb-70">
-                    <ul class="nav nav-tabs wow fadeInDown">
-                        @{
-                            for (byte c = 0; c < dsDanhMuc.Count(); c++)
-                            {
-                                var dm = dsDanhMuc[c];
-                                bool isActive = c == 0;
-                                <li>
-                                    <button class="nav-link @(isActive ? "active" : "")" data-bs-toggle="tab" data-bs-target="#dm_@dm.Madanhmuc">@dm.Tendanhmuc</button>
-                                </li>
-                            }
+                    <ul class="nav nav-tabs">
+                        @foreach (var (cat, i) in Model.Select((c, i) => (c, i)))
+                        {
+                            <li class="nav-item">
+                                <button class="nav-link @(i == 0 ? "active" : "")"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#cat_@cat.Category.CategoryId">
+                                    @cat.Category.CategoryName
+                                </button>
+                            </li>
                         }
                     </ul>
                 </div>
@@ -56,63 +51,73 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="tab-content">
-                    @{
-                        for (int k = 0; k < dsDanhMuc.Count(); k++)
-                        {
-                            var dm = dsDanhMuc[k];
-                            <div class="tab-pane fade @(k == 0 ? "show active" : "")" id="dm_@dm.Madanhmuc" style="max-height: 75vh;overflow-y: scroll; overflow-x: hidden;">
-                                <div class="row">
-                                    @foreach (var product in FastFood_SanPham.getSanPhamTheoDanhMuc(dm.Madanhmuc, 8))
-                                    {
-                                        string hinhAnh = product.Hinhanh?.Split(new char[] { ',' })[0] ?? string.Empty;
-                                        <div class="col-xl-3 col-md-6 col-sm-12">
-                                            <div class="menu-item style-four mb-30">
-                                                <div class="d-flex justify-content-center align-items-center align-content-center mx-auto overflow-hidden" style="width: 220px;height: 200px;">
-                                                    <img src="@hinhAnh" alt="menu image" class="object-fit-fill" width="100%" height="100%">
-                                                </div>
-                                                <div class="menu-info">
-                                                    <div class="menu-meta"\>
-                                                        <span class="price">
-                                                            <span class="currency">$</span>
-                                                            @product.Giasaukhuyenmai
-                                                            @{
-                                                                if (product.Khuyenmai != 0)
-                                                                {
-                                                                    <span class="text-decoration-line-through ps-1" style="color:slategray;">@product.Giagoc</span>
-                                                                }
-                                                            }
+                    @foreach (var (cat, i) in Model.Select((c, i) => (c, i)))
+                    {
+                        var category = cat.Category;
+                        <div class="tab-pane fade @(i == 0 ? "show active" : "")"
+                             id="cat_@category.CategoryId"
+                             style="max-height: 75vh;overflow-y: scroll; overflow-x: hidden;">
 
-                                                        </span>
-                                                        <span class="rating">
-                                                            <i class="fas fa-star"></i>
-                                                            @{
-                                                                if (product.Danhgiasanphams.Any())
-                                                                {
-                                                                    <a href="#">
-                                                                        @product.Danhgiasanphams.Average(x => x.Xephangsao)
-                                                                    </a>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <a href="#">3</a>
-                                                                }
-                                                            }
-                                                        </span>
-                                                    </div>
-                                                    <h4 class="title"><a href="@Url.Action("Detail", "Menu", new {id = product.Masanpham})">@product.Tensanpham</a></h4>
-                                                    <p class="text-secondary" style="font-weight: 500;">@product.Motangan</p>
-                                                    <button type="button" class="add-to-cart-btn theme-btn style-two mt-3" style="padding: 12px 0;" data-product-id="@product.Masanpham" data-quantity="1"><i class="far fa-cart-plus"></i> Thêm vào giỏ</button>
+                            <div class="row">
+                                @foreach (var product in cat.Products)
+                                {
+                                    string image = product.Image?.Split(',')[0] ?? string.Empty;
+                                    <div class="col-xl-3 col-md-6 col-sm-12">
+                                        <div class="menu-item style-four mb-30">
+                                            <div class="d-flex justify-content-center align-items-center mx-auto overflow-hidden"
+                                                 style="width: 220px;height: 200px;">
+                                                <img src="@image" alt="menu image"
+                                                     class="object-fit-fill"
+                                                     width="100%" height="100%">
+                                            </div>
+                                            <div class="menu-info">
+                                                <div class="menu-meta">
+                                                    <span class="price">
+                                                        <span class="currency">$</span>
+                                                        @product.FinalPrice
+                                                        @if (product.Discount != 0)
+                                                        {
+                                                            <span class="text-decoration-line-through ps-1" style="color:slategray;">
+                                                                @product.OriginalPrice
+                                                            </span>
+                                                        }
+                                                    </span>
+                                                    <span class="rating">
+                                                        <i class="fas fa-star"></i>
+                                                        @if (product.ProductReviews.Any())
+                                                        {
+                                                            <a href="#">
+                                                                @product.ProductReviews.Average(x => x.StarRating)
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="#">3</a>
+                                                        }
+                                                    </span>
                                                 </div>
+                                                <h4 class="title">
+                                                    <a href="@Url.Action("Detail", "Menu", new { productId = product.ProductId })">
+                                                        @product.ProductName
+                                                    </a>
+                                                </h4>
+                                                <p class="text-secondary" style="font-weight: 500;">@product.Summary</p>
+                                                <button type="button"
+                                                        class="add-to-cart-btn theme-btn style-two mt-3"
+                                                        style="padding: 12px 0;"
+                                                        data-product-id="@product.ProductId"
+                                                        data-quantity="1">
+                                                    <i class="far fa-cart-plus"></i> Thêm vào giỏ
+                                                </button>
                                             </div>
                                         </div>
-                                    }
-                                </div>
+                                    </div>
+                                }
                             </div>
-                        }
+                        </div>
                     }
-
-
                 </div>
+
             </div>
         </div>
     </div>

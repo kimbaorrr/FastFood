@@ -1,7 +1,4 @@
-﻿@using FastFood.Models;
-@{
-    @model FastFood_ThanhToan_KetQua
-}
+﻿@model PaymentResultViewModel
 
 <!--====== Start Page Section ======-->
 <section class="page-banner">
@@ -30,26 +27,30 @@
                 <h3 class="page-title text-center">KẾT QUẢ THANH TOÁN</h3>
                 <div class="row justify-content-center">
                     <div class="col-5">
-                        <table class="table mt-4">
+                        <table class="mt-4 table">
                             <tr>
-                                <td><strong>@Html.LabelFor(m => m.MaDonHang, new { @class = "control-label" })</strong></td>
-                                <td>@Html.DisplayFor(m => m.MaDonHang, new { @class = "form-control" })</td>
+                                <td><strong>@Html.LabelFor(m => m.OrderId, new { @class = "control-label" })</strong></td>
+                                <td>@Html.DisplayFor(m => m.OrderId, new { @class = "form-control" })</td>
                             </tr>
                             <tr>
-                                <td><strong>@Html.LabelFor(m => m.TongThanhToan, new { @class = "control-label" })</strong></td>
-                                <td>@Html.DisplayFor(m => m.TongThanhToan, new { @class = "form-control" })</td>
+                                <td><strong>@Html.LabelFor(m => m.TotalPay, new { @class = "control-label" })</strong></td>
+                                <td>@Html.DisplayFor(m => m.TotalPay, new { @class = "form-control" })</td>
                             </tr>
                             <tr>
-                                <td><strong>@Html.LabelFor(m => m.MaGiaoDich, new { @class = "control-label" })</strong></td>
-                                <td>@Html.DisplayFor(m => m.MaGiaoDich, new { @class = "form-control" })</td>
+                                <td><strong>@Html.LabelFor(m => m.PaymentMethod, new { @class = "control-label" })</strong></td>
+                                <td>@Html.DisplayFor(m => m.PaymentMethod, new { @class = "form-control" })</td>
                             </tr>
                             <tr>
-                                <td><strong>@Html.LabelFor(m => m.TrangThaiThanhToan, new { @class = "control-label" })</strong></td>
-                                <td>@Html.DisplayFor(m => m.TrangThaiThanhToan, new { @class = "form-control" })</td>
+                                <td><strong>@Html.LabelFor(m => m.TransactionId, new { @class = "control-label" })</strong></td>
+                                <td>@Html.DisplayFor(m => m.TransactionId, new { @class = "form-control" })</td>
                             </tr>
                             <tr>
-                                <td><strong>@Html.LabelFor(m => m.TrangThaiGiaoDich, new { @class = "control-label" })</strong></td>
-                                <td>@Html.DisplayFor(m => m.TrangThaiGiaoDich, new { @class = "form-control" })</td>
+                                <td><strong>@Html.LabelFor(m => m.PaymentStatus, new { @class = "control-label" })</strong></td>
+                                <td>@Html.DisplayFor(m => m.PaymentStatus, new { @class = "form-control" })</td>
+                            </tr>
+                            <tr>
+                                <td><strong>@Html.LabelFor(m => m.TransactionStatus, new { @class = "control-label" })</strong></td>
+                                <td>@Html.DisplayFor(m => m.TransactionStatus, new { @class = "form-control" })</td>
                             </tr>
                         </table>
 

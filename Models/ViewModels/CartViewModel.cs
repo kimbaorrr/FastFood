@@ -26,7 +26,7 @@ namespace FastFood.Models.ViewModels
         /// <summary>
         /// Tổng tiền của sản phẩm dựa trên số lượng và giá bán.
         /// </summary>
-        public int? FinalPrice => OriginalPrice * Quantity * (Discount/100);
+        public int? FinalPrice { get; set; } = 0;
 
         /// <summary>
         /// Hình ảnh của sản phẩm.

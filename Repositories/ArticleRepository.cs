@@ -21,10 +21,10 @@ public class ArticleRepository : CommonRepository, IArticleRepository
         return await this._fastFoodEntities.Articles.Where(x => x.IsApproved == isApproved).ToListAsync();
     }
 
-    public async Task<List<Article>> GetRecentArticles(int articleId, int take)
+    public async Task<List<Article>> GetRecentArticles(int excludedArticleId, int take)
     {
         return await this._fastFoodEntities.Articles
-            .Where(x=>x.ArticleId != articleId)
+            .Where(x=>x.ArticleId != excludedArticleId)
             .OrderByDescending(x=>x.CreatedAt)
             .Take(take)
             .ToListAsync();

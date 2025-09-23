@@ -1,46 +1,50 @@
-﻿using FastFood.Models;
+﻿using FastFood.DB.Entities;
+using FastFood.Models;
 using FastFood.Models.ViewModels;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text.Json;
-using FastFood.DB.Entities;
 
-namespace FastFood.Areas.Controllers
+namespace FastFood.Controllers
 {
-    public abstract class BaseController : Controller
+    public abstract class BaseAppController : Controller
     {
-        protected int _customerId => this.GetCustomerFromClaim()?.CustomerId ?? -1;
-        protected Dictionary<int, CustomerCartViewModel> _customerCartViewModel => this.GetCartFromClaim() ?? new();
-
-        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        protected IActionResult CreateJsonResult(
+            bool success = false,
+            string message = "",
+            object? data = null,
+            int statusCode = 200)
         {
-            Dictionary<int, CustomerCartViewModel> customerCartViewModel = new();
-            await this.AddCartToClaim(customerCartViewModel);
-
-            await base.OnActionExecutionAsync(context, next);
-        }
-
-        protected JsonResult CreateJsonResult(bool success = false, string message = "", object? data = null)
-        {
-
             var json = new
             {
-                success = success!,
+                success,
                 type = success ? "var(--bs-success)" : "var(--bs-danger)",
-                message = message!,
+                message,
                 data = data ?? new { }
             };
 
-            return new JsonResult(json, new JsonSerializerOptions()
-            {
-                WriteIndented = true
-            });
+            var jsonSerialized = JsonConvert.SerializeObject(json);
 
+            return statusCode switch
+            {
+                400 => BadRequest(jsonSerialized),
+                401 => Unauthorized(jsonSerialized),
+                403 => Forbid(),
+                404 => NotFound(jsonSerialized),
+                500 => StatusCode(500, jsonSerialized),
+                _ => Ok(jsonSerialized)
+            };
         }
+    }
+
+    public abstract class BaseCustomerController : BaseAppController
+    {
+        protected int _customerId => this.GetCustomerFromClaim()?.CustomerId ?? -1;
 
         protected Customer? GetCustomerFromClaim()
         {
@@ -58,15 +62,15 @@ namespace FastFood.Areas.Controllers
             return absoluteUri;
         }
 
-        protected async Task AddCustomerToClaim(string customerId, Customer customerInfo, bool rememberMe = false)
+        protected async Task AddCustomerToClaim(string customerId, CustomerClaimInfoViewModel customerClaimInfo, bool rememberMe = false)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, customerId ?? string.Empty),
-                new Claim("CustomerInfo", JsonConvert.SerializeObject(customerInfo))
+                new Claim("CustomerInfo", JsonConvert.SerializeObject(customerClaimInfo))
             };
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var identity = new ClaimsIdentity(claims, "CustomerScheme");
             var principal = new ClaimsPrincipal(identity);
 
             var authProperties = new AuthenticationProperties
@@ -78,73 +82,35 @@ namespace FastFood.Areas.Controllers
             };
 
             await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
+                "CustomerScheme",
                 principal,
                 authProperties
             );
-        }
-
-        protected async Task AddCartToClaim(Dictionary<int, CustomerCartViewModel> customerCartViewModel)
-        {
-            var claims = new List<Claim>(User?.Claims ?? Enumerable.Empty<Claim>());
-
-            var oldCartClaim = claims.FirstOrDefault(c => c.Type == "CartInfo");
-            if (oldCartClaim != null)
-                claims.Remove(oldCartClaim);
-
-            claims.Add(new Claim("CartInfo", JsonConvert.SerializeObject(customerCartViewModel)));
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-
-            var authProperties = new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
-            };
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                principal,
-                authProperties
-            );
-        }
-
-        protected Dictionary<int, CustomerCartViewModel>? GetCartFromClaim()
-        {
-            var claimData = User?.FindFirst("CartInfo");
-            if (claimData != null)
-                return JsonConvert.DeserializeObject<Dictionary<int, CustomerCartViewModel>>(claimData.Value);
-
-            return null;
         }
 
         protected async Task ClearClaims()
-            => await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                => await HttpContext.SignOutAsync("CustomerScheme");
 
 
-        protected async Task AddPaymentSummaryToClaim(PaymentSummaryViewModel paymentSummaryViewModel)
+        protected void AddPaymentSummaryToSession(string paymentSummary)
         {
-            var claims = new List<Claim>(User?.Claims ?? Enumerable.Empty<Claim>());
-
-            var oldClaim = claims.FirstOrDefault(c => c.Type == "CheckoutSummary");
-            if (oldClaim != null)
-                claims.Remove(oldClaim);
-
-            claims.Add(new Claim("PaymentSummary", JsonConvert.SerializeObject(paymentSummaryViewModel)));
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            HttpContext.Session.SetString("PaymentSummary", paymentSummary);
         }
 
-        protected PaymentSummaryViewModel? GetPaymentSummaryFromClaim()
+        protected PaymentSummaryViewModel? GetPaymentSummaryFromSession()
         {
-            var claimData = User?.FindFirst("PaymentSummary");
-            if (claimData != null)
-                return JsonConvert.DeserializeObject<PaymentSummaryViewModel>(claimData.Value)
-                    ;
+            var summaryJson = HttpContext.Session.GetString("PaymentSummary");
+            if (!string.IsNullOrEmpty(summaryJson))
+            {
+                try
+                {
+                    return JsonConvert.DeserializeObject<PaymentSummaryViewModel>(summaryJson);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
             return null;
         }
 

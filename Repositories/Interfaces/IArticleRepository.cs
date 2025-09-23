@@ -6,7 +6,7 @@ namespace FastFood.Repositories.Interfaces
     {
         Task<List<Article>> GetArticles();
         Task<List<Article>> GetArticlesByApproved(bool isApproved);
-        Task<List<Article>> GetRecentArticles(int articleId, int take);
+        Task<List<Article>> GetRecentArticles(int excludedArticleId, int take);
         Task UpdateCoverImage(int articleId, string coverImagePath);
         Task<Article> GetArticleById(int articleId);
         Task AddArticle(Article article);

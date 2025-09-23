@@ -1,0 +1,37 @@
+﻿@model CustomerCustomHomeViewModel
+<section class="special-offer-section pt-120 pb-90 gray-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!--=== Section Title ===-->
+                <div class="section-title mb-50 wow fadeInDown text-center">
+                    <span class="sub-title">Khuyến mãi đặc biệt</span>
+                    <h2>Giảm giá sốc hôm nay !</h2>
+                    <p>Đừng bỏ lỡ cơ hội tận hưởng giảm giá siêu sốc cho các món ngon khó cưỡng! Từ burger nướng thơm lừng, gà rán giòn tan, khoai tây chiên giòn rụm đến các món tacos đầy đặn và bánh mì nóng hổi — tất cả đều đang chờ bạn với mức giá cực kỳ hấp dẫn!</p>
+                </div>
+            </div>
+        </div>
+        <!--=== Special Off Slider ===-->
+        <div class="special-off-slider wow fadeInUp">
+            @foreach (var product in Model.Top10HotSales)
+            {
+                <!--=== Special Off Item ===-->
+                <a href="@Url.Action("Detail", "Menu", new {productId = product.ProductId})">
+                    <div class="special-off-item mb-40 text-center">
+                        <div class="sp-shape"><img src="/public_page/assets/images/gallery/sp-shape-1.png" alt="shape"></div>
+                        <div class="item-title">
+                            <h4>@product.ProductName</h4>
+                        </div>
+                        <div class="image">
+                            <img src='@(CommonHelper.ImageSplitter(product.Image ?? string.Empty)[0] ?? string.Empty)' alt="image">
+                        </div>
+                        <div class="content">
+                            <p>@product.Summary</p>
+                        </div>
+                    </div>
+                </a>
+
+            }
+        </div>
+    </div>
+</section>

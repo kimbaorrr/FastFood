@@ -1,98 +1,129 @@
-﻿using FastFood.Models;
+﻿using FastFood.DB.Entities;
+using FastFood.Models;
 using FastFood.Models.ViewModels;
 using FastFood.Repositories.Interfaces;
 using FastFood.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using System.Runtime.CompilerServices;
 
 namespace FastFood.Services
 {
-    public class CartService : CommonService, ICartService
+    public class CartService : ICartService
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IProductRepository _productRepository;
         private readonly IPromoRepository _promoRepository;
 
-        public CartService(IProductRepository productRepository, IPromoRepository promoRepository)
+        public CartService(
+            IHttpContextAccessor httpContextAccessor,
+            IProductRepository productRepository,
+            IPromoRepository promoRepository)
         {
+            _httpContextAccessor = httpContextAccessor;
             _productRepository = productRepository;
             _promoRepository = promoRepository;
         }
 
-        public CartService(Dictionary<int, CustomerCartViewModel> customerCartViewModel)
+        private ISession Session => _httpContextAccessor.HttpContext!.Session;
+
+        private Dictionary<int, CustomerCartViewModel> GetCart()
         {
-            this.CustomerCartViewModel = customerCartViewModel;
+            var json = Session.GetString("CartInfo");
+            if (string.IsNullOrEmpty(json))
+                return new();
+
+            return JsonConvert.DeserializeObject<Dictionary<int, CustomerCartViewModel>>(json)!;
         }
 
-        public Dictionary<int, CustomerCartViewModel> CustomerCartViewModel { get; set; }
-            = new Dictionary<int, CustomerCartViewModel>();
+        private void SaveCart(Dictionary<int, CustomerCartViewModel> cart)
+        {
+            var json = JsonConvert.SerializeObject(cart);
+            Session.SetString("CartInfo", json);
+        }
 
-        /// <summary>
-        /// Kiểm tra xem giỏ hàng có rỗng hay không.
-        /// </summary>
-        /// <returns>Trả về true nếu giỏ hàng rỗng, ngược lại là false.</returns>
-        public bool IsCartEmpty() => !this.CustomerCartViewModel.Any();
+        public Dictionary<int, CustomerCartViewModel> CustomerCartViewModel
+        {
+            get => this.GetCart();
+            set => this.SaveCart(value);
+        }
 
-        /// <summary>
-        /// Thêm sản phẩm vào giỏ hàng.
-        /// </summary>
-        /// <param name="maSanPham">Mã sản phẩm.</param>
-        /// <param name="soLuong">Số lượng sản phẩm cần thêm.</param>
+        public bool IsCartEmpty() => !this.GetCart().Any();
+
         public async Task AddItem(int productId, int quantity)
         {
-            if (this.CustomerCartViewModel.TryGetValue(productId, out CustomerCartViewModel? customerCartViewModel))
+            var cart = this.GetCart();
+            var product = await _productRepository.GetProductById(productId);
+
+            if (cart.TryGetValue(productId, out var item))
             {
-                customerCartViewModel.Quantity += quantity;
+                item.Quantity += quantity;
+                item.FinalPrice = CalculateFinalPrice(product.OriginalPrice, product.Discount, item.Quantity);
             }
             else
             {
-                var product = await this._productRepository.GetProductById(productId);
-                if (product == null) return;
-
-                this.CustomerCartViewModel[productId] = new()
+                cart[productId] = new CustomerCartViewModel
                 {
                     ProductId = productId,
                     Quantity = quantity,
                     Discount = product.Discount,
                     OriginalPrice = product.OriginalPrice,
-                    ProductImage = string.Empty,
-                    ProductName = product.ProductName
+                    ProductImage = product.Image?.Split(",").FirstOrDefault() ?? string.Empty,
+                    ProductName = product.ProductName,
+                    FinalPrice = CalculateFinalPrice(product.OriginalPrice, product.Discount, quantity)
                 };
             }
+
+            this.SaveCart(cart);
         }
 
-        /// <summary>
-        /// Xóa sản phẩm khỏi giỏ hàng.
-        /// </summary>
-        /// <param name="maSanPham">Mã sản phẩm cần xóa.</param>
         public void RemoveItem(int productId)
         {
-            this.CustomerCartViewModel.Remove(productId);
+            var cart = this.GetCart();
+            cart.Remove(productId);
+            this.SaveCart(cart);
         }
 
-        /// <summary>
-        /// Giảm số lượng của một sản phẩm trong giỏ hàng.
-        /// </summary>
-        /// <param name="maSanPham">Mã sản phẩm cần giảm số lượng.</param>
         public void DecreaseQuantity(int productId)
         {
-            if (!this.CustomerCartViewModel.TryGetValue(productId, out CustomerCartViewModel? customerCartViewModel)) return;
+            var cart = GetCart();
 
-            customerCartViewModel.Quantity--;
+            if (!cart.TryGetValue(productId, out var item)) return;
 
-            if (customerCartViewModel.Quantity <= 0)
-                this.RemoveItem(productId);
+            item.Quantity--;
+            item.FinalPrice = CalculateFinalPrice(item.OriginalPrice, item.Discount, item.Quantity);
+
+            if (item.Quantity <= 0)
+                cart.Remove(productId);
+
+            SaveCart(cart);
         }
 
-        /// <summary>
-        /// Tính tổng tiền của tất cả sản phẩm trong giỏ hàng.
-        /// </summary>
-        /// <returns>Tổng tiền của giỏ hàng.</returns>
-        public int TotalPay() => this.CustomerCartViewModel.Values.Sum(x => x.FinalPrice) ?? 0;
+        private int CalculateTotalProductPrice()
+        {
+            var cart = this.GetCart();
+            return cart.Values.Sum(x => (int)((x.OriginalPrice * (100 - x.Discount) / 100.0) * x.Quantity));
+        }
 
         public async Task<(bool, string, string)> GetSummaryCheckout(string promoCode)
         {
-            var promo = await this._promoRepository.GetPromoByPromoCode(promoCode);
+            var cart = this.GetCart();
+            
+            if (string.IsNullOrEmpty(promoCode))
+            {
+                PaymentSummaryViewModel paymentSummaryViewModel = new()
+                {
+                    PromoCode = string.Empty,
+                    PromoId = null,
+                    PromoAmount = 0,
+                    ShippingFee = 20000,
+                    TotalProductPrice = this.CalculateTotalProductPrice(),
+                    TotalPay = CalculateTotalPay()
+                };
 
+                return (true, string.Empty, JsonConvert.SerializeObject(paymentSummaryViewModel));
+            }
+
+            var promo = await this._promoRepository.GetPromoByPromoCode(promoCode);
             if (promo != null)
             {
                 bool isExpired = promo.EndTime.HasValue && DateTime.Now > promo.EndTime.Value;
@@ -109,15 +140,27 @@ namespace FastFood.Services
                     PromoId = promo.PromoId,
                     PromoAmount = promo.DiscountAmount,
                     ShippingFee = 20000,
-                    TotalProductPrice = this.TotalPay(),
-                    
+                    TotalProductPrice = this.CalculateTotalProductPrice(),
+                    TotalPay = CalculateTotalPay(promo.DiscountAmount)
                 };
 
                 return (true, string.Empty, JsonConvert.SerializeObject(paymentSummaryViewModel));
             }
 
-            return (false, "Mã khuyến mãi không hợp lệ !", string.Empty); 
-            
+            return (false, "Mã khuyến mãi không hợp lệ !", string.Empty);
+        }
+
+        private int CalculateTotalPay(int discountAmount = 0)
+        {
+            int totalProductPrice = this.CalculateTotalProductPrice();
+            int shippingFee = 20000;
+            return shippingFee + totalProductPrice - discountAmount;
+        }
+
+        private static int CalculateFinalPrice(int originalPrice, int? discount, int quantity)
+        {
+            var discountValue = discount ?? 0;
+            return (int)((originalPrice * (100 - discountValue) / 100.0) * quantity);
         }
     }
 }

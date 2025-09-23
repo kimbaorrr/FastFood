@@ -220,7 +220,7 @@ namespace FastFood.Services
                 OrderDetails = order.OrderDetails.ToList() ?? new List<OrderDetail>(),
                 Customer = order.BuyerNavigation,
                 OrderStatuses = order.OrderStatusNavigation,
-                DiscountAmount = order.PromoCodeNavigation?.DiscountAmount ?? 0,
+                DiscountAmount = order.Promo?.DiscountAmount ?? 0,
                 TransactionId = order.Payments.Where(x => x.PaymentStatus).Select(x => x.TransactionId).FirstOrDefault(),
                 PaymentDate = order.Payments.Where(x => x.PaymentStatus).Select(x => x.CreatedAt).FirstOrDefault()
             };

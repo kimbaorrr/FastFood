@@ -1,0 +1,63 @@
+﻿@{
+	@model CustomerSendFeedbackViewModel; 
+}
+@using (Html.BeginForm("SendFeedback", "Contact", null, FormMethod.Post, true, new { @id = "sendFeedback", @class = "contact-form wow fadeInUp" }))
+{
+	@Html.AntiForgeryToken()
+	<div class="row">
+		<div class="col-lg-6">
+			<div class="form_group">
+				@Html.TextBoxFor(x=>x.CustomerName, new {@class = "form_control", @placeholder="Tên khách hàng"})
+
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="form_group">
+				@Html.TextBoxFor(x => x.Phone, new { @class = "form_control", @placeholder = "Số điện thoại" })
+			</div>
+		</div>
+		<div class="col-lg-12">
+			<div class="form_group">
+				@Html.TextBoxFor(x => x.Email, new { @class = "form_control", @placeholder = "Email" })
+			</div>
+		</div>
+		<div class="col-lg-12">
+			<div class="form_group">
+				@Html.TextAreaFor(x => x.Content, new { @class = "form_control", @placeholder = "Nhập nội dung tại đây....", @rows = "5" })
+			</div>
+		</div>
+		<div class="col-lg-12">
+			<div class="form_group">
+				<button class="theme-btn style-one" type="submit">Gửi</button>
+			</div>
+		</div>
+	</div>
+}
+
+<script>
+	$(document).ready(function () {
+		$("#sendFeedback").on("submit", function (e) {
+			e.preventDefault();
+
+			let form = $(this);
+			let formData = form.serialize();
+			let actionUrl = form.attr("action");
+
+			$.ajax({
+				url: actionUrl,
+				type: 'POST',
+				dataType: "json",
+				data: formData,
+				success: function (response) {
+					if (response.value.success) {
+						alertMessage(response.value.type, response.value.message);
+						form[0].reset();
+					}
+				},
+				error: function (xhr, status, error) {
+					alert("Đã xảy ra lỗi khi gửi câu hỏi: " + error);
+				}
+			});
+		});
+	});
+</script>

@@ -1,9 +1,4 @@
-﻿@using FastFood.DB;
-@using FastFood.Models;
-@{
-    Baiviet? bv = ViewBag.BaiViet as Baiviet;
-    IEnumerable<Baiviet> dsBaiVietGanDay = FastFood_BaiViet.GetBaiVietGanDay(bv!.Mabaiviet, 4);
-}
+﻿@model CustomArticleViewModel
 
 
 <!--====== Start Page Section ======-->
@@ -35,24 +30,24 @@
                     <div class="blog-post-item wow fadeInUp">
                         <div class="main-post">
                             <div class="post-content">
-                                <h4 class="post-title">@bv!.Tieude</h4>
+                                <h4 class="post-title">@Model.Article.Title</h4>
                                 <div class="post-meta">
-                                    <span><a href="#">@FastFood_NhanVien.getHoTen(bv.Nguoitao.ToString())</a></span>
-                                    <span><a href="#">@bv.Ngaytao.ToString("dd MMM, yyyy")</a></span>
+                                    <span><a href="#">@(Model.Article.Author.LastName + " " + Model.Article.Author.FirstName)</a></span>
+                                    <span><a href="#">@Model.Article.CreatedAt.ToString("dd MMM, yyyy")</a></span>
                                 </div>
                                 <figure>
                                     <div class="d-flex justify-content-center align-items-center overflow-hidden" style="width: 410px;height: 280px;">
-                                        <img src="@bv.Hinhanh" alt="@bv.Tieude" width="100%" height="100%" class="object-fit-fill">
+                                        <img src="@Model.Article.CoverImage" alt="@Model.Article.Title" width="100%" height="100%" class="object-fit-fill">
                                     </div>
                                 </figure>
-                                <p>@Html.Raw(bv.Noidung)</p>
+                                <p>@Html.Raw(Model.Article.Content)</p>
                             </div>
                         </div>
                         <div class="entry-footer wow fadeInUp">
                             <div class="tag-links">
                                 <span>Tag:</span>
                                 @{
-                                    string[] tags = bv.Tags != null ? bv.Tags.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries) : new string[0];
+                                    string[] tags = Model.Article.Tags != null ? Model.Article.Tags.Split(",", StringSplitOptions.RemoveEmptyEntries) : new string[0];
                                     foreach (var tag in tags)
                                     {
                                         <a href="#">@tag</a>
@@ -77,17 +72,17 @@
                         <div class="widget-content">
                             <h4 class="sidebar-title">TIN TỨC MỚI NHẤT</h4>
                             <ul class="recent-post-list">
-                                @foreach (Baiviet gd in dsBaiVietGanDay)
+                                @foreach (var recentArticle in Model.RecentArticles)
                                 {
                                     <li class="post-thumbnail-content">
-                                        <img src="@gd.Hinhanh" alt="post thumb">
+                                        <img src="@recentArticle.CoverImage" alt="post thumb">
                                         <div class="post-title-date">
                                             <h6>
-                                                <a href="@Url.Action("Detail", "Article", new {id = gd.Mabaiviet})">
-                                                    @gd.Tieude
+                                                <a href="@Url.Action("Detail", "Article", new {articleId = recentArticle.ArticleId})">
+                                                    @recentArticle.Title
                                                 </a>
                                             </h6>
-                                            <span class="posted-on"><a href="#">@gd.Ngaytao.ToString("dd MMM, yyyy")</a></span>
+                                            <span class="posted-on"><a href="#">@recentArticle.CreatedAt.ToString("dd MMM, yyyy")</a></span>
                                         </div>
                                     </li>
                                 }

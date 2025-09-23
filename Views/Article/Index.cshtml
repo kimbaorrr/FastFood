@@ -1,7 +1,9 @@
-﻿@using FastFood.Models;
-@using FastFood.DB;
+﻿
 @{
-    IEnumerable<Baiviet>? dsBaiViet = ViewBag.BaiViet as IEnumerable<Baiviet>;
+    var articles = ViewBag.Articles as IPagedList<Article>;
+    var currentPage = ViewBag.CurrentPage as int?;
+    var totalPages = ViewBag.TotalPages as int?;
+
 }
 
 <!--====== Start Page Section ======-->
@@ -27,25 +29,25 @@
 <section class="blogs-grid-section pt-130 pb-130">
     <div class="container">
         <div class="row">
-            @foreach (Baiviet bv in dsBaiViet!)
+            @foreach (var article in articles!)
             {
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <!--=== Blog Post Item ===-->
                     <div class="blog-post-item style-two mb-30 wow fadeInUp">
                         <div class="post-thumbnail">
                             <div class="d-flex justify-content-center align-items-center overflow-hidden" style="width: 410px;height: 280px;">
-                                <img src="@bv.Hinhanh" alt="@bv.Tieude" width="100%" height="100%" class="object-fit-fill">
+                                <img src="@article.CoverImage" alt="@article.Title" width="100%" height="100%" class="object-fit-fill">
                             </div>
 
                         </div>
                         <div class="post-content">
                             <div class="post-meta">
-                                <span><a href="#">@FastFood_NhanVien.getHoTen(bv.Nguoitao.ToString())</a></span>
-                                <span><a href="#">@bv.Ngaytao.ToString("dd MMM, yyyy")</a></span>
+                                <span><a href="#">@(article.Author.LastName + " " + article.Author.FirstName)</a></span>
+                                <span><a href="#">@article.CreatedAt.ToString("dd MMM, yyyy")</a></span>
                             </div>
-                            <h4 class="post-title"><a href="@Url.Action("Detail", "Article", new {id = bv.Mabaiviet})">@bv.Tieude</a></h4>
-                            <p>@bv.Motangan</p>
-                            <a href="@Url.Action("Detail", "Article", new {id = bv.Mabaiviet})" class="read-more" style="text-transform: none;">Xem thêm<i class="fas fa-arrow-right"></i></a>
+                            <h4 class="post-title"><a href="@Url.Action("Detail", "Article", new {articleId = article.ArticleId})">@article.Title</a></h4>
+                            <p>@article.Summary</p>
+                            <a href="@Url.Action("Detail", "Article", new {articleId = article.ArticleId})" class="read-more" style="text-transform: none;">Xem thêm<i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -55,11 +57,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <!--=== Foodix Pagination ===-->
-                <ul class="foodix-pagination d-flex justify-content-center mt-20 wow fadeInDown">
+                <ul class="foodix-pagination d-flex justify-content-center wow fadeInDown mt-20">
                     <!-- Page Numbers -->
-                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    @for (int i = 1; i <= totalPages; i++)
                     {
-                        if (i == ViewBag.CurrentPage)
+                        if (i == currentPage)
                         {
                             <li>
                                 <a href="#">@i</a>

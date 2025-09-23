@@ -1,3 +1,229 @@
-﻿@{
+﻿@using Newtonsoft.Json;
+@{
     Layout = "_Layout";
+    var customerId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.Name));
+    var customerInfo = JsonConvert.DeserializeObject<CustomerClaimInfoViewModel>(User.FindFirstValue("CustomerInfo") ?? string.Empty) ?? new();
+    var isLoggedIn = customerInfo != null;
 }
+
+<script>
+    let $responseData = [];
+    let csrfToken = $('input[name="__RequestVerificationToken"]').val();
+
+    function ajaxCartAction(url, method, data, onSuccess, onError) {
+        $.ajax({
+            url: url,
+            method: method,
+            dataType: 'json',
+            data: Object.assign({ __RequestVerificationToken: csrfToken }, data),
+            success: onSuccess,
+            error: onError || function (error) { console.error('Cart AJAX error:', error); }
+        });
+    }
+
+    function renderMiniCart(items) {
+        const cartList = $('.foodix-mini-cart-list');
+        cartList.empty();
+        if (!items.length) {
+            cartList.append('<p class="fw-bold text-danger mt-3 text-center">Giỏ hàng rỗng!</p>');
+            return;
+        }
+        items.forEach(function (item) {
+            cartList.append(`
+                <li class="foodix-menu-cart">
+                    <button type="button" class="remove-cart remove-cart-btn bg-white" data-product-id="${item.ProductId}">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+                    <a href="#">
+                        <img src="${item.ProductImage}" alt="cart image">
+                        ${item.ProductName}
+                    </a>
+                    <span class="quantity">${item.Quantity} × <span>${item.OriginalPrice} VNĐ</span></span>
+                </li>
+            `);
+        });
+    }
+
+    function renderCartTable(items) {
+        const cartTable = $('.cart-table table tbody');
+        cartTable.empty();
+        if (!items.length) {
+            cartTable.append('<tr><td class="fw-bold text-danger mt-3 text-center">Giỏ hàng rỗng!</td></tr>');
+            return;
+        }
+        items.forEach(function (item) {
+            cartTable.append(`
+                <tr>
+                    <td class="thumbnail-title">
+                        <img src="${item.ProductImage}" alt="Cart Image">
+                        <span class="title"><a href="menu-details.html">${item.ProductName}</a></span>
+                    </td>
+                    <td class="price">$${item.OriginalPrice}</td>
+                    <td class="quantity">
+                        <div class="quantity-input">
+                            <button class="quantity-down" data-product-id="${item.ProductId}"><i class="far fa-minus"></i></button>
+                            <input class="quantity" type="text" value="${item.Quantity}" name="quantity">
+                            <button class="quantity-up" data-product-id="${item.ProductId}"><i class="far fa-plus"></i></button>
+                        </div>
+                    </td>
+                    <td class="subtotal">${item.FinalPrice}</td>
+                    <td class="remove">
+                        <button type="button" class="remove-cart-btn bg-white" data-product-id="${item.ProductId}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            `);
+        });
+    }
+
+    function loadCartItems(callback) {
+        ajaxCartAction('@Url.Action("GetItems", "Cart")', 'GET', {}, function (response) {
+            if (response.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
+                $responseData = Object.values(response.data);
+            } else if (Array.isArray(response.data)) {
+                $responseData = response.data;
+            } else {
+                $responseData = [];
+            }
+            summaryCheckout("");
+            if (callback) callback($responseData);
+        });
+    }
+
+    function updateToSubCart() {
+        loadCartItems(renderMiniCart);
+    }
+
+    function updateToCartPage() {
+        loadCartItems(renderCartTable);
+    }
+
+    function addToCart(productId, quantity) {
+        ajaxCartAction('@Url.Action("AddItem", "Cart")', 'POST', { productId, quantity }, function (response) {
+            if (response.success) {
+                alertMessage(response.type, response.message);
+                updateToSubCart();
+            }
+        });
+    }
+
+    function removeFromCart(productId) {
+        ajaxCartAction('@Url.Action("RemoveItem", "Cart")', 'POST', { productId }, function (response) {
+            if (response.success) {
+                alertMessage(response.type, response.message);
+                updateToSubCart();
+                updateToCartPage();
+            }
+        });
+    }
+
+    function decreaseQuantity(productId) {
+        ajaxCartAction('@Url.Action("DecreaseQuantity", "Cart")', 'POST', { productId }, function (response) {
+            if (response.success) {
+                updateToSubCart();
+            }
+        });
+    }
+
+    function cartIsEmpty() {
+        return new Promise(function (resolve, reject) {
+            ajaxCartAction('@Url.Action("IsCartEmpty", "Cart")', 'POST', {}, function (response) {
+                resolve(response);
+            }, function (error) {
+                reject(error);
+            });
+        });
+    }
+
+    function summaryCheckout(promoCode) {
+        ajaxCartAction('@Url.Action("GetSummaryCheckout", "Cart")', 'POST', { promoCode }, function (response) {
+            if (!response.success) {
+                alertMessage(response.type, response.message);
+                return;
+            }
+            const data = JSON.parse(response.data);
+            $(".cart-total-product").html(`${data.TotalProductPrice} <span class="currency ps-1">VNĐ</span>`);
+            $(".cart-shipping-fee").html(`+${data.ShippingFee} <span class="currency ps-1">VNĐ</span>`);
+            $(".cart-coupon-code").html(`-${data.PromoAmount} <span class="currency ps-1">VNĐ</span>`);
+            $(".cart-total-pay").html(`${data.TotalPay} <span class="currency ps-1">VNĐ</span>`);
+        });
+    }
+
+    function alertMessage(type, message) {
+        Toastify({
+            text: message,
+            duration: 2000,
+            newWindow: true,
+            close: true,
+            gravity: "top",
+            position: "center",
+            stopOnFocus: true,
+            style: {
+                background: type,
+            }
+        }).showToast();
+    }
+
+         
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        updateToSubCart();
+
+        $(document).on('click', '.add-to-cart-btn', function () {
+            const productId = $(this).data('product-id');
+            const quantity = $(this).data('quantity');
+            addToCart(productId, quantity);
+        });
+
+        $(document).on('click', '.remove-cart-btn', function () {
+            const productId = $(this).data('product-id');
+            removeFromCart(productId);
+        });
+
+        $(document).on('click', '.cart-button', function () {
+            updateToSubCart();
+        });
+
+        $(document).on('click', '#openRegistrationModal', function () {
+            $('.modal').modal('hide');
+            $("#registrationModal").modal("show");
+        });
+
+        $("#userChoose").on("click", function () {
+            const customerId = "@customerId";
+            const avatar = "@customerInfo.Avatar";
+            const fullName = '@(customerInfo.LastName + " " + customerInfo.FirstName)';
+            const email = '@customerInfo.Email';
+
+            if (customerId && avatar) {
+                $('#userInfoModal #userInfoName').text(fullName);
+                $('#userInfoModal #userInfoEmail').text(email);
+                $('#userInfoModal img').attr("src", avatar);
+                $('#userInfoModal').modal('show');
+            } else {
+                $('#loginModal').modal('show');
+            }
+        });
+
+        $(document).on('click', '#paymentPage', function () {
+            const isLoggedIn = @isLoggedIn.ToString().ToLower();
+            if (!isLoggedIn) {
+                $('#loginModal').modal('show');
+            } else {
+                cartIsEmpty().then(function (response) {
+                    if (response.success) {
+                        alertMessage(response.type, response.message);
+                    } else {
+                        window.location.replace("@Url.Action("Checkout", "Payment")");
+                    }
+                });
+            }
+        });
+    });
+
+
+</script>

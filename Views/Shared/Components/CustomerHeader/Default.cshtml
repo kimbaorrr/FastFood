@@ -1,0 +1,66 @@
+﻿@{
+    var storeInfo = ViewBag.StoreInfo as StoreInfo ?? new();
+}
+<header class="header-area header-one navigation-white transparent-header">
+    <div class="container">
+        <div class="header-navigation">
+            <div class="nav-overlay"></div>
+            <div class="primary-menu">
+                <!--=== Site Branding ===-->
+                <div class="site-branding">
+                    <a href="@Url.Action("Index", "Home")" class="brand-logo"><img height="50" src="@storeInfo.Logo" alt="Logo"></a>
+                </div>
+                <div class="nav-inner-menu">
+                    <!--=== Foodix Nav Menu ===-->
+                    <div class="foodix-nav-menu">
+                        <!--=== Mobile Logo ===-->
+                        <div class="mobile-logo mb-30 d-block d-xl-none text-center">
+                            <a href="@Url.Action("Index", "Home")" class="brand-logo"><img height="50" src="@storeInfo.Logo" alt="Site Logo"></a>
+                        </div>
+                        <!--=== Main Menu ===-->
+                        <nav class="main-menu">
+                            <ul>
+                                <li class="menu-item">
+                                    <a href="@Url.Action("Index", "Home")">Trang chủ</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="@Url.Action("Index", "Menu")">Thực đơn</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="@Url.Action("Index", "Article")">Tin tức</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="@Url.Action("Index", "Contact")">Liên hệ</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="@Url.Action("Index", "About")">Về chúng tôi</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <!--=== Nav Button ===-->
+                        <div class="nav-button mt-50 d-block d-xl-none text-center">
+                            <a href="@Url.Action("Index", "Menu")" class="theme-btn style-one">Đặt món ngay</a>
+                        </div>
+                    </div>
+                    <!--=== Nav Right Item ===-->
+                    <div class="nav-right-item">
+                        <div class="nav-button d-none d-xl-block">
+                            <a href="@Url.Action("Index", "Menu")" class="theme-btn style-one">Đặt món ngay</a>
+                        </div>
+                        <div class="cart-button">
+                            <i class="far fa-shopping-cart"></i>
+                        </div>
+                        <button type="button" class="login-button" id="userChoose">
+                            <i class="far fa-user"></i>
+                        </button>
+                        <div class="navbar-toggler">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

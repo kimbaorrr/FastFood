@@ -3,8 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FastFood.Models.ViewModels
 {
+    /// <summary>
+    /// ViewModel đại diện cho thông tin nhân viên.
+    /// </summary>
     public class EmployeeViewModel
     {
+        /// <summary>
+        /// Mã nhân viên.
+        /// </summary>
         [DataType(DataType.Text)]
         [Display(Name = "Mã nhân viên")]
         public int EmployeeId { get; set; }
@@ -55,9 +61,19 @@ namespace FastFood.Models.ViewModels
 
     }
 
+    /// <summary>
+    /// ViewModel mở rộng cho quyền tuỳ chỉnh của nhân viên.
+    /// </summary>
     public class CustomEmployeePermissions : EmployeeViewModel
     {
+        /// <summary>
+        /// Tên đăng nhập của nhân viên.
+        /// </summary>
         public string UserName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Vai trò của nhân viên (quyền truy cập).
+        /// </summary>
         public bool Role { get; set; } = false;
     }
 }

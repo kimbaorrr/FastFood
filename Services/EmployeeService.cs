@@ -71,30 +71,39 @@ namespace FastFood.Services
             return customListPermissions;
         }
 
-        public async Task<(bool, Employee?)> LoginChecker(EmployeeLoginViewModel employeeLoginViewModel)
+        public async Task<(bool, string, EmployeeClaimInfoViewModel?)> LoginChecker(EmployeeLoginViewModel employeeLoginViewModel)
         {
             employeeLoginViewModel.UserName = employeeLoginViewModel.UserName.Normalize().Trim().ToLower();
 
-            var employeeInfo = await this._employeeAccountRepository.GetEmployeeAccountByUserName(employeeLoginViewModel.UserName);
+            var employeeAccount = await this._employeeAccountRepository.GetEmployeeAccountByUserName(employeeLoginViewModel.UserName);
 
-            if (employeeInfo == null || employeeInfo.EmployeeId != -1)
+            if (employeeAccount == null)
             {
-                return (false, null);
+                return (false, "Tài khoản không tồn tại", null);
             }
 
             var verifyResult = this._passwordHasher.VerifyHashedPassword(
-                employeeLoginViewModel.UserName,
-                employeeInfo.Password,
+                string.Empty,
+                employeeAccount.Password,
                 employeeLoginViewModel.Password
             );
 
-            if (verifyResult != PasswordVerificationResult.Success ||
-                   verifyResult != PasswordVerificationResult.SuccessRehashNeeded)
+            if (verifyResult != PasswordVerificationResult.Success &&
+                verifyResult != PasswordVerificationResult.SuccessRehashNeeded)
             {
-                return (false, null);
+                return (false, "Thông tin xác thực không đúng !", null);
             }
 
-            return (true, employeeInfo.Employee);
+            EmployeeClaimInfoViewModel employeeClaimInfoViewModel = new()
+            {
+                EmployeeId = employeeAccount.EmployeeId,
+                Avatar = employeeAccount.Employee.ThumbnailImage ?? string.Empty,
+                LastName = employeeAccount.Employee.LastName,
+                FirstName = employeeAccount.Employee.FirstName,
+                Email = employeeAccount.Employee.Email ?? string.Empty
+            };
+
+            return (true, string.Empty, employeeClaimInfoViewModel);
         }
 
         public async Task<(bool, string)> ChangePassword(EmployeeChangePasswordViewModel employeeChangePasswordViewModel)
@@ -205,6 +214,8 @@ namespace FastFood.Services
                 employeeHasPermissions = string.Join(",", permissionArray) ?? string.Empty;
             }
 
+            string passwordHashed = this._passwordHasher.HashPassword(string.Empty, employeeRegisterViewModel.Password);
+
             EmployeeAccount employeeAccount = new()
             {
                 EmployeeId = employeeRegisterViewModel.EmployeeId,
@@ -213,7 +224,7 @@ namespace FastFood.Services
                 CreatedAt = DateTime.Now,
                 Role = employeeRegisterViewModel.Role,
                 TemporaryPassword = false,
-                Password = this._passwordHasher.HashPassword(string.Empty, employeeRegisterViewModel.Password)
+                Password = passwordHashed
             };
 
             await this._employeeAccountRepository.AddEmployeeAccount(employeeAccount);

@@ -1,7 +1,5 @@
-﻿@using FastFood.Models;
-@{
-    @model FastFood_ThanhToan_ThemDot
-}
+﻿@model AddPaymentViewModel
+
 
 <!--====== Start Page Section ======-->
 <section class="page-banner">
@@ -30,58 +28,59 @@
                 <!--=== Checkout Wrapper ===-->
                 <div class="checkout-wrapper mt-50 wow fadeInUp">
                     <!--=== Checkout Form ===-->
-                    @using (Html.BeginForm("Index", "Checkout", FormMethod.Post, new { @class = "checkout-form" }))
+                    @using (Html.BeginForm("Index", "Payment", FormMethod.Post, new { @class = "checkout-form" }))
                     {
                         @Html.AntiForgeryToken()
-                        @Html.HiddenFor(x => x.IDMaKhuyenMai)
-                        @Html.HiddenFor(x => x.TongTienSanPham)
-                        @Html.HiddenFor(x => x.PhiVanChuyen)
-                        @Html.HiddenFor(x => x.TongThanhToan)
+                        @Html.HiddenFor(x => x.PromoId)
+                        @Html.HiddenFor(x => x.TotalProductPrice)
+                        @Html.HiddenFor(x => x.ShippingFee)
+                        @Html.HiddenFor(x => x.TotalPay)
+
                         <div class="row">
                             <div class="col-xl-8">
                                 <h4 class="title mb-15">Thông tin giao hàng</h4>
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form_group">
-                                            @Html.LabelFor(x => x.HoDem)
-                                            @Html.TextBoxFor(x => x.HoDem, new { @class = "form_control", @readonly = "" })
+                                            @Html.LabelFor(x => x.Customer.LastName)
+                                            @Html.TextBoxFor(x => x.Customer.LastName, new { @class = "form_control", @readonly = "" })
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form_group">
-                                            @Html.LabelFor(x => x.TenKhachHang)
-                                            @Html.TextBoxFor(x => x.TenKhachHang, new { @class = "form_control", @readonly = "" })
+                                            @Html.LabelFor(x => x.Customer.FirstName)
+                                            @Html.TextBoxFor(x => x.Customer.FirstName, new { @class = "form_control", @readonly = "" })
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="form_group">
-                                            @Html.LabelFor(x => x.DiaChiGiaoHang)
-                                            @Html.TextBoxFor(x => x.DiaChiGiaoHang, new { @class = "form_control", @required = "" })
+                                            @Html.LabelFor(x => x.Customer.Address)
+                                            @Html.TextBoxFor(x => x.Customer.Address, new { @class = "form_control", @required = "" })
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form_group">
-                                            @Html.LabelFor(x => x.ThanhPho)
-                                            @Html.TextBoxFor(x => x.ThanhPho, new { @class = "form_control" })
+                                            @Html.LabelFor(x => x.Customer.City)
+                                            @Html.TextBoxFor(x => x.Customer.City, new { @class = "form_control" })
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form_group">
-                                            @Html.LabelFor(x => x.MaBuuDien)
-                                            @Html.TextBoxFor(x => x.MaBuuDien, new { @class = "form_control" })
+                                            @Html.LabelFor(x => x.Customer.PostalCode)
+                                            @Html.TextBoxFor(x => x.Customer.PostalCode, new { @class = "form_control" })
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="form_group">
                                             <label>Thông tin liên hệ</label>
-                                            @Html.TextBoxFor(x => x.Email, new { @class = "form_control" })
-                                            @Html.TextBoxFor(x => x.SoDienThoai, new { @class = "form_control" })
+                                            @Html.TextBoxFor(x => x.Customer.Email, new { @class = "form_control" })
+                                            @Html.TextBoxFor(x => x.Customer.PhoneNumber, new { @class = "form_control" })
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="form_group">
-                                            @Html.LabelFor(x => x.GhiChuDonHang)
-                                            @Html.TextAreaFor(x => x.GhiChuDonHang, new { @class = "form_control", @rows = 3 })
+                                            @Html.LabelFor(x => x.Customer.OrderNote)
+                                            @Html.TextAreaFor(x => x.Customer.OrderNote, new { @class = "form_control", @rows = 3 })
                                         </div>
                                     </div>
                                 </div>
@@ -94,23 +93,23 @@
                                             <tbody>
                                                 <tr>
                                                     <td>Tổng tiền sản phẩm</td>
-                                                    <td>@Html.DisplayTextFor(x => x.TongTienSanPham)</td>
+                                                    <td>@Html.DisplayTextFor(x => x.TotalProductPrice)</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Phí vận chuyển</td>
-                                                    <td>+@Html.DisplayTextFor(x => x.PhiVanChuyen)</td>
+                                                    <td>+@Html.DisplayTextFor(x => x.ShippingFee)</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Mã khuyến mãi</td>
-                                                    <td>-@Html.DisplayTextFor(x => x.MaKhuyenMai)</td>
+                                                    <td>-@Html.DisplayTextFor(x => x.PromoAmount)</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="total"><span>Tổng thanh toán</span></td>
-                                                    <td class="total price"><span>@Html.DisplayTextFor(x => x.TongThanhToan)</span></td>
+                                                    <td class="total price"><span>@Html.DisplayTextFor(x => x.TotalPay)</span></td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <button class="theme-btn style-one mt-4 d-block mx-auto">Thanh toán</button>
+                                        <button class="theme-btn style-one d-block mx-auto mt-4">Thanh toán</button>
                                     </div>
 
                                 </div>

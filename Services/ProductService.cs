@@ -19,8 +19,10 @@ namespace FastFood.Services
         private readonly IFileUploadService _fileUploadService;
         private readonly string _productVirtualPath;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IProductReviewRepository _productReviewRepository;
+        private readonly IProductReviewService _productReviewService;
 
-        public ProductService(IProductService productService, ICategoryRepository categoryRepository, IWebHostEnvironment webHostEnvironment, IProductRepository productRepository, ICategoryService categoryService, IEmployeeRepository employeeRepository, IFileUploadService fileUploadService, IProductIngredientRepository productIngredientRepository)
+        public ProductService(ICategoryRepository categoryRepository, IWebHostEnvironment webHostEnvironment, IProductRepository productRepository, ICategoryService categoryService, IEmployeeRepository employeeRepository, IFileUploadService fileUploadService, IProductIngredientRepository productIngredientRepository, IProductReviewRepository productReviewRepository, IProductReviewService productReviewService)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
@@ -29,6 +31,8 @@ namespace FastFood.Services
             _categoryService = categoryService;
             _productIngredientRepository = productIngredientRepository;
             _productVirtualPath = Path.Combine(webHostEnvironment.WebRootPath, "admin_page/products/");
+            _productReviewRepository = productReviewRepository;
+            _productReviewService = productReviewService;
         }
 
         public async Task<IPagedList<Product>> GetProductsByApproveStatusPagedList(bool isApproved, int page, int size)
@@ -250,6 +254,24 @@ namespace FastFood.Services
             string isApprovedText = isApproved ? "phê duyệt" : "thu hồi";
             return (true, $"Đã {isApprovedText} thành công {successIds.Count}/{failedIds.Count} sản phẩm !");
 
+        }
+
+        public async Task<CustomProductDetailViewModel> GetCustomProductDetailViewModel(int productId)
+        {
+            var product = await this._productRepository.GetProductById(productId);
+            var productReviews = await this._productReviewRepository.GetProductReviewsByProductId(productId);
+            var topProductReview = productReviews.FirstOrDefault() ?? new ProductReview();
+            var randomProducts = await this._productRepository.GetRandomProducts(true, productId, 4);
+
+            CustomProductDetailViewModel customProductDetailViewModel = new()
+            {
+                Product = product,
+                Image = CommonHelper.ImageSplitter(product.Image ?? string.Empty),
+                ProductReviews = productReviews,
+                TopProductReview = topProductReview,
+                RandomProducts = randomProducts
+            };
+            return customProductDetailViewModel;
         }
     }
 }

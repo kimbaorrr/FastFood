@@ -24,11 +24,10 @@ public class EmployeeRepository : CommonRepository, IEmployeeRepository
             .FirstOrDefault() ?? string.Empty;
     }
 
-    public async Task<Employee> GetEmployeeById(int? employeeId)
+    public async Task<Employee?> GetEmployeeById(int? employeeId)
     {
         return await this._fastFoodEntities.Employees
-            .FirstOrDefaultAsync(x => x.EmployeeId == employeeId) 
-            ?? new Employee();
+            .FirstOrDefaultAsync(x => x.EmployeeId == employeeId);
     }
 
     public async Task AddEmployee(Employee employee)

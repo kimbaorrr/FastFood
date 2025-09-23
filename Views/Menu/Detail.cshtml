@@ -1,13 +1,4 @@
-﻿@    using FastFood.DB;
-@    using FastFood.Models;
-    using FastFood.Models.ViewModels;
-@{
-    Sanpham? sp = ViewBag.SanPham as Sanpham;
-    string[] hinhAnh = FastFood_Tools.SplitAnh(sp?.Hinhanh ?? string.Empty) ?? Array.Empty<string>();
-    IEnumerable<Danhgiasanpham> dsDanhGia = FastFood_SanPham.GetDanhGiaTheoMaSP(sp.Masanpham);
-    Danhgiasanpham? topDanhGia = FastFood_SanPham.getKhachHangDanhGia().Where(x => x.Masanpham == sp.Masanpham).FirstOrDefault();
-    @model FastFood_SanPham_DanhGiaSanPham
-    }
+﻿@model CustomProductDetailViewModel
 
 <!--====== Start Page Section ======-->
 <section class="page-banner">
@@ -20,7 +11,7 @@
                         <h1 class="page-title">@ViewBag.Title</h1>
                         <ul class="breadcrumb-link">
                             <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
-                            <li class="active">Món ăn @sp.Tensanpham</li>
+                            <li class="active">Món ăn @Model.Product.ProductName</li>
                         </ul>
                     </div>
                 </div>
@@ -38,7 +29,7 @@
                     <!--=== Menu Image ===-->
                     <div class="menu-image mb-50 wow fadeInLeft">
                         <div class="d-flex justify-content-center align-items-center mx-auto overflow-hidden" style="width: 540px;height: 450px;">
-                            <img src="@(hinhAnh[0] ?? "")" alt="Product Image" width="100%" height="100%" class="object-fit-fill">
+                            <img src="@Model.Image" alt="Product Image" width="100%" height="100%" class="object-fit-fill">
                         </div>
 
                     </div>
@@ -46,14 +37,14 @@
                 <div class="col-lg-6">
                     <!--=== Menu Info ===-->
                     <div class="menu-info-content mb-50 wow fadeInRight">
-                        <h4 class="title">@sp.Tensanpham</h4>
-                        <p>@sp.Motangan</p>
+                        <h4 class="title">@Model.Product.ProductName</h4>
+                        <p>@Model.Product.Summary</p>
                         <span class="price">
-                            @sp.Giasaukhuyenmai VNĐ
-                            @if (sp.Khuyenmai != 0)
+                            @Model.Product.FinalPrice VNĐ
+                            @if (Model.Product.Discount != 0)
                             {
                                 <span class="pre-price">
-                                    @sp.Giagoc VNĐ
+                                    @Model.Product.OriginalPrice VNĐ
                                 </span>
                             }
                         </span>
@@ -61,15 +52,15 @@
                             <ul>
                                 <li>
                                     <div class="quantity-input">
-                                        <button class="quantity-down" data-product-id="@sp.Masanpham"><i class="far fa-minus"></i></button>
+                                        <button class="quantity-down" data-product-id="@Model.Product.ProductId"><i class="far fa-minus"></i></button>
                                         <input class="quantity" type="text" value="1" name="quantity">
-                                        <button class="quantity-up" data-product-id="@sp.Masanpham"><i class="far fa-plus"></i></button>
+                                        <button class="quantity-up" data-product-id="@Model.Product.ProductId"><i class="far fa-plus"></i></button>
                                     </div>
                                 </li>
                             </ul>
                         </div>
                         <div class="add-to-cart">
-                            <button type="button" class="theme-btn style-one add-to-cart-btn" data-product-id="@sp.Masanpham" data-quantity="1">Thêm vào giỏ</button>
+                            <button type="button" class="theme-btn style-one add-to-cart-btn" data-product-id="@Model.Product.ProductId" data-quantity="1">Thêm vào giỏ</button>
                         </div>
                     </div>
                 </div>
@@ -94,23 +85,23 @@
                             <!--=== Tab Pane ===-->
                             <div class="tab-pane fade show active" id="cat1">
                                 <div class="content-box">
-                                    <p>@Html.Raw(sp.Motadai)</p>
+                                    <p>@Html.Raw(Model.Product.Content)</p>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="cat2">
                                 <div class="content-box">
                                     <h5 class="title fw-bold text-uppercase">Đánh giá từ khách hàng</h5>
                                     <div class="customer-reviews my-4" style="overflow-y: scroll;max-height: 40vh;">
-                                        @foreach (Danhgiasanpham dg in dsDanhGia)
+                                        @foreach (var productReview in Model.ProductReviews)
                                         {
                                             <div class="review d-flex mb-3 p-3">
                                                 <div class="d-flex justify-content-center align-items-center overflow-hidden" style="width: 75px;max-height: 75px;">
-                                                    <img class="object-fit-fill rounded-circle" src="@dg.MakhachhangNavigation.Anhdd" alt="Image" width="100%" height="100%" />
+                                                    <img class="object-fit-fill rounded-circle" src="@productReview.Customer.ThumbnailImage" width="100%" height="100%" />
                                                 </div>
                                                 <div class="ps-2">
-                                                    <h6 class="fw-bold mb-1 italic">@dg.MakhachhangNavigation.Hodem @dg.MakhachhangNavigation.Tenkhachhang</h6>
+                                                    <h6 class="fw-bold mb-1 italic">@productReview.Customer.LastName @productReview.Customer.FirstName</h6>
                                                     <div class="rater text-warning"></div>
-                                                    <p class="" style="">@dg.Danhgia</p>
+                                                    <p class="" style="">@productReview.ReviewContent</p>
                                                 </div>
                                             </div>
                                         }
@@ -122,8 +113,8 @@
                                             {
                                                 @Html.AntiForgeryToken()
                                                 <div class="form_group">
-                                                    @Html.LabelFor(x => x.NoiDung, new { @class = "form-label" })
-                                                    @Html.TextAreaFor(x => x.NoiDung, new { @class = "form-control", @required = "", @style = "padding: 6px 20px; margin-bottom: 2px;", @rows = "7" })
+                                                    @Html.LabelFor(x => x.ProductReviewModel.ReviewContent, new { @class = "form-label" })
+                                                    @Html.TextAreaFor(x => x.ProductReviewModel.ReviewContent, new { @class = "form-control", @required = "", @style = "padding: 6px 20px; margin-bottom: 2px;", @rows = "7" })
                                                 </div>
                                                 <div class="form_group pb-4 pt-2">
                                                     <div class="rating text-warning" style="font-size: 30px;"></div>
@@ -141,15 +132,15 @@
                 <div class="col-xl-5">
                     <div class="foodix-banner-wrapper">
                         <!--=== Foodix Banner ===-->
-                        @if (topDanhGia != null)
+                        @if (Model.TopProductReview != null)
                         {
                             <div class="foodix-banner-item style-three mb-30 wow fadeInUp">
                                 <div class="banner-inner-wrap bg_cover" style="background-image: url(/public_page/assets/images/bg/banner-bg-4.jpg); padding: 45px 40px 55px 50px;">
                                     <div class="banner-content d-block mx-auto text-center">
                                         <div class="d-flex justify-content-center align-items-center mx-auto overflow-hidden" style="width: 80px;height: 80px;">
-                                            <img class="object-fit-cover rounded-circle" src="@topDanhGia.MakhachhangNavigation.Anhdd" alt="Image" width="100%" height="100%" />
+                                            <img class="object-fit-cover rounded-circle" src="@Model.TopProductReview.Customer.ThumbnailImage" alt="Image" width="100%" height="100%" />
                                         </div>
-                                        <p class="fw-bold d-block mx-auto mt-2 text-center" style="font-size: 20px;"><i class="bi bi-quote"></i> @topDanhGia.Danhgia</p>
+                                        <p class="fw-bold d-block mx-auto mt-2 text-center" style="font-size: 20px;"><i class="bi bi-quote"></i> @Model.TopProductReview.ReviewContent</p>
                                     </div>
                                 </div>
                             </div>
@@ -164,16 +155,16 @@
                     <h3 class="releted-title mb-30 wow fadeInDown">Có thể bạn sẽ thích</h3>
                     <div class="row justify-content-center">
                         @{
-                            foreach (var splq in FastFood_SanPham.GetSanPhamNgauNhien(sp.Masanpham, 4))
+                            foreach (var randomProduct in Model.RandomProducts)
                             {
-                                string[] anh = FastFood_Tools.SplitAnh(splq.Hinhanh ?? string.Empty) ?? Array.Empty<string>();
+                                string[] images = CommonHelper.ImageSplitter(randomProduct.Image ?? string.Empty) ?? Array.Empty<string>();
 
                                 <div class="col-lg-3 col-md-6 col-sm-12">
                                     <!--=== Menu Item ===-->
                                     <div class="menu-item related-menu-item style-four mb-30 wow fadeInUp border-start border-end rounded-4 border" style="padding: 0;">
                                         <div class="menu-image">
                                             <div class="d-flex justify-content-center align-items-center mx-auto overflow-hidden" style="width: 300px;height: 300px;">
-                                                <img src="@((anh != null && anh.Length > 0) ? anh[0] : "")" alt="Image" width="100%" height="100%" class="object-fit-fill">
+                                                <img src="@((images != null && images.Length > 0) ? images[0] : string.Empty)" alt="Image" width="100%" height="100%" class="object-fit-fill">
                                             </div>
 
                                         </div>
@@ -182,8 +173,8 @@
                                             <div class="menu-meta">
                                                 <span class="price">
                                                     <span class="currency">$</span>
-                                                    @splq.Giasaukhuyenmai
-                                                    <span class="text-decoration-line-through ps-1" style="color:slategray;">@splq.Giagoc</span>
+                                                    @randomProduct.FinalPrice
+                                                    <span class="text-decoration-line-through ps-1" style="color:slategray;">@randomProduct.OriginalPrice</span>
 
 
                                                 </span>
@@ -193,8 +184,8 @@
 
                                                 </span>
                                             </div>
-                                            <h4 class="title"><a href="@Url.Action("Detail", "Menu", new {id = splq.Masanpham })">@splq.Tensanpham</a></h4>
-                                            <p class="text-secondary" style="font-weight: 500;">@splq.Motangan</p>
+                                            <h4 class="title"><a href="@Url.Action("Detail", "Menu", new {productId = randomProduct.ProductId })">@randomProduct.ProductName</a></h4>
+                                            <p class="text-secondary" style="font-weight: 500;">@randomProduct.Summary</p>
                                             <button type="button" class="add-to-cart-btn theme-btn style-two mt-3" style="padding: 12px 0;" data-product-id="15" data-quantity="1"><i class="far fa-cart-plus"></i> Thêm vào giỏ</button>
                                         </div>
                                     </div>

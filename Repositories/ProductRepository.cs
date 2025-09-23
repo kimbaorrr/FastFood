@@ -55,11 +55,12 @@ public class ProductRepository : CommonRepository, IProductRepository
             .ToList();
     }
 
-    public async Task<List<Product>> GetProductsByOrderDiscount()
+    public async Task<List<Product>> GetProductsByOrderDiscount(int take)
     {
         var products = await this.GetProductsByApproveStatus(true);
         return products
             .OrderByDescending(x => x.Discount)
+            .Take(take)
             .ToList();
     }
 
@@ -70,6 +71,13 @@ public class ProductRepository : CommonRepository, IProductRepository
             .OrderByDescending(x=>x.FinalPrice)
             .Take(take)
             .ToList();
+    }
+
+    public async Task<Product> GetBestSellingProduct()
+    {
+        return await this._fastFoodEntities.Products
+        .OrderByDescending(p => p.OrderDetails.Count)
+        .FirstOrDefaultAsync() ?? new Product();
     }
 
     public async Task AddProduct(Product product)

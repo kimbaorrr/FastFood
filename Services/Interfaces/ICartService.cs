@@ -9,8 +9,6 @@ namespace FastFood.Services.Interfaces
         Task AddItem(int productId, int quantity);
         void RemoveItem(int productId);
         void DecreaseQuantity(int productId);
-        int TotalPay();
         Task<(bool, string, string)> GetSummaryCheckout(string promoCode);
-
     }
 }

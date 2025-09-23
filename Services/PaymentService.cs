@@ -16,17 +16,13 @@ namespace FastFood.Services
         private readonly IVnpay _vnPay;
         private readonly IOrderRepository _orderRepository;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IConfiguration _configuration;
         public PaymentService(ICustomerRepository customerRepository, IVnpay vnPay, IConfiguration configuration, IOrderRepository orderRepository, IPaymentRepository paymentRepository)
         {
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
             _paymentRepository = paymentRepository;
-
-            string tmnCode = configuration["Vnpay:TmnCode"] ?? string.Empty;
-            string hashSecret = configuration["Vnpay:HashSecret"] ?? string.Empty;
-            string baseUrl = configuration["Vnpay:BaseUrl"] ?? string.Empty;
-
-            vnPay.Initialize(tmnCode, hashSecret, baseUrl, "about:blank");
+            _configuration = configuration;
             _vnPay = vnPay;
         }
 
@@ -52,6 +48,7 @@ namespace FastFood.Services
                     PromoAmount = paymentSummaryViewModel.PromoAmount,
                     PromoCode = paymentSummaryViewModel.PromoCode,
                     Customer = customerInfoViewModel,
+                    TotalPay = paymentSummaryViewModel.TotalPay
                 };
 
                 return addPaymentViewModel;
@@ -60,8 +57,14 @@ namespace FastFood.Services
 
         }
 
-        public async Task<string> AddPaymentViewPostModel(AddPaymentViewModel addPaymentViewModel, Dictionary<int, CustomerCartViewModel> customerCartViewModel, int customerId, string ipAddress)
+        public async Task<string> AddPaymentViewPostModel(AddPaymentViewModel addPaymentViewModel, Dictionary<int, CustomerCartViewModel> customerCartViewModel, int customerId, string ipAddress, string callbackUrl)
         {
+            string tmnCode = this._configuration["Vnpay:TmnCode"] ?? string.Empty;
+            string hashSecret = this._configuration["Vnpay:HashSecret"] ?? string.Empty;
+            string baseUrl = this._configuration["Vnpay:BaseUrl"] ?? string.Empty;
+
+            this._vnPay.Initialize(tmnCode, hashSecret, baseUrl, callbackUrl);
+
             Order newOrder = new()
             {
                 Buyer = customerId,
@@ -75,14 +78,14 @@ namespace FastFood.Services
 
             foreach (var item in customerCartViewModel.Values)
             {
-                newOrder.OrderDetails.Add(new OrderDetail
+                newOrder.OrderDetails.Add(new()
                 {
                     ProductId = item.ProductId,
                     Quantity = item.Quantity
                 });
             }
 
-            newOrder.Payments.Add(new Payment()
+            newOrder.Payments.Add(new()
             {
                 PaymentStatus = false,
                 OrderId = newOrder.OrderId,

@@ -14,12 +14,14 @@ namespace FastFood.Services
         private readonly ICategoryRepository _categoryRepository;
         private readonly IFileUploadService _fileUploadService;
         private readonly string _categoryVirtualPath;
+        private readonly IProductRepository _productRepository;
 
-        public CategoryService(ICategoryRepository categoryRepository, IFileUploadService fileUploadService, IWebHostEnvironment webHostEnvironment)
+        public CategoryService(ICategoryRepository categoryRepository, IFileUploadService fileUploadService, IWebHostEnvironment webHostEnvironment, IProductRepository productRepository)
         {
             _categoryRepository = categoryRepository;
             _fileUploadService = fileUploadService;
             _categoryVirtualPath = Path.Combine(webHostEnvironment.WebRootPath, "admin_page/uploads/categories/");
+            _productRepository = productRepository;
         }
 
         public async Task<IPagedList<Category>> GetCategoriesPagedList(int page, int size)
@@ -119,6 +121,25 @@ namespace FastFood.Services
                     Value = p.CategoryId.ToString()
                 }).ToList(), "Value", "Text");
 
+        }
+
+        public async Task<List<CustomCategoryViewModel>> GetCustomCategoryViewModel()
+        {
+            var categories = await this._categoryRepository.GetCategories();
+
+            var result = new List<CustomCategoryViewModel>();
+
+            foreach (var category in categories)
+            {
+                var products = await this._productRepository.GetProductsByCategory(true, category.CategoryId, 5);
+                result.Add(new CustomCategoryViewModel
+                {
+                    Category = category,
+                    Products = products
+                });
+            }
+
+            return result;
         }
     }
 }

@@ -16,11 +16,10 @@ public class CustomerAccountRepository : CommonRepository, ICustomerAccountRepos
         return await this._fastFoodEntities.CustomerAccounts.ToListAsync();
     }
 
-    public async Task<CustomerAccount> GetCustomerAccountByUserName(string userName)
+    public async Task<CustomerAccount?> GetCustomerAccountByUserName(string userName)
     {
         return await this._fastFoodEntities.CustomerAccounts
-            .FirstOrDefaultAsync(x => x.UserName.Equals(userName))
-            ?? new CustomerAccount();
+            .FirstOrDefaultAsync(x => x.UserName.Equals(userName));
     }
 
     public async Task AddCustomerAccount(CustomerAccount customerAccount)

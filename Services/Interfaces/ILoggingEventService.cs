@@ -1,6 +1,9 @@
 ﻿namespace FastFood.Services.Interfaces
 {
-    internal interface ILoggingEventService
+    /// <summary>
+    /// Dịch vụ ghi lại sự kiện nhật ký hệ thống.
+    /// </summary>
+    public interface ILoggingEventService
     {
     }
 }

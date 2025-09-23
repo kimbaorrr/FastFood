@@ -1,0 +1,50 @@
+﻿@model CustomerCustomHomeViewModel
+<section class="testimonial-section gray-bg pt-120 pb-130">
+    <div class="container">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--=== Section Title ===-->
+                    <div class="section-title mb-55 wow fadeInDown text-center">
+                        <span class="sub-title">Món ăn thật sự tuyệt vời!</span>
+                        <h2>Cảm nhận từ khách hàng</h2>
+                        <p>Chúng tôi tự hào mang đến sự hài lòng cho cả những khách hàng khó tính nhất. Hãy cùng khám phá những trải nghiệm tuyệt vời mà họ đã chia sẻ!</p>
+                    </div>
+                </div>
+            </div>
+            <!--=== Testimonial Slider ===-->
+            <div class="testimonial-slider-two wow fadeInUp">
+                @foreach (var productReview in Model.ProductReviews)
+                {
+                    <!--=== Testimonial Item ===-->
+                    <div class="testimonial-item style-two mb-40">
+                        <div class="testimonial-content">
+                            <div class="author-thumb-item">
+                                <div class="author-thumb">
+                                    <img src="@(productReview.Customer.ThumbnailImage ?? string.Empty)" alt="author image">
+                                </div>
+                                <div class="author-info">
+                                    <h5>@productReview.Customer.LastName @productReview.Customer.FirstName</h5>
+                                    <span>@(productReview.CreatedAt.HasValue ? (DateTime.Now - productReview.CreatedAt).Value.Days : "0") ngày trước</span>
+                                </div>
+                            </div>
+                            <p>
+                                @productReview.ReviewContent
+                            </p>
+                            <ul class="ratings rating-four">
+                                @{
+                                    for (byte b = 0; b <= 4; b++)
+                                    {
+                                        <li><i class="fas fa-star"></i></li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</section>

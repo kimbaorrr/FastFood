@@ -29,14 +29,14 @@
                         </table>
                     </div>
                 </div>
-                <div class="cart-middle mt-40 wow fadeInUp">
+                <div class="cart-middle wow fadeInUp mt-40">
                     <div class="row">
                         <div class="col-lg-7">
                             <div class="coupon-box mb-30">
                                 <form>
                                     <div class="form_group">
-                                        <input type="text" class="form_control" name="couponCode" placeholder="Mã khuyến mãi">
-                                        <button type="button" id="sendCoupon" class="theme-btn style-one">Áp dụng</button>
+                                        <input type="text" class="form_control" name="promoCode" placeholder="Mã khuyến mãi">
+                                        <button type="button" id="sendPromo" class="theme-btn style-one">Áp dụng</button>
                                     </div>
                                 </form>
                             </div>
@@ -47,7 +47,7 @@
             <div class="col-xl-4">
                 <div class="shopping-cart-total mb-30 wow fadeInUp">
                     <h4 class="title">Thanh toán giỏ hàng</h4>
-                    <table class="table mb-25">
+                    <table class="mb-25 table">
                         <tbody>
                             <tr>
                                 <td>Tổng tiền sản phẩm</td>
@@ -78,8 +78,8 @@
     $(document).ready(() => {
         updateToCartPage();
 
-        $("#sendCoupon").on("click", () => {
-            summaryCheckout($("input[name='couponCode']").val());
+        $("#sendPromo").on("click", () => {
+            summaryCheckout($("input[name='promoCode']").val());
         });
 
         const debounce = (func, delay) => {

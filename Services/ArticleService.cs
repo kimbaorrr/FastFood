@@ -153,5 +153,18 @@ namespace FastFood.Services
             return approvedArticles.OrderBy(m => m.ArticleId).ToPagedList(page, size);
         }
 
+        public async Task<CustomArticleViewModel> GetCustomArticleViewModel(int articleId)
+        {
+            var article = await this._articleRepository.GetArticleById(articleId);
+            var recentArticles = await this._articleRepository.GetRecentArticles(articleId, 4);
+
+            CustomArticleViewModel customArticleViewModel = new()
+            {
+                Article = article,
+                RecentArticles = recentArticles
+            };
+            return customArticleViewModel;
+        }
+
     }
 }

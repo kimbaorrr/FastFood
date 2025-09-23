@@ -1,0 +1,68 @@
+﻿@model CustomerLoginViewModel
+
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #f7f1e1;">
+            <div class="modal-header">
+                <h5 class="modal-title page-title" id="loginModalLabel">Khách hàng đăng nhập</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body gap-2">
+                @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "loginForm" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.UserName, new { @style = "font-size:18px;font-weight:500;" })
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @required = "required", @style = "padding:6px 1rem;" })
+                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Password, new { @style = "font-size:18px;font-weight:500;" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @required = "required", @style = "padding:6px 1rem;" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <a href="/Account/ForgotPassword" style="font-size:16px;">Quên mật khẩu?</a>
+                    </div>
+
+                    <p class="text-muted text-center">
+                        Chưa có tài khoản?
+                        <a href="#" class="text-decoration-none" style="color:#007bff;" id="openRegistrationModal">Đăng ký ngay</a>
+                    </p>
+
+                    <button type="submit" class="theme-btn style-one w-100" style="padding:10px;">Đăng nhập</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#loginForm').submit(function (e) {
+            e.preventDefault();
+            let $form = $(this);
+
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'POST',
+                data: $form.serialize(),
+                dataType: 'json',
+                success: function (response) {
+                    alertMessage(response.type, response.message);
+
+                    if (response.success) {
+                        $('#loginModal').modal('hide');
+                        setTimeout(() => location.reload(), 1500);
+                    }
+                },
+                error: function () {
+                    alert("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.");
+                }
+            });
+        });
+    });
+</script>
