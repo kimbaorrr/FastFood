@@ -1,0 +1,27 @@
+﻿name: ASP.NET Core MVC Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - run: dotnet restore
+    - run: dotnet build --no-restore --configuration Release
+    - run: dotnet publish -c Release -o ./publish
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: FastFood
+        path: ./publish
