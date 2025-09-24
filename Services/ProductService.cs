@@ -273,5 +273,17 @@ namespace FastFood.Services
             };
             return customProductDetailViewModel;
         }
+
+        public async Task<Dictionary<string, int>> GetCustomProductsByTopSale(int take)
+        {
+            var products = await this._productRepository.GetProductsByApproveStatus(true);
+            return products
+                .OrderByDescending(x => x.OrderDetails.Sum(od => od.Quantity))
+                .Take(take)
+                .ToDictionary(
+                    x => x.ProductName,
+                    x => x.OrderDetails.Sum(od => od.Quantity)
+                );
+        }
     }
 }

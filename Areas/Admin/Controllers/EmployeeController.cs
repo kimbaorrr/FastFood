@@ -3,6 +3,7 @@ using FastFood.Models;
 using FastFood.Models.ViewModels;
 using FastFood.Repositories.Interfaces;
 using FastFood.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -13,7 +14,8 @@ using X.PagedList.Extensions;
 namespace FastFood.Areas.Admin.Controllers
 {
     [Route("admin/employees")]
-    public class EmployeeController : BaseController
+    [Authorize(AuthenticationSchemes = "EmployeeScheme")]
+    public class EmployeeController : BaseEmployeeController
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IEmployeeService _employeeService;

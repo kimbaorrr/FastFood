@@ -10,12 +10,12 @@ namespace FastFood.Services.Interfaces
     public interface ICustomerService
     {
         /// <summary>
-        /// So sánh khách hàng dựa trên thời gian truy cập.
+        /// So sánh khách hàng mới tạo tài khoản trong khoảng thời gian theo phần trăm.
         /// </summary>
         /// <param name="currentTime">Thời gian hiện tại.</param>
         /// <param name="previousTime">Thời gian trước đó.</param>
         /// <returns>Giá trị so sánh (double).</returns>
-        Task<double> CompareCustomersByDateTime(DateTime currentTime, DateTime previousTime);
+        Task<double> CompareCustomersByPercentage(DateTime currentTime, DateTime previousTime);
 
         /// <summary>
         /// Lấy danh sách khách hàng tiềm năng.
@@ -61,5 +61,12 @@ namespace FastFood.Services.Interfaces
         /// <param name="customerRegisterViewModel">Model đăng ký khách hàng.</param>
         /// <returns>Kết quả đăng ký và thông báo.</returns>
         Task<(bool, string)> Register(CustomerRegisterViewModel customerRegisterViewModel);
+        /// <summary>
+        /// Đếm số lượng khách hàng mới tạo tài khoản trong khoảng thời gian chỉ định
+        /// </summary>
+        /// <param name="currentDate"></param>
+        /// <param name="previousDate"></param>
+        /// <returns></returns>
+        Task<int> CountNewCustomers(DateTime currentDate, DateTime previousDate);
     }
 }

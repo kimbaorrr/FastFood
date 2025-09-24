@@ -10,11 +10,6 @@ namespace FastFood.Repositories;
 public class CustomerRepository : CommonRepository, ICustomerRepository
 {
     public CustomerRepository(FastFoodEntities fastFoodEntities) : base(fastFoodEntities) { }
-    public async Task<int> CountNewCustomers(DateTime fromTime, DateTime toTime)
-    {
-        return await this._fastFoodEntities.Customers
-            .Where(x => x.CreatedAt >= fromTime && x.CreatedAt < toTime).CountAsync();
-    }
 
     public async Task<List<Customer>> GetCustomers()
     {

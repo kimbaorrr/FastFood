@@ -2,6 +2,7 @@
 using FastFood.Models;
 using FastFood.Models.ViewModels;
 using FastFood.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using X.PagedList;
 using X.PagedList.Extensions;
@@ -10,7 +11,8 @@ namespace FastFood.Areas.Admin.Controllers
 {
 
     [Route("admin/categories")]
-    public class CategoriesController : BaseController
+    [Authorize(AuthenticationSchemes = "EmployeeScheme")]
+    public class CategoriesController : BaseEmployeeController
     {
         private readonly ICategoryService _categoryService;
         public CategoriesController(ICategoryService categoryService)

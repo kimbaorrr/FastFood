@@ -1,19 +1,21 @@
-﻿using System.Collections.Immutable;
-using FastFood.DB;
+﻿using FastFood.DB;
 using FastFood.Models;
 using FastFood.Models.ViewModels;
 using FastFood.Repositories.Interfaces;
 using FastFood.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 using X.PagedList;
 using X.PagedList.Extensions;
 namespace FastFood.Areas.Admin.Controllers
 {
     [Route("admin/products")]
-    public class ProductController : BaseController
+    [Authorize(AuthenticationSchemes = "EmployeeScheme")]
+    public class ProductController : BaseEmployeeController
     {
         private readonly IProductService _productService;
         private readonly IProductRepository _productRepository;

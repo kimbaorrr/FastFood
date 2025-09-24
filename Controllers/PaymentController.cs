@@ -51,7 +51,7 @@ namespace FastFood.Controllers
         /// <param name="addPaymentViewModel">Model thông tin thanh toán.</param>
         /// <returns>Chuyển hướng đến URL thanh toán.</returns>
         [HttpPost("")]
-        //[AutoValidateAntiforgeryToken]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Index(AddPaymentViewModel addPaymentViewModel)
         {
             string paymentUrl = await this._paymentService.AddPaymentViewPostModel(

@@ -86,7 +86,7 @@ namespace FastFood.Models.ViewModels
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Nhập lại mật khẩu")]
-        [Compare("MatKhauMoi", ErrorMessage = "Mật khẩu và xác nhận mật khẩu không giống nhau !")]
+        [Compare("NewPassword", ErrorMessage = "Mật khẩu và xác nhận mật khẩu không giống nhau !")]
         public string ReenterPassword { get; set; } = string.Empty;
     }
 

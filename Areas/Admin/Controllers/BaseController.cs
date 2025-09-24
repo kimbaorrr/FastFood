@@ -6,55 +6,30 @@ using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Filters;
 using FastFood.DB.Entities;
+using FastFood.Controllers;
+using FastFood.Models.ViewModels;
 
 namespace FastFood.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public abstract class BaseController : Controller
+    public abstract class BaseEmployeeController : BaseAppController
     {
         protected int? _employeeId => this.GetEmployeeFromClaim()?.EmployeeId ?? -1;
-        protected BaseController()
+        protected BaseEmployeeController()
         {
 
         }
-        //public override void OnActionExecuting(ActionExecutingContext context)
-        //{
-        //    if (!(User.Identity?.IsAuthenticated ?? false) || !User.HasClaim(c => c.Type == "EmployeeInfo"))
-        //    {
-        //        context.Result = new RedirectToActionResult("Login", "Account", new {area = "Admin"});
-        //    }
 
-        //    base.OnActionExecuting(context);
-        //}
-
-        protected JsonResult CreateJsonResult(bool success = false, string message = "", object? data = null)
-        {
-
-            var json = new
-            {
-                success = success!,
-                type = success ? "var(--bs-success)" : "var(--bs-danger)",
-                message = message!,
-                data = data ?? new { }
-            };
-
-            return new JsonResult(json, new JsonSerializerOptions()
-            {
-                WriteIndented = true
-            });
-
-        }
-
-        protected Employee? GetEmployeeFromClaim()
+        protected EmployeeClaimInfoViewModel? GetEmployeeFromClaim()
         {
             var claimData = User?.FindFirst("EmployeeInfo");
             if (claimData != null)
-                return JsonConvert.DeserializeObject<Employee>(claimData.Value);
+                return JsonConvert.DeserializeObject<EmployeeClaimInfoViewModel>(claimData.Value);
 
             return null;
         }
 
-        protected async Task AddEmployeeToClaim(string employeeId, Employee employeeInfo, bool rememberMe = false)
+        protected async Task AddEmployeeToClaim(string employeeId, EmployeeClaimInfoViewModel employeeInfo, bool rememberMe = false)
         {
             var claims = new List<Claim>
             {
@@ -62,7 +37,7 @@ namespace FastFood.Areas.Admin.Controllers
                 new Claim("EmployeeInfo", JsonConvert.SerializeObject(employeeInfo))
             };
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var identity = new ClaimsIdentity(claims, "EmployeeScheme");
             var principal = new ClaimsPrincipal(identity);
 
             var authProperties = new AuthenticationProperties
@@ -74,14 +49,14 @@ namespace FastFood.Areas.Admin.Controllers
             };
 
             await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
+                "EmployeeScheme",
                 principal,
                 authProperties
             );
         }
 
         protected async Task ClearClaims()
-            => await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            => await HttpContext.SignOutAsync("EmployeeScheme");
 
         protected string GetAbsoluteUri()
         {

@@ -78,5 +78,11 @@ namespace FastFood.Services.Interfaces
         /// <param name="productId">ID sản phẩm.</param>
         /// <returns>Chi tiết sản phẩm tuỳ chỉnh.</returns>
         Task<CustomProductDetailViewModel> GetCustomProductDetailViewModel(int productId);
+        /// <summary>
+        /// Lấy danh sách sản phẩm bán chạy nhất.
+        /// </summary>
+        /// <param name="take"></param>
+        /// <returns>Danh sách sản phẩm dạng Dictionary</returns>
+        Task<Dictionary<string, int>> GetCustomProductsByTopSale(int take);
     }
 }

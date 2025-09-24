@@ -22,12 +22,14 @@ namespace FastFood.Services
             return ordersDelivered.Count(x => x.OrderDate >= fromDate && x.OrderDate < toDate);
         }
 
-        public async Task<int> GetRevenue(DateTime fromDate, DateTime toDate)
+        public async Task<int> GetRevenueByDateTime(DateTime fromDate, DateTime toDate)
         {
             var ordersDelivered = await this._orderRepository.GetOrdersDelivered();
             return ordersDelivered
                 .Where(x => x.OrderDate >= fromDate && x.OrderDate < toDate)
-                .Sum(x => x.TotalPrice);
+                .Select(x=>x.TotalPrice)
+                .DefaultIfEmpty(0)
+                .Sum();
         }
 
         public async Task<double> CompareRevenueByPercentage(DateTime currentDate, DateTime previousDate)
@@ -66,7 +68,7 @@ namespace FastFood.Services
             return percentageChange;
         }
 
-        public async Task<string> GetRevenueByTimeRange(string timeRange)
+        public async Task<Dictionary<string, int>> GetRevenueByTimeRange(string timeRange)
         {
             var ordersDelivered = await this._orderRepository.GetOrdersDelivered();
 
@@ -122,25 +124,23 @@ namespace FastFood.Services
                 kvp => kvp.Value
             );
 
-            return JsonConvert.SerializeObject(result);
+            return result;
         }
 
-        public async Task<string> GetOrdersByDate(DateTime fromTime, DateTime toTime)
+        public async Task<Dictionary<string, int>> GetOrdersByDate(DateTime fromTime, DateTime toTime)
         {
             var orders = await this._orderRepository.GetOrders();
 
-            var ordersListByDate = orders
+            var ordersDictByDate = orders
                 .Where(x => x.OrderStatus != 0 && x.OrderDate >= fromTime && x.OrderDate < toTime)
                 .GroupBy(d => d.OrderDate.Date)
-                .Select(g => new
-                {
-                    Date = g.Key.ToString("dd-MM-yyyy"),
-                    OrderCount = g.Count()
-                })
-                .OrderBy(g => g.Date)
-                .ToList();
+                .OrderBy(g => g.Key)
+                .ToDictionary(
+                    g => g.Key.ToString("dd-MM-yyyy"),
+                    g => g.Count()
+                );
 
-            return JsonConvert.SerializeObject(ordersListByDate);
+            return ordersDictByDate;
         }
 
         public async Task<List<CustomOrderViewModel>> GetCustomOrderViewModels()

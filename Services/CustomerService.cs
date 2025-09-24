@@ -23,7 +23,7 @@ namespace FastFood.Services
             _customerAccountRepository = customerAccountRepository;
         }
 
-        public async Task<double> CompareCustomersByDateTime(DateTime currentTime, DateTime previousTime)
+        public async Task<double> CompareCustomersByPercentage(DateTime currentTime, DateTime previousTime)
         {
             var customers = await this._customerRepository.GetCustomers();
 
@@ -41,6 +41,11 @@ namespace FastFood.Services
             double percentageChange = ((double)(customersCurrent - customersPrevious) / customersPrevious) * 100;
 
             return percentageChange;
+        }
+        public async Task<int> CountNewCustomers(DateTime currentDate, DateTime previousDate)
+        {
+            var customers = await this._customerRepository.GetCustomers();
+            return customers.Count(x => x.CreatedAt >= previousDate && x.CreatedAt < currentDate);
         }
 
         public async Task<List<PotentialCustomersViewModel>> GetPotentialCustomers()
@@ -87,7 +92,8 @@ namespace FastFood.Services
             var customer = potentialCustomers.FirstOrDefault(x => x.CustomerId == customerId);
             CustomerDetailViewModel customerDetailViewModel = new();
 
-            if (customer != null) {
+            if (customer != null)
+            {
                 customerDetailViewModel.Address = customer.Address;
                 customerDetailViewModel.Phone = customer.Phone;
                 customerDetailViewModel.Email = customer.Email;
@@ -137,7 +143,7 @@ namespace FastFood.Services
                 Email = customerAccount.Customer.Email ?? string.Empty
             };
 
-            return (true, string.Empty, customerClaimInfoViewModel);
+            return (true, "Đăng nhập thành công !", customerClaimInfoViewModel);
         }
 
         public async Task<(bool, string)> Register(CustomerRegisterViewModel customerRegisterViewModel)

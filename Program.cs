@@ -21,7 +21,12 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
 
 builder.Services.AddAuthentication()
     .AddCookie("CustomerScheme")
-    .AddCookie("EmployeeScheme");
+    .AddCookie("EmployeeScheme", options =>
+    {
+        options.LoginPath = "/admin/auth/login";
+        options.LogoutPath = "/admin/auth/logout";
+        options.Cookie.Name = "EmployeeAuth";
+    });
 
 builder.Services.AddAuthorization();
 

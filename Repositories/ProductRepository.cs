@@ -19,7 +19,7 @@ public class ProductRepository : CommonRepository, IProductRepository
     public async Task<Product> GetProductById(int productId)
     {
         return await this._fastFoodEntities.Products
-            .FirstOrDefaultAsync(x => x.ProductId == productId) 
+            .FirstOrDefaultAsync(x => x.ProductId == productId)
             ?? new Product();
     }
 
@@ -49,8 +49,8 @@ public class ProductRepository : CommonRepository, IProductRepository
     {
         var products = await this.GetProductsByApproveStatus(isApproved);
         return products
-            .Where(x=>x.ProductId != excludedProductId)
-            .OrderBy(x=>Guid.NewGuid())
+            .Where(x => x.ProductId != excludedProductId)
+            .OrderBy(x => Guid.NewGuid())
             .Take(take)
             .ToList();
     }
@@ -66,18 +66,17 @@ public class ProductRepository : CommonRepository, IProductRepository
 
     public async Task<List<Product>> GetProductsByTopSale(int take)
     {
-        var products = await this.GetProductsByApproveStatus(true);
-        return products
-            .OrderByDescending(x=>x.FinalPrice)
+        return await this._fastFoodEntities.Products
+            .OrderByDescending(x => x.FinalPrice)
             .Take(take)
-            .ToList();
+            .ToListAsync();
     }
 
-    public async Task<Product> GetBestSellingProduct()
+    public async Task<Product?> GetBestSellingProduct()
     {
         return await this._fastFoodEntities.Products
         .OrderByDescending(p => p.OrderDetails.Count)
-        .FirstOrDefaultAsync() ?? new Product();
+        .FirstOrDefaultAsync();
     }
 
     public async Task AddProduct(Product product)

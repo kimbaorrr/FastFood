@@ -1,17 +1,17 @@
-﻿@using FastFood.Models;
-@using FastFood.DB;
-@using X.PagedList;
-@using X.PagedList.Mvc;
-@{
-    int donHangHomNay = FastFood_DonHang.countDonHangHomNay();
-    int doanhThuToday = FastFood_DonHang.doanhThuHomNay();
-    int khachHangMoi = FastFood_KhachHang.countKhachHangMoi();
-    int nhapKhoHomNay = FastFood_NguyenLieu.countNhapKhoHomNay();
-    double soSanhDoanhThuNgay = FastFood_DonHang.soSanhDoanhThuNgay();
-    double soSanhDonHangNgay = FastFood_DonHang.soSanhDonHangNgay();
-    double soSanhKhachHangNgay = FastFood_KhachHang.soSanhKhachHangNgay();
-    double soSanhNhapKhoNgay = 0;
-    IEnumerable<Donhang>? donHangs = ViewBag.DonHang as IEnumerable<Donhang>;
+﻿@{
+    var orders = ViewBag.Orders as IPagedList<Order>;
+    var totalOrdersToday = ViewBag.TotalOrdersToday as int?;
+    var totalRevenueToday = ViewBag.TotalRevenueToday as int?;
+    var totalNewCustomersToday = ViewBag.TotalNewCustomersToday as int?;
+    var totalInInventoryToday = ViewBag.TotalInInventoryToday as int?;
+
+    var percentageChangeOrders = ViewBag.PercentageChangeOrders as double?;
+    var percentageChangeRevenue = ViewBag.PercentageChangeRevenue as double?;
+    var percentageChangeNewCustomers = ViewBag.PercentageChangeNewCustomers as double?;
+	var percentageChangeInInventory = ViewBag.PercentageChangeInInventory as double?;
+
+    var currentPage = ViewBag.CurrentPage as int?;
+	var totalPages = ViewBag.TotalPages as int?;
 }
 
 <div class="container-fluid">
@@ -30,26 +30,26 @@
                                     </div>
                                 </div> <!-- end col -->
                                 <div class="col-9 text-end">
-                                    <p class="text-muted mb-0 text-truncate">Đơn hàng hôm nay</p>
-                                    <h3 class="text-dark mt-1 mb-0">@donHangHomNay</h3>
+                                    <p class="text-muted text-truncate mb-0">Đơn hàng hôm nay</p>
+                                    <h3 class="text-dark mb-0 mt-1">@totalOrdersToday</h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
-                        <div class="card-footer py-2 bg-light bg-opacity-50">
+                        <div class="card-footer bg-light bg-opacity-50 py-2">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
                                     @{
-                                        if (soSanhDonHangNgay > 0)
+                                        if (percentageChangeOrders > 0)
                                         {
-                                            <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i> @soSanhDonHangNgay%</span>
+                                            <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i> @percentageChangeOrders%</span>
                                         }
                                         else
                                         {
-                                            <span class="text-danger"> <i class="bx bxs-down-arrow fs-12"></i> @soSanhDonHangNgay%</span>
+                                            <span class="text-danger"> <i class="bx bxs-down-arrow fs-12"></i> @percentageChangeOrders%</span>
                                         }
                                     }
 
-                                    <span class="text-muted ms-1 fs-12">Ngày trước</span>
+                                    <span class="text-muted fs-12 ms-1">Ngày trước</span>
                                 </div>
                                 <a href="#" class="text-reset fw-semibold fs-12">Xem thêm</a>
                             </div>
@@ -66,23 +66,23 @@
                                     </div>
                                 </div> <!-- end col -->
                                 <div class="col-9 text-end">
-                                    <p class="text-muted mb-0 text-truncate">Doanh thu hôm nay</p>
-                                    <h3 class="text-dark mt-1 mb-0">@doanhThuToday</h3>
+                                    <p class="text-muted text-truncate mb-0">Doanh thu hôm nay</p>
+                                    <h3 class="text-dark mb-0 mt-1">@totalRevenueToday</h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
-                        <div class="card-footer py-2 bg-light bg-opacity-50">
+                        <div class="card-footer bg-light bg-opacity-50 py-2">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
-                                    @if (soSanhDoanhThuNgay > 0)
+                                    @if (percentageChangeRevenue > 0)
                                     {
-                                        <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i> @soSanhDoanhThuNgay%</span>
+                                        <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i> @percentageChangeRevenue%</span>
                                     }
                                     else
                                     {
-                                        <span class="text-danger"> <i class="bx bxs-down-arrow fs-12"></i> @soSanhDoanhThuNgay%</span>
+                                        <span class="text-danger"> <i class="bx bxs-down-arrow fs-12"></i> @percentageChangeRevenue%</span>
                                     }
-                                    <span class="text-muted ms-1 fs-12">Ngày trước</span>
+                                    <span class="text-muted fs-12 ms-1">Ngày trước</span>
                                 </div>
                                 <a href="#" class="text-reset fw-semibold fs-12">Xem thêm</a>
                             </div>
@@ -99,31 +99,31 @@
                                     </div>
                                 </div> <!-- end col -->
                                 <div class="col-9 text-end">
-                                    <p class="text-muted mb-0 text-truncate">Khách hàng mới</p>
-                                    <h3 class="text-dark mt-1 mb-0">@khachHangMoi</h3>
+                                    <p class="text-muted text-truncate mb-0">Khách mới hôm nay</p>
+                                    <h3 class="text-dark mb-0 mt-1">@totalNewCustomersToday</h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
-                        <div class="card-footer py-2 bg-light bg-opacity-50">
+                        <div class="card-footer bg-light bg-opacity-50 py-2">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
 
                                     @{
-                                        if (soSanhKhachHangNgay > 0)
+                                        if (percentageChangeNewCustomers > 0)
                                         {
                                             <span class="text-success">
-                                                <i class="bx bxs-up-arrow fs-12"></i> @soSanhKhachHangNgay%
+                                                <i class="bx bxs-up-arrow fs-12"></i> @percentageChangeNewCustomers%
                                             </span>
                                         }
                                         else
                                         {
                                             <span class="text-danger">
-                                                <i class="bx bxs-down-arrow fs-12"></i> @soSanhKhachHangNgay%
+                                                <i class="bx bxs-down-arrow fs-12"></i> @percentageChangeNewCustomers%
                                             </span>
                                         }
                                     }
 
-                                    <span class="text-muted ms-1 fs-12">Ngày trước</span>
+                                    <span class="text-muted fs-12 ms-1">Ngày trước</span>
                                 </div>
                                 <a href="#" class="text-reset fw-semibold fs-12">Xem thêm</a>
                             </div>
@@ -140,29 +140,29 @@
                                     </div>
                                 </div> <!-- end col -->
                                 <div class="col-9 text-end">
-                                    <p class="text-muted mb-0 text-truncate">Lần nhập kho hôm nay</p>
-                                    <h3 class="text-dark mt-1 mb-0">@nhapKhoHomNay</h3>
+                                    <p class="text-muted text-truncate mb-0">Lần nhập kho hôm nay</p>
+                                    <h3 class="text-dark mb-0 mt-1">@totalInInventoryToday</h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
-                        <div class="card-footer py-2 bg-light bg-opacity-50">
+                        <div class="card-footer bg-light bg-opacity-50 py-2">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
                                     @{
-                                        if (soSanhNhapKhoNgay > 0)
+                                        if (percentageChangeInInventory > 0)
                                         {
                                             <span class="text-success">
-                                                <i class="bx bxs-up-arrow fs-12"></i> @soSanhNhapKhoNgay%
+                                                <i class="bx bxs-up-arrow fs-12"></i> @percentageChangeInInventory%
                                             </span>
                                         }
                                         else
                                         {
                                             <span class="text-danger">
-                                                <i class="bx bxs-down-arrow fs-12"></i> @soSanhNhapKhoNgay%
+                                                <i class="bx bxs-down-arrow fs-12"></i> @percentageChangeInInventory%
                                             </span>
                                         }
                                     }
-                                    <span class="text-muted ms-1 fs-12">Ngày trước</span>
+                                    <span class="text-muted fs-12 ms-1">Ngày trước</span>
                                 </div>
                                 <a href="#" class="text-reset fw-semibold fs-12">Xem thêm</a>
                             </div>
@@ -177,7 +177,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="card-title">Biểu đồ doanh thu theo thời gian</h4>
-                        <div id="doanhThuChartBtn">
+                        <div id="revenueChartBtn">
                             <button type="button" class="btn btn-sm btn-outline-light active" data-id="30_days">30D</button>
                             <button type="button" class="btn btn-sm btn-outline-light" data-id="6_months">6M</button>
                             <button type="button" class="btn btn-sm btn-outline-light" data-id="1_year">1Y</button>
@@ -185,7 +185,7 @@
                     </div> <!-- end card-title-->
 
                     <div dir="ltr">
-                        <div id="doanh-thu-chart" class="apex-charts"></div>
+                        <div id="revenueChart" class="apex-charts"></div>
                     </div>
                 </div> <!-- end card body -->
             </div> <!-- end card -->
@@ -201,7 +201,7 @@
                     </div> <!-- end card-title-->
 
                     <div dir="ltr">
-                        <div id="don-hang-chart" class="apex-charts"></div>
+                        <div id="ordersChart" class="apex-charts"></div>
                     </div>
                 </div> <!-- end card body -->
             </div> <!-- end card -->
@@ -210,8 +210,8 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Top 10 sản phẩm bán chạy trong tuần</h4>
-                    <div id="sanpham-banchay" class="apex-charts"></div>
+                    <h4 class="card-title">Top 10 sản phẩm bán chạy</h4>
+                    <div id="topSellingProductChart" class="apex-charts"></div>
                 </div>
 
             </div>
@@ -229,7 +229,7 @@
                 </div>
                 <!-- end card body -->
                 <div class="table-responsive table-centered">
-                    <table class="table mb-0">
+                    <table class="mb-0 table">
                         <thead class="bg-light bg-opacity-50">
                             <tr>
                                 <th class="ps-3">
@@ -254,18 +254,18 @@
                         </thead>
                         <!-- end thead-->
                         <tbody>
-                            @foreach (Donhang dh in donHangs!)
+                            @foreach (var order in orders!)
                             {
                                 <tr>
                                     <td class="ps-3">
-                                        <a href="@Url.Action("Detail", "Order", new { area = "Admin", id = dh.Madonhang })">@dh.Madonhang</a>
+                                        <a href="@Url.Action("Detail", "Order", new { area = "Admin", orderId = order.OrderId })">@order.OrderId</a>
                                     </td>
-                                    <td>@dh.Ngaydat</td>
-                                    <td>@dh.NguoimuaNavigation.Email</td>
-                                    <td>@dh.NguoimuaNavigation.Sodienthoai</td>
-                                    <td>@dh.NguoimuaNavigation.Diachi</td>
+                                    <td>@order.OrderDate</td>
+                                    <td>@order.BuyerNavigation.Email</td>
+                                    <td>@order.BuyerNavigation.Phone</td>
+                                    <td>@order.BuyerNavigation.Address</td>
                                     <td>
-                                        @FastFood_DonHang.getTenTrangThai(dh.Trangthaidon)
+                                        @order.OrderStatusNavigation.StatusName
                                     </td>
                                 </tr>
 
@@ -345,37 +345,37 @@
 
 <script>
     $(document).ready(function () {
-        $('#doanhThuChartBtn button').click(function () {
+        $('#revenueChartBtn button').click(function () {
             $('button').removeClass('active');
             $(this).addClass('active');
         });
 
-        var chartDoanhThu, chartSanPhamBanChay;
-        loadDoanhThuChart("30_days");
+        var revenueChart, topSellingProductChart;
+        loadRevenueChart("30_days");
 
         $('.btn-outline-light').click(function() {
             var type = $(this).data('id');
-            loadDoanhThuChart(type);
+            loadRevenueChart(type);
         });
 
-        function loadDoanhThuChart(type) {
+        function loadRevenueChart(timeRange) {
             $.ajax({
-                url: '@Url.Action("DoanhThuTheoThoiGian", "Home", new {area = "Admin"})',
+                url: '@Url.Action("GetRevenueByTimeRange", "Chart", new { area = "Admin" })',
                 method: 'GET',
                 dataType: 'json',
-                data: { type: type },
-                success: function(json_data) {
-                    const dates = Object.keys(json_data);
-                    const doanhThuValues = Object.values(json_data);
+                data: { timeRange: timeRange },
+                success: function(response) {
+                    const dates = Object.keys(response.data);
+                    const revenueValues = Object.values(response.data);
 
-                    if (chartDoanhThu) {
-                        chartDoanhThu.destroy();
+                    if (revenueChart) {
+                        revenueChart.destroy();
                     }
 
                     var options = {
                         series: [{
                             name: 'Doanh thu',
-                            data: doanhThuValues
+                            data: revenueValues
                         }],
                         chart: {
                             height: 350,
@@ -406,7 +406,7 @@
                             labels: { show: true, formatter: val => val + " VNĐ" }
                         },
                         title: {
-                            text: 'Tổng doanh thu ' + type.replace('_', ' ').toUpperCase(),
+                            text: 'Tổng doanh thu ' + timeRange.replace('_', ' ').toUpperCase(),
                             floating: true,
                             offsetY: 330,
                             align: 'center',
@@ -414,8 +414,8 @@
                         }
                     };
 
-                    chartDoanhThu = new ApexCharts(document.querySelector("#doanh-thu-chart"), options);
-                    chartDoanhThu.render();
+                    revenueChart = new ApexCharts(document.querySelector("#revenueChart"), options);
+                    revenueChart.render();
                 },
                 error: function(error) {
                     console.error('Lỗi khi lấy dữ liệu doanh thu:', error);
@@ -423,16 +423,16 @@
             });
         }
 
-        loadTopSanPhamBanChay();
+        loadTopSellingProductChart();
 
-        function loadTopSanPhamBanChay() {
+        function loadTopSellingProductChart() {
             $.ajax({
-                url: '@Url.Action("TopSanPhamBanChay", "Home", new {area = "Admin"})',
+                url: '@Url.Action("GetTopSellingProducts", "Chart", new { area = "Admin" })',
                 method: 'GET',
                 dataType: 'json',
                 data: { take: 10 },
-                success: function(json_data) {
-                    updateSanPhamChart(json_data);
+                success: function(response) {
+                    updateSanPhamChart(response.data);
                 },
                 error: function(xhr, status, error) {
                     console.error('Error fetching data:', error);
@@ -440,47 +440,43 @@
             });
         }
 
-        function updateSanPhamChart(data) {
-            const categories = data.map(item => item.TenSanPham);
-            const seriesData = data.map(item => item.SoLuongDaBan);
+            function updateSanPhamChart(data) {
+                const categories = Object.keys(data);
+                const seriesData = Object.values(data);
 
-            var options = {
-                chart: { height: 380, type: "bar", toolbar: { show: false } },
-                plotOptions: { bar: { borderRadius: 10, horizontal: true } },
-                dataLabels: { enabled: false },
-                series: [{ data: seriesData }],
-                colors: ["#ef4444", "#60a5fa"],
-                xaxis: {
-                    categories: categories,
-                    labels: {
-                        formatter: function (value) {
-                            return value.length > 15 ? value.slice(0, 15) + '...' : value;
+                var options = {
+                    chart: { height: 380, type: "bar", toolbar: { show: false } },
+                    plotOptions: { bar: { borderRadius: 10, horizontal: true } },
+                    dataLabels: { enabled: false },
+                    series: [{ data: seriesData }],
+                    colors: ["#ef4444", "#60a5fa"],
+                    xaxis: {
+                        categories: categories,
+                        labels: {
+                            formatter: function (value) {
+                                return value.length > 15 ? value.slice(0, 15) + '...' : value;
+                            }
                         }
-                    }
-                },
-                states: { hover: { filter: "none" } },
-                grid: { borderColor: "#f1f3fa" },
-            };
+                    },
+                    states: { hover: { filter: "none" } },
+                    grid: { borderColor: "#f1f3fa" },
+                };
 
-            if (chartSanPhamBanChay) {
-                chartSanPhamBanChay.destroy();
+                if (topSellingProductChart) {
+                    topSellingProductChart.destroy();
+                }
+                topSellingProductChart = new ApexCharts(document.querySelector("#topSellingProductChart"), options);
+                topSellingProductChart.render();
             }
-            chartSanPhamBanChay = new ApexCharts(document.querySelector("#sanpham-banchay"), options);
-            chartSanPhamBanChay.render();
-        }
+
 
         $.ajax({
-            url: '@Url.Action("DonHangTrongTuan", "Home", new {area = "Admin"})',
+            url: '@Url.Action("GetOrdersInThisWeek", "Chart", new { area = "Admin" })',
             type: 'GET',
             dataType: 'json',
-            success: function (data) {
-                var dates = [];
-                var orderCounts = [];
-
-                data.forEach(function (item) {
-                    dates.push(item.Date);
-                    orderCounts.push(item.OrderCount);
-                });
+            success: function (response) {
+                var dates = Object.keys(response.data);
+                var orderCounts = Object.values(response.data);
 
                 var options = {
                     chart: {
@@ -497,7 +493,7 @@
                     }
                 };
 
-                var chart = new ApexCharts(document.querySelector("#don-hang-chart"), options);
+                var chart = new ApexCharts(document.querySelector("#ordersChart"), options);
                 chart.render();
             },
             error: function (xhr, status, error) {

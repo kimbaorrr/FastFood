@@ -2,6 +2,7 @@
 using FastFood.Models;
 using FastFood.Repositories.Interfaces;
 using FastFood.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -9,7 +10,8 @@ using Newtonsoft.Json;
 namespace FastFood.Areas.Admin.Controllers
 {
     [Route("admin/ingredient")]
-    public class IngredientController : BaseController
+    [Authorize(AuthenticationSchemes = "EmployeeScheme")]
+    public class IngredientController : BaseEmployeeController
     {
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IIngredientService _ingredientService;

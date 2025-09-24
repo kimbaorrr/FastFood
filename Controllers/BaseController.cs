@@ -28,16 +28,15 @@ namespace FastFood.Controllers
                 data = data ?? new { }
             };
 
-            var jsonSerialized = JsonConvert.SerializeObject(json);
 
             return statusCode switch
             {
-                400 => BadRequest(jsonSerialized),
-                401 => Unauthorized(jsonSerialized),
+                400 => BadRequest(json),
+                401 => Unauthorized(json),
                 403 => Forbid(),
-                404 => NotFound(jsonSerialized),
-                500 => StatusCode(500, jsonSerialized),
-                _ => Ok(jsonSerialized)
+                404 => NotFound(json),
+                500 => StatusCode(500, json),
+                _ => Ok(json)
             };
         }
     }

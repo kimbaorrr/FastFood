@@ -1,0 +1,62 @@
+﻿@model EmployeeChangePasswordViewModel
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordLabel" aria-hidden="true">
+	@using (Html.BeginForm("ChangePassword", "Account", new { area = "admin" }, FormMethod.Post, true, new { id = "changePasswordForm" }))
+	{
+		@Html.AntiForgeryToken()
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Đổi mật khẩu</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						@Html.LabelFor(m => m.OldPassword, "Mật khẩu cũ", new { @class = "form-label" })
+						@Html.PasswordFor(m => m.OldPassword, new { @class = "form-control", required = "required" })
+					</div>
+					<div class="mb-3">
+						@Html.LabelFor(m => m.NewPassword, "Mật khẩu mới", new { @class = "form-label" })
+						@Html.PasswordFor(m => m.NewPassword, new { @class = "form-control", required = "required" })
+					</div>
+					<div class="mb-3">
+						@Html.LabelFor(m => m.ReenterPassword, "Nhập lại mật khẩu", new { @class = "form-label" })
+						@Html.PasswordFor(m => m.ReenterPassword, new { @class = "form-control", required = "required" })
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+					<button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+<script>
+	$(document).ready(function () {
+			$('#changePasswordForm').on('submit', function (e) {
+				e.preventDefault();
+
+				var $form = $(this);
+				var url = $form.attr('action');
+
+				$.ajax({
+					url: url,
+					type: 'POST',
+					dataType: 'json',
+					data: $form.serialize(),
+					success: function (response) {
+						alertMessage(response.message, response.type);
+						if (response.success) {
+							setTimeout(() => { location.reload(); }, 1500);
+						}
+					},
+					error: function () {
+						alertMessage("Có lỗi xảy ra. Thử lại !", "var(--bs-danger)");
+					}
+				});
+			});
+	});
+</script>

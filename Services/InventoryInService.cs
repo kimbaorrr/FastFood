@@ -11,12 +11,12 @@ namespace FastFood.Services
             _inventoryInRepository = inventoryInRepository;
         }
 
-        public async Task<int> CountInventoryInByDateTime(DateTime fromDate, DateTime toDate)
+        public async Task<int> CountInventoryInByDateTime(DateTime currentDate, DateTime previousDate)
         {
             var inventoryIns = await this._inventoryInRepository.GetInventoryIns();
 
             return inventoryIns
-                .Count(nk => nk.CreatedAt >= fromDate && nk.CreatedAt < toDate);
+                .Count(nk => nk.CreatedAt >= previousDate && nk.CreatedAt < currentDate);
         }
     }
 }

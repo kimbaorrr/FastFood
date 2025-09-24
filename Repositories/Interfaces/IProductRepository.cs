@@ -16,6 +16,6 @@ namespace FastFood.Repositories.Interfaces
         Task UpdateProduct(Product product);
         Task DeleteProduct(Product product);
         Task<bool> IsProductHasOrder(int productId);
-        Task<Product> GetBestSellingProduct();
+        Task<Product?> GetBestSellingProduct();
     }
 }

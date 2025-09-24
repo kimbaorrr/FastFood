@@ -1,13 +1,14 @@
 ﻿using FastFood.DB.Entities;
 using FastFood.Models.ViewModels;
 using FastFood.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace FastFood.Areas.Admin.Controllers
 {
     [Route("admin/auth")]
-    public class AccountController : BaseController
+    public class AccountController : BaseEmployeeController
     {
         private readonly IEmployeeService _employeeService;
         public AccountController(IEmployeeService employeeService)
@@ -16,6 +17,7 @@ namespace FastFood.Areas.Admin.Controllers
         }
 
         [HttpGet("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login()
         {
             ViewBag.Title = "Đăng nhập hệ thống";
@@ -24,29 +26,34 @@ namespace FastFood.Areas.Admin.Controllers
 
         [HttpPost("login")]
         [AutoValidateAntiforgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(EmployeeLoginViewModel employeeLoginViewModel)
         {
             if (ModelState.IsValid)
             {
-                (bool isValid, Employee? employee) = await this._employeeService.LoginChecker(employeeLoginViewModel);
+                (bool success, string message, EmployeeClaimInfoViewModel? employeeClaimInfo) = await this._employeeService.LoginChecker(employeeLoginViewModel);
 
-                if (isValid)
+                if (success)
                 {
                     await this.AddEmployeeToClaim(
-                        employee!.EmployeeId.ToString(),
-                        employee,
+                        employeeClaimInfo!.EmployeeId.ToString(),
+                        employeeClaimInfo,
                         employeeLoginViewModel.RememberMe
                     );
-                    return RedirectToAction("Index", "Home", new { area = "Admin" });
                 }
-                ViewBag.AlertMessage = "Thông tin đăng nhập không hợp lệ !";
+                return CreateJsonResult(success, message);
             }
-            return View();
+            var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+
+            return CreateJsonResult(false, string.Join(" | ", errors));
 
         }
 
-        [HttpPost("logout")]
-        [AutoValidateAntiforgeryToken]
+        [HttpGet("logout")]
+        [Authorize(AuthenticationSchemes = "EmployeeScheme")]
         public async Task<IActionResult> Logout()
         {
             await this.ClearClaims();
@@ -55,6 +62,7 @@ namespace FastFood.Areas.Admin.Controllers
 
         [HttpPost("change-password")]
         [AutoValidateAntiforgeryToken]
+        [Authorize(AuthenticationSchemes = "EmployeeScheme")]
         public async Task<IActionResult> ChangePassword(EmployeeChangePasswordViewModel employeeChangePasswordViewModel)
         {
             if (ModelState.IsValid)
@@ -75,6 +83,7 @@ namespace FastFood.Areas.Admin.Controllers
 
         [HttpPost("forgot-password")]
         [AutoValidateAntiforgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword(EmployeeForgotPasswordViewModel employeeForgotPasswordViewModel)
         {
             if (ModelState.IsValid)

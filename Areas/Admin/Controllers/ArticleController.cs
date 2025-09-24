@@ -1,11 +1,13 @@
 ﻿using FastFood.Models.ViewModels;
 using FastFood.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using X.PagedList.Extensions;
 namespace FastFood.Areas.Admin.Controllers
 {
     [Route("admin/articles")]
-    public class ArticleController : BaseController
+    [Authorize(AuthenticationSchemes = "EmployeeScheme")]
+    public class ArticleController : BaseEmployeeController
     {
         private readonly IArticleService _articleService;
 

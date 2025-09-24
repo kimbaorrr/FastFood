@@ -34,24 +34,28 @@ namespace FastFood.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Login(CustomerLoginViewModel customerLoginViewModel)
         {
-            if (!ModelState.IsValid)
-                return CreateJsonResult(false, "Dữ liệu không hợp lệ");
-
-            (bool success, string message, CustomerClaimInfoViewModel? customerClaimInfoViewModel)
+            if (ModelState.IsValid)
+            {
+                (bool success, string message, CustomerClaimInfoViewModel? customerClaimInfoViewModel)
                 = await this._customerService.LoginChecker(customerLoginViewModel);
 
-            if (success)
-            {
-                await this.AddCustomerToClaim(
-                    customerClaimInfoViewModel!.CustomerId.ToString(),
-                    customerClaimInfoViewModel,
-                    rememberMe: true
-                );
+                if (success)
+                {
+                    await this.AddCustomerToClaim(
+                        customerClaimInfoViewModel!.CustomerId.ToString(),
+                        customerClaimInfoViewModel,
+                        rememberMe: true
+                    );
 
-                return CreateJsonResult(true, "Đăng nhập thành công !");
+                    return CreateJsonResult(true, message);
+                }
             }
+            var errors = ModelState.Values
+               .SelectMany(v => v.Errors)
+               .Select(e => e.ErrorMessage)
+               .ToList();
 
-            return CreateJsonResult(false, message);
+            return CreateJsonResult(false, string.Join(" | ", errors));
         }
 
         /// <summary>

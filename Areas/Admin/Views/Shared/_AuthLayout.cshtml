@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="/admin_page/assets/images/favicon.ico">
+    <link rel="shortcut icon" href="~/admin_page/assets/images/favicon.ico">
 
     <!-- Vendor css (Require in all Page) -->
     <link href="~/admin_page/assets/css/vendor.min.css" rel="stylesheet" type="text/css" />
@@ -57,7 +57,10 @@
 
                                 <h2 class="fw-bold fs-24">@ViewBag.Title</h2>
                                 <p class="text-muted pb-2">@ViewBag.Description</p>
+
                                 @RenderBody()
+
+
                             </div>
                         </div>
                     </div>

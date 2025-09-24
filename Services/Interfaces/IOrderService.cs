@@ -23,10 +23,10 @@ namespace FastFood.Services.Interfaces
         /// <param name="fromDate">Ngày bắt đầu.</param>
         /// <param name="toDate">Ngày kết thúc.</param>
         /// <returns>Tổng doanh thu.</returns>
-        Task<int> GetRevenue(DateTime fromDate, DateTime toDate);
+        Task<int> GetRevenueByDateTime(DateTime fromDate, DateTime toDate);
 
         /// <summary>
-        /// So sánh doanh thu giữa hai ngày theo phần trăm.
+        /// So sánh doanh thu trong khoảng thời gian theo phần trăm.
         /// </summary>
         /// <param name="currentDate">Ngày hiện tại.</param>
         /// <param name="previousDate">Ngày trước đó.</param>
@@ -34,7 +34,7 @@ namespace FastFood.Services.Interfaces
         Task<double> CompareRevenueByPercentage(DateTime currentDate, DateTime previousDate);
 
         /// <summary>
-        /// So sánh số lượng đơn hàng giữa hai ngày theo phần trăm.
+        /// So sánh số lượng đơn hàng trong khoảng thời gian theo phần trăm.
         /// </summary>
         /// <param name="currentDate">Ngày hiện tại.</param>
         /// <param name="previousDate">Ngày trước đó.</param>
@@ -45,16 +45,16 @@ namespace FastFood.Services.Interfaces
         /// Lấy doanh thu theo khoảng thời gian.
         /// </summary>
         /// <param name="timeRange">Khoảng thời gian (ví dụ: tuần, tháng).</param>
-        /// <returns>Doanh thu dưới dạng chuỗi.</returns>
-        Task<string> GetRevenueByTimeRange(string timeRange);
+        /// <returns>Doanh thu dưới dạng Dictionary.</returns>
+        Task<Dictionary<string, int>> GetRevenueByTimeRange(string timeRange);
 
         /// <summary>
         /// Lấy danh sách đơn hàng theo ngày.
         /// </summary>
         /// <param name="fromTime">Thời gian bắt đầu.</param>
         /// <param name="toTime">Thời gian kết thúc.</param>
-        /// <returns>Danh sách đơn hàng dưới dạng chuỗi.</returns>
-        Task<string> GetOrdersByDate(DateTime fromTime, DateTime toTime);
+        /// <returns>Danh sách đơn hàng dưới dạng Dictionary.</returns>
+        Task<Dictionary<string, int>> GetOrdersByDate(DateTime fromTime, DateTime toTime);
 
         /// <summary>
         /// Lấy danh sách đơn hàng tuỳ chỉnh.
