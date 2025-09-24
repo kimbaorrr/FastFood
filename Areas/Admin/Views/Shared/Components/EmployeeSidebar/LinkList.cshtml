@@ -1,0 +1,173 @@
+﻿<div class="scrollbar" data-simplebar>
+    <ul class="navbar-nav" id="navbar-nav">
+
+        <li class="menu-title">Menu</li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "Home", new { area = "Admin" })">
+                <span class="nav-icon">
+                    <iconify-icon icon="solar:widget-5-bold-duotone"></iconify-icon>
+                </span>
+                <span class="nav-text"> Trang chủ </span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link menu-arrow" href="#sidebarProducts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarProducts">
+                <span class="nav-icon">
+                    <iconify-icon icon="mdi:hamburger"></iconify-icon>
+                </span>
+                <span class="nav-text"> Sản phẩm </span>
+            </a>
+            <div class="collapse" id="sidebarProducts">
+                <ul class="nav sub-navbar-nav">
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("List", "Product", new { area = "Admin" })">Tất cả sản phẩm</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("Create", "Product", new { area = "Admin" })">Thêm sản phẩm</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("Approve", "Product", new { area = "Admin" })">Phê duyệt sản phẩm</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("GetCategories", "Categories", new { area = "Admin" })">Quản lý danh mục</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link menu-arrow" href="#sidebarBlogs" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarBlogs">
+                <span class="nav-icon">
+                    <iconify-icon icon="mage:note-fill"></iconify-icon>
+                </span>
+                <span class="nav-text"> Bài viết </span>
+            </a>
+            <div class="collapse" id="sidebarBlogs">
+                <ul class="nav sub-navbar-nav">
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("List", "Article", new { area = "Admin" })">Tất cả bài viết</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("Create", "Article", new { area = "Admin" })">Thêm bài viết</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("Approve", "Article", new { area = "Admin" })">Phê duyệt bài viết</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link menu-arrow" href="#sidebarInventory" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarInventory">
+                <span class="nav-icon">
+                    <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
+                </span>
+                <span class="nav-text"> Nguyên liệu </span>
+            </a>
+            <div class="collapse" id="sidebarInventory">
+                <ul class="nav sub-navbar-nav">
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("WareHouse", "Ingredient", new { area = "Admin" })">Quản lý kho</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link menu-arrow" href="#sidebarOrders" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarOrders">
+                <span class="nav-icon">
+                    <iconify-icon icon="solar:bag-smile-bold-duotone"></iconify-icon>
+                </span>
+                <span class="nav-text"> Đơn hàng </span>
+            </a>
+            <div class="collapse" id="sidebarOrders">
+                <ul class="nav sub-navbar-nav">
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("List", "Order", new { area = "Admin" })">Tất cả đơn hàng</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("OrderStatus", "Order", new { area = "Admin", id = 4 })">Đang thực hiện món</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("OrderStatus", "Order", new { area = "Admin", id = 5 })">Đơn hàng chờ giao</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("OrderStatus", "Order", new { area = "Admin", id = 6 })">Đơn hàng đang giao</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("OrderStatus", "Order", new { area = "Admin", id = 7 })">Đơn hàng đã giao</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("OrderStatus", "Order", new { area = "Admin", id = 8 })">Đơn hàng bị hủy</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link menu-arrow" href="#sidebarCustomers" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCustomers">
+                <span class="nav-icon">
+                    <iconify-icon icon="solar:users-group-two-rounded-bold-duotone"></iconify-icon>
+                </span>
+                <span class="nav-text"> Khách hàng </span>
+            </a>
+            <div class="collapse" id="sidebarCustomers">
+                <ul class="nav sub-navbar-nav">
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("List", "Customer", new { area = "Admin" })">Danh sách khách hàng</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("Potential", "Customer", new { area = "Admin" })">Khách hàng tiềm năng</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link menu-arrow" href="#sidebarInvoice" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarInvoice">
+                <span class="nav-icon">
+                    <iconify-icon icon="solar:bill-list-bold-duotone"></iconify-icon>
+                </span>
+                <span class="nav-text"> Nhân viên </span>
+            </a>
+            <div class="collapse" id="sidebarInvoice">
+                <ul class="nav sub-navbar-nav">
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("List", "Employee", new { area = "Admin" })">Danh sách nhân viên</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("Permission", "Employee", new { area = "Admin" })">Quản lý tài khoản</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link menu-arrow" href="#sidebarRoles" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarRoles">
+                <span class="nav-icon">
+                    <iconify-icon icon="solar:user-speak-rounded-bold-duotone"></iconify-icon>
+                </span>
+                <span class="nav-text"> Tài khoản </span>
+            </a>
+            <div class="collapse" id="sidebarRoles">
+                <ul class="nav sub-navbar-nav">
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("Info", "Account", new { area = "Admin" })">Thông tin tài khoản</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("History", "Account", new { area = "Admin" })">Nhật ký truy cập</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="#" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Đổi mật khẩu</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="@Url.Action("Logout", "Account", new { area = "Admin" })">Đăng xuất</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+    </ul>
+</div>

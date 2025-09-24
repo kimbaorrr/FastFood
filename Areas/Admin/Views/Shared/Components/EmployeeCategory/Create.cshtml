@@ -1,0 +1,71 @@
+﻿@model NewCategoryViewModel
+
+<div class="modal fade" id="createCategoryModal" tabindex="-1" role="dialog" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createCategoryModalLabel">Tạo danh mục mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @using (Html.BeginForm("Create", "Categories", null, FormMethod.Post, true, new { area = "Admin", id = "createCategoryForm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group mb-2">
+                        @Html.LabelFor(x => x.CategoryName, new { @class = "form-label" }) <span class="text-red"> *</span>
+                        @Html.TextBoxFor(x => x.CategoryName, new { @class = "form-control", @required = "" })
+                    </div>
+                    <div class="form-group mb-2">
+                        @Html.LabelFor(x => x.Description, new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.Description, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group mb-2">
+                        @Html.LabelFor(x => x.ThumbnailImage, new { @class = "form-label" }) <span class="text-red"> *</span>
+                        @Html.TextBoxFor(x => x.ThumbnailImage, new { @class = "form-control", @type = "file", @accept = "image/*", @required = "" })
+                    </div>
+                    <div class="form-group mb-2">
+                        @Html.LabelFor(x => x.BackgroundImage, new { @class = "form-label" }) <span class="text-red"> *</span>
+                        @Html.TextBoxFor(x => x.BackgroundImage, new { @class = "form-control", @type = "file", @accept = "image/*", @required = "" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+            $('#createCategoryForm').on('submit', function (e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method') || 'POST',
+                    dataType: 'json',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        alertMessage(response.message, response.type);
+                        if (response.success) {
+                            $('#createCategoryModal').modal('hide');
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        }
+                    },
+                    error: function () {
+                        alert('Đã xảy ra lỗi khi thực hiện yêu cầu.');
+                    }
+                });
+            });
+
+
+    });
+</script>

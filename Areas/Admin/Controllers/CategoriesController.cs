@@ -21,13 +21,16 @@ namespace FastFood.Areas.Admin.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<IActionResult> Get(int page = 1, int size = 10)
+        public async Task<IActionResult> GetCategories([FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var categories = await this._categoryService.GetCategoriesPagedList(page, size);
+            var categoriesByProductCount = await this._categoryService.GetCategoriesOrderByProductCount(4);
+
             ViewBag.Categories = categories;
+            ViewBag.CategoriesByProductCount = categoriesByProductCount;
             ViewBag.CurrentPage = categories.PageNumber;
             ViewBag.TotalPages = categories.PageCount;
-            return View();
+            return View("List");
         }
 
         [HttpPost("create")]

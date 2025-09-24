@@ -44,5 +44,10 @@ namespace FastFood.Services.Interfaces
         /// Lấy danh sách view model danh mục sản phẩm tùy chỉnh.
         /// </summary>
         Task<List<CustomCategoryViewModel>> GetCustomCategoryViewModel();
+        /// <summary>
+        /// Lấy danh mục theo số lượng sản phẩm, sắp xếp giảm dần.
+        /// </summary>
+        /// <returns></returns>
+        Task<List<Category>> GetCategoriesOrderByProductCount(int take);
     }
 }

@@ -1,4 +1,4 @@
-﻿@using FastFood.Models
+﻿@model NewCategoryViewModel
 
 <div class="modal fade" id="createCategoryModal" tabindex="-1" role="dialog" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -7,9 +7,9 @@
                 <h5 class="modal-title" id="createCategoryModalLabel">Tạo danh mục mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            @using (Html.BeginForm("Create", "Categories", null, FormMethod.Post, true, new { area = "Admin" , id = "createCategoryForm" }))
+            @using (Html.BeginForm("Create", "Categories", null, FormMethod.Post, true, new { area = "Admin", id = "createCategoryForm" }))
             {
-            @model FastFood_DanhMuc_TaoMoi
+                @model FastFood_DanhMuc_TaoMoi
                 @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div class="form-group mb-2">

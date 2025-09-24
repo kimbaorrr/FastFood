@@ -91,7 +91,7 @@ namespace FastFood.Services
                 (bool success, string message) = await this.DeleteCategory(categoryId);
                 if (success)
                     successIds.Add(categoryId);
-                else 
+                else
                     failedIds.Add(categoryId);
             }
             return (true, $"Đã xóa thành công {successIds.Count}/{failedIds.Count} danh mục. Các id danh mục lỗi gồm: {failedIds.ToArray()}");
@@ -140,6 +140,12 @@ namespace FastFood.Services
             }
 
             return result;
+        }
+
+        public async Task<List<Category>> GetCategoriesOrderByProductCount(int take)
+        {
+            var categories = await this._categoryRepository.GetCategories();
+            return categories.OrderByDescending(c => c.Products.Count).Take(take).ToList();
         }
     }
 }

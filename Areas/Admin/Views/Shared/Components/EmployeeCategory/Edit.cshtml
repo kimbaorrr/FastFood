@@ -1,4 +1,4 @@
-﻿@using FastFood.Models
+﻿@model EditCategoryViewModel
 
 <div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -9,17 +9,16 @@
 			</div>
 			@using (Html.BeginForm("Edit", "Categories", null, FormMethod.Post, true, new { id = "editCategoryForm", area = "Admin" }))
 			{
-			@model FastFood_DanhMuc_SuaDanhMuc
-				@Html.Hidden("MaDanhMuc", "")
+				@Html.Hidden("CategoryId", "")
 				@Html.AntiForgeryToken()
 				<div class="modal-body">
 					<div class="form-group mb-2">
-						@Html.LabelFor(x => x.TenDanhMuc, new { @class = "form-label" }) <span class="text-red"> *</span>
-						@Html.TextBoxFor(x => x.TenDanhMuc, new { @class = "form-control category-name", @required = "" })
+						@Html.LabelFor(x => x.CategoryName, new { @class = "form-label" }) <span class="text-red"> *</span>
+						@Html.TextBoxFor(x => x.CategoryName, new { @class = "form-control category-name", @required = "" })
 					</div>
 					<div class="form-group mb-2">
-						@Html.LabelFor(x => x.MoTa, new { @class = "form-label" })
-						@Html.TextBoxFor(x => x.MoTa, new { @class = "form-control category-description" })
+						@Html.LabelFor(x => x.Description, new { @class = "form-label" })
+						@Html.TextBoxFor(x => x.Description, new { @class = "form-control category-description" })
 					</div>
 
 				</div>
@@ -40,8 +39,8 @@
 			const formData = new FormData(this);
 
 			$.ajax({
-				url: '@Url.Action("Edit", "Categories", new { area = "Admin" })',
-				type: 'POST',
+				url: $(this).attr('action'),
+				type: $(this).attr('method'),
 				dataType: 'json',
 				data: formData,
 				processData: false,
