@@ -14,7 +14,7 @@ namespace FastFood.Areas.Admin.Controllers
     [Area("Admin")]
     public abstract class BaseEmployeeController : BaseAppController
     {
-        protected int? _employeeId => this.GetEmployeeFromClaim()?.EmployeeId ?? -1;
+        protected int _employeeId => this.GetEmployeeFromClaim()?.EmployeeId ?? -1;
         protected BaseEmployeeController()
         {
 

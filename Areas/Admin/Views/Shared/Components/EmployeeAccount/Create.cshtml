@@ -1,41 +1,40 @@
-﻿@using FastFood.Models;
-@model FastFood_NhanVienDangNhap_TaoTaiKhoan
+﻿@model EmployeeRegisterLoginAccountViewModel
 
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header text-center">
-                <h4 class="m-0 card-title">Tạo tài khoản</h4>
+                <h4 class="card-title m-0">Tạo tài khoản</h4>
             </div>
             <div class="card-body">
-                @using (Html.BeginForm("Create", "Employee", FormMethod.Post, new { area = "Admin", id = "createEmployeeForm" }))
+                @using (Html.BeginForm("RegisterLoginAccount", "Employee", FormMethod.Post, new { area = "Admin", id = "createEmployeeForm" }))
                 {
                     @Html.AntiForgeryToken()
                     <div class="form-group">
-                        <select id="MaNhanVien" name="MaNhanVien" class="form-control mt-1" required>
+                        <select id="EmployeeId" name="EmployeeId" class="form-control mt-1" required>
                             <option value="">Chọn nhân viên</option>
                         </select>
                     </div>
                     <div class="form-group mt-2">
-                        @Html.LabelFor(x => x.TenDangNhap, new { @class = "form-label" }) <span class="text-red"> *</span>
-                        @Html.TextBoxFor(x => x.TenDangNhap, new { @class = "form-control", @autocomplete = "off", @required = "" })
+                        @Html.LabelFor(x => x.UserName, new { @class = "form-label" }) <span class="text-red"> *</span>
+                        @Html.TextBoxFor(x => x.UserName, new { @class = "form-control", @autocomplete = "off", @required = "" })
                     </div>
                     <div class="form-group mt-2">
-                        @Html.LabelFor(x => x.MatKhau, new { @class = "form-label" }) <span class="text-red"> *</span>
-                        @Html.PasswordFor(x => x.MatKhau, new { @class = "form-control", @autocomplete = "off", @required = "" })
+                        @Html.LabelFor(x => x.Password, new { @class = "form-label" }) <span class="text-red"> *</span>
+                        @Html.PasswordFor(x => x.Password, new { @class = "form-control", @autocomplete = "off", @required = "" })
                     </div>
                     <div class="form-group mt-2">
-                        @Html.LabelFor(x => x.VaiTro, new { @class = "form-label" }) <span class="text-red"> *</span>
-                        <select name="VaiTro" class="form-control">
+                        @Html.LabelFor(x => x.Role, new { @class = "form-label" }) <span class="text-red"> *</span>
+                        <select name="Role" class="form-control">
                             <option value="true">Quản trị viên</option>
                             <option value="false" selected>Người dùng</option>
                         </select>
                     </div>
                     <div class="form-group mt-2">
                         <label class="form-label">Chọn Quyền:</label> <span class="text-red"> *</span>
-                        <div class="row mt-1 listPermission"></div>
+                        <div class="row listPermission mt-1"></div>
                     </div>
-                    <button type="submit" class="btn btn-success mt-3 w-100">Tạo tài khoản</button>
+                    <button type="submit" class="btn btn-success w-100 mt-3">Tạo tài khoản</button>
                 }
             </div>
         </div>
@@ -43,25 +42,23 @@
 </div>
 
 <script>
-    
-
     function loadEmployeeData() {
         $.ajax({
-            url: '@Url.Action("GetNonInfo", "Employee", new { area = "Admin" })',
+            url: '@Url.Action("GetEmployeesByAccountStatus", "Employee", new { area = "Admin" })',
             type: 'GET',
             dataType: 'json',
-            success: function(data) {
-                if (Array.isArray(data)) {
-                    var $employeeSelect = $('#createEmployeeForm #MaNhanVien');
+            success: function(response) {
+                if (Array.isArray(response.data)) {
+                    var $employeeSelect = $('#createEmployeeForm #CustomerId');
                     $employeeSelect.empty();
                     $employeeSelect.append('<option value="">Chọn nhân viên</option>');
 
-                    data.forEach(function (employee) {
-                        if (employee.MaNhanVien && employee.HoTen) {
+                    response.data.forEach(function (employee) {
+                        if (employee.EmployeeId && employee.FullName) {
                             $employeeSelect.append(
                                 $('<option>', {
-                                    value: employee.MaNhanVien,
-                                    text: employee.HoTen
+                                    value: employee.EmployeeId,
+                                    text: employee.FullName
                                 })
                             );
                         }
@@ -90,7 +87,7 @@
                 selectedPermissions.push($(this).val());
             });
 
-            formData += '&permissions=' + JSON.stringify(selectedPermissions);
+            formData += '&selectedPermissions=' + JSON.stringify(selectedPermissions);
 
             $.ajax({
                 url: url,

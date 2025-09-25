@@ -1,7 +1,7 @@
 ﻿@using FastFood.Models
 
 @{
-	var dsQuyenHan = FastFood_NhanVienDangNhap.getQuyenHanNhanVien();
+	var employeePermissions = ViewBag.Permissions as List<Permission>;
 
 }
 
@@ -10,39 +10,39 @@
 	<div class="row mt-3">
 		<div class="col-12 col-lg-4">
 			<!-- Form tạo tài khoản nhân viên -->
-			@Html.Partial("_Create")
+			@await Component.InvokeAsync("EmployeeAccount", new { viewName = "Create" })
 
 		</div>
 		<div class="col-12 col-lg-8">
 			<!-- Bảng phân quyền nhân viên -->
-			@Html.Partial("_PermissionTable")
+			@await Component.InvokeAsync("EmployeeAccount", new { viewName = "PermissionTable" })
 
 		</div>
 	</div>
 
 	<!-- Edit Modal -->
-	@Html.Partial("_Edit")
+	@await Component.InvokeAsync("EmployeeAccount", new { viewName = "Edit" })
 </div>
 
 <script>
 
 	function loadListPermission() {
 		$.ajax({
-			url: '@Url.Action("GetListPermission", "Employee", new { area = "Admin" })',
+			url: '@Url.Action("GetPermission", "Employee", new { area = "Admin" })',
 			type: 'GET',
 			dataType: 'json',
-			success: function(data) {
+			success: function(response) {
 				var permission = $('.listPermission');
 				permission.empty();
 
-				$.each(data, function(index, item) {
+				$.each(response.data, function(index, item) {
 					permission.append(
 						`
 						<div class="col-md-4 mb-1">
 								 <div class="form-check">
-									 <input class="form-check-input choosePermission" type="checkbox" value="${item.MaQuyenHan}">
+									 <input class="form-check-input choosePermission" type="checkbox" value="${item.Id}">
 									 <label class="form-check-label">
-										 ${item.MoTa}
+										 ${item.Name}
 									 </label>
 								 </div>
 						</div>
@@ -86,9 +86,9 @@
 			const employeeId = $(this).data("employee-id");
 			const userName = $(this).data("user-name");
 
-			$("#editModal input[name='employeeId']").val(employeeId);
-			$("#editModal span[name='employeeId']").text(employeeId);
-			$("#editModal input[name='TenDangNhap']").val(userName);
+			$("#editModal input[name='EmployeeId']").val(employeeId);
+			$("#editModal span[name='EmployeeId']").text(employeeId);
+			$("#editModal input[name='UserName']").val(userName);
 		});
 
 		$('#editEmployeeForm').on('submit', function (e) {
@@ -102,7 +102,7 @@
 				selectedPermissions.push($(this).val());
 			});
 
-			formData += '&permissions=' + JSON.stringify(selectedPermissions);
+			formData += '&selectedPermissions=' + JSON.stringify(selectedPermissions);
 			formData += '&role=' + role;
 			$.ajax({
 				url: url,

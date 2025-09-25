@@ -1,7 +1,7 @@
-﻿@using FastFood.DB;
-@using FastFood.Models
-@{
-	IEnumerable<Baiviet>? dsBaiViet = ViewBag.BaiViet as IEnumerable<Baiviet>;
+﻿@{
+	var articles = ViewBag.Articles as IPagedList<Article>;
+	var currentPage = ViewBag.CurrentPage as int?;
+	var totalPages = ViewBag.TotalPages as int?;
 
 }
 
@@ -18,7 +18,7 @@
 				</div>
 				<div>
 					<div class="table-responsive">
-						<table class="table align-middle mb-0 table-hover table-centered">
+						<table class="table-hover table-centered mb-0 table align-middle">
 							<thead class="bg-light-subtle">
 								<tr>
 									<th>ID</th>
@@ -31,27 +31,27 @@
 								</tr>
 							</thead>
 							<tbody>
-								@foreach (Baiviet bv in dsBaiViet!)
+								@foreach (var article in articles!)
 								{
 									<tr>
-										<td><a href="@Url.Action("Detail", "Article", new {area = "Admin", id = bv.Mabaiviet })">@bv.Mabaiviet</a></td>
-										<td>@FastFood_NhanVien.getHoTen(bv.Nguoitao.ToString())</td>
-										<td>@bv.Tieude</td>
-										<td>@bv.Ngaytao</td>
-										<td>@bv.Ngaycapnhat</td>
-										<td>@bv.Ngayduyet</td>
+										<td><a href="@Url.Action("Detail", "Article", new {area = "Admin", articleId = article.ArticleId })">@article.ArticleId</a></td>
+										<td>@(article.Author.LastName + " " + article.Author.FirstName)</td>
+										<td>@article.Title</td>
+										<td>@article.CreatedAt</td>
+										<td>@article.UpdatedAt</td>
+										<td>@article.ApproveAt</td>
 										<td>
 											<div class="d-flex gap-2">
-												<a href="#" class="btn btn-light btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#viewArticleModal" data-article-id="@bv.Mabaiviet" data-article-title="@bv.Tieude" data-article-content="@bv.Noidung" data-article-description="@bv.Motangan">
-													<iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
+												<a href="#" class="btn btn-light btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#viewArticleModal" data-article-id="@article.ArticleId" data-article-title="@article.Title" data-article-content="@article.Content" data-article-description="@article.Summary">
+													<iconify-icon icon="solar:eye-broken" class="fs-18 align-middle"></iconify-icon>
 
 												</a>
-												<a href="#" class="btn btn-soft-primary btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editArticleModal" data-article-id="@bv.Mabaiviet" data-article-title="@bv.Tieude" data-article-content="@bv.Noidung" data-article-description="@bv.Motangan">
-													<iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
+												<a href="#" class="btn btn-soft-primary btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editArticleModal" data-article-id="@article.ArticleId" data-article-title="@article.Title" data-article-content="@article.Content" data-article-description="@article.Summary">
+													<iconify-icon icon="solar:pen-2-broken" class="fs-18 align-middle"></iconify-icon>
 
 												</a>
-												<a href="#" class="btn btn-soft-danger btn-sm btn-delete" data-article-id="@bv.Mabaiviet">
-													<iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
+												<a href="#" class="btn btn-soft-danger btn-sm btn-delete" data-article-id="@article.ArticleId">
+													<iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="fs-18 align-middle"></iconify-icon>
 												</a>
 
 											</div>
@@ -121,10 +121,13 @@
 			</div>
 		</div>
 	</div>
+
 	<!--Edit Article Modal-->
-	@Html.Partial("_Edit")
+	@await Component.InvokeAsync("EmployeeArticle", new {viewName = "Edit"})
+
 	<!--View Article Modal-->
-	@Html.Partial("_View")
+	@await Component.InvokeAsync("EmployeeArticle", new { viewName = "View" })
+
 </div>
 <!-- End Container Fluid -->
 
@@ -132,7 +135,7 @@
 
 	$(document).ready(function () {
 
-		const token = $('input[name="__RequestVerificationToken"]').val();
+		let token = $('input[name="__RequestVerificationToken"]').val();
 
 		tinymce.init({
 			selector: '.article-content',
@@ -150,7 +153,7 @@
 			$(".article-title").val(articleTitle);
 			$(".article-description").val(articleDescription);
 			$("#editArticleModalLabel").find("span").text(articleId);
-			$("#MaBaiViet").val(articleId);
+			$("#ArticleId").val(articleId);
 
 			tinymce.activeEditor.setContent(articleContent || '');
 		});

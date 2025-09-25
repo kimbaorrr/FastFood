@@ -1,11 +1,8 @@
-﻿@    using FastFood.Models;
-@    using FastFood.DB;
-@    using X.PagedList;
-@    using X.PagedList.Mvc;
-    using FastFood.Models.ViewModels;
-@{
+﻿@{
     ViewBag.Title = "Tất cả sản phẩm";
-    IEnumerable<Sanpham>? dsSanPham = ViewBag.SanPham as IEnumerable<Sanpham>;
+    var products = ViewBag.Products as IPagedList<Product>;
+    var currentPage = ViewBag.CurrentPage as int? ?? 1;
+	var totalPages = ViewBag.TotalPages as int? ?? 1;
 }
 
 @Html.AntiForgeryToken()
@@ -18,7 +15,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center gap-1">
                     <h4 class="card-title flex-grow-1">@ViewBag.Title</h4>
 
-                    <button id="delete-selected" class="btn btn-danger btn-sm" style="display: none;">Xóa đã chọn</button>
+                    <button id="deleteProductSelected" class="btn btn-danger btn-sm" style="display: none;">Xóa đã chọn</button>
                 </div>
                 <div>
                     <div class="table-responsive">
@@ -41,42 +38,41 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var sp in ViewBag.SanPham)
+                                @foreach (var product in products!)
                                 {
-                                    string[] anhSplitted = sp.Hinhanh != null ? sp.Hinhanh.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) : Array.Empty<string>();
-                                    string imageUrl = (anhSplitted != null && anhSplitted.Length > 0) ? anhSplitted[0] : "#";
+                                    string[] images = product.Image?.Split(",") ?? new string[] { }; 
                                     <tr>
                                         <td>
 
                                             <div class="form-check ms-1">
-                                                <input type="checkbox" class="form-check-input product-checkbox" data-id="@sp.Masanpham">
+                                                <input type="checkbox" class="form-check-input product-checkbox" data-id="@product.ProductId">
                                                 <label class="form-check-label">&nbsp;</label>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
                                                 <div class="bg-light avatar-md d-flex align-items-center justify-content-center rounded">
-                                                    <img src="@imageUrl" alt="" class="avatar-md">
+                                                    <img src="@images[0]" alt="" class="avatar-md">
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <p class="text-dark fw-medium fs-15 mb-1">@sp.Tensanpham</p>
-                                                    <p class="text-secondary product-description mb-0" data-full-description="@sp.Motangan">@sp.Motangan</p>
+                                                    <p class="text-dark fw-medium fs-15 mb-1">@product.ProductName</p>
+                                                    <p class="text-secondary product-description mb-0" data-full-description="@product.Summary">@product.Summary</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="text-center">
                                             <div class="d-flex flex-column align-items-center">
-                                                <p class="text-red fw-bold mb-1">@sp.Giasaukhuyenmai đ</p>
-                                                @if (sp.Khuyenmai != 0)
+                                                <p class="text-red fw-bold mb-1">@product.FinalPrice đ</p>
+                                                @if (product.Discount != 0)
                                                 {
-                                                    <p class="text-secondary text-muted text-decoration-line-through mb-0">@sp.Giagoc đ</p>
+                                                    <p class="text-secondary text-muted text-decoration-line-through mb-0">@product.OriginalPrice đ</p>
                                                 }
                                             </div>
                                         </td>
-                                        <td> @sp.MadanhmucNavigation!.Tendanhmuc</td>
+                                        <td> @product.Category.CategoryName</td>
                                         <td>
                                             @{
-                                                if (sp.Daduyet)
+                                                if (product.IsApprove)
                                                 {
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#09ee2e" fill-rule="evenodd" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20m10.742-26.33a1 1 0 1 0-1.483-1.34L21.28 29.567l-6.59-6.291a1 1 0 0 0-1.382 1.446l7.334 7l.743.71l.689-.762z" clip-rule="evenodd" /></svg>
                                                 }
@@ -86,19 +82,19 @@
                                                 }
                                             }
                                         </td>
-                                        <td> @sp.Ngayduyet</td>
+                                        <td> @product.ApprovedAt</td>
                                         <td>
-                                            <span class="badge bg-light text-dark fs-12 me-1 p-1"><i class="bx bxs-star fs-14 text-warning me-1 align-text-top"></i>@FastFood_SanPham.getXepHangSaoTrungBinh(sp.Masanpham)</span> @FastFood_SanPham.getTongLuotDanhGia(sp.Masanpham) đánh giá
+                                            <span class="badge bg-light text-dark fs-12 me-1 p-1"><i class="bx bxs-star fs-14 text-warning me-1 align-text-top"></i>@product.ProductReviews.Select(x=>x.StarRating)</span> @product.ProductReviews.Count đánh giá
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                <a href="@Url.Action("Detail", "Product", new {area = "Admin", id = sp.Masanpham})" class="btn btn-light btn-sm">
+                                                <a href="@Url.Action("Detail", "Product", new {area = "Admin", productId = product.ProductId})" class="btn btn-light btn-sm">
                                                     <iconify-icon icon="solar:eye-broken" class="fs-18 align-middle"></iconify-icon>
                                                 </a>
-                                                <a href="@Url.Action("Detail", "Product", new {area = "Admin", id = sp.Masanpham})" class="btn btn-soft-primary btn-sm">
+                                                <a href="@Url.Action("Detail", "Product", new { area = "Admin", productId = product.ProductId })" class="btn btn-soft-primary btn-sm">
                                                     <iconify-icon icon="solar:pen-2-broken" class="fs-18 align-middle"></iconify-icon>
                                                 </a>
-                                                <a href="#" class="btn btn-soft-danger btn-sm btn-delete" data-id="@sp.Masanpham">
+                                                <a href="#" class="btn btn-soft-danger btn-sm btn-delete" data-product-id="@product.ProductId">
                                                     <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="fs-18 align-middle"></iconify-icon>
                                                 </a>
                                             </div>
@@ -177,7 +173,7 @@
 const token = $('input[name="__RequestVerificationToken"]').val();
 $(document).on('click', '.btn-delete', function (event) {
     event.preventDefault();
-    const productId = $(this).data('id');
+    const productId = $(this).data('product-id');
     
     if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
         $.ajax({
@@ -207,7 +203,7 @@ $('#select-all').on('click', function () {
     $('.product-checkbox').prop('checked', this.checked);
 });
 
-$('#delete-selected').on('click', function () {
+$('#deleteProductSelected').on('click', function () {
     const selectedIds = [];
     $('.product-checkbox:checked').each(function () {
         selectedIds.push($(this).data('id'));
@@ -247,7 +243,7 @@ $('#delete-selected').on('click', function () {
         });
 
         $('.product-checkbox').on("change", function () {
-            $('#delete-selected').toggle($('.product-checkbox:checked').length > 0);
+            $('#deleteProductSelected').toggle($('.product-checkbox:checked').length > 0);
         });
 
     function exportTableToCSV(data, filename) {

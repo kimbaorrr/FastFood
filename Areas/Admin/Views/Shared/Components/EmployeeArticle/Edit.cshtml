@@ -1,12 +1,9 @@
-﻿@using FastFood.Models;
+﻿@model EditArticleViewModel
 
 <div class="modal fade" id="editArticleModal" tabindex="-1" aria-labelledby="editArticleModalLabel" aria-hidden="true">
 	@using (Html.BeginForm("Edit", "Article", null, FormMethod.Post, true, new { @area = "Admin", @id = "editArticleForm", }))
 	{
-		@model FastFood_BaiViet_SuaBaiViet
 		@Html.AntiForgeryToken()
-		
-
 		<div class="modal-dialog modal-lg modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -15,18 +12,18 @@
 				</div>
 
 				<div class="modal-body">
-					@Html.Hidden("MaBaiViet", "")
+					@Html.Hidden("ArticleId", "")
 					<div class="form-group mb-2">
-						@Html.LabelFor(x => x.TieuDe, new { @class = "form-label" }) <span class="text-red"> *</span>
-						@Html.TextBoxFor(x => x.TieuDe, new { @class = "form-control article-title" })
+						@Html.LabelFor(x => x.Title, new { @class = "form-label" }) <span class="text-red"> *</span>
+						@Html.TextBoxFor(x => x.Title, new { @class = "form-control article-title" })
 					</div>
 					<div class="form-group mb-2">
-						@Html.LabelFor(x => x.MoTaNgan, new { @class = "form-label" })
-						@Html.TextBoxFor(x => x.MoTaNgan, new { @class = "form-control article-description" })
+						@Html.LabelFor(x => x.Summary, new { @class = "form-label" })
+						@Html.TextBoxFor(x => x.Summary, new { @class = "form-control article-description" })
 					</div>
 					<div class="form-group mb-2">
-						@Html.LabelFor(x => x.NoiDung, new { @class = "form-label" })
-						@Html.TextAreaFor(x => x.NoiDung, new { @class = "form-control article-content" })
+						@Html.LabelFor(x => x.Content, new { @class = "form-label" })
+						@Html.TextAreaFor(x => x.Content, new { @class = "form-control article-content" })
 					</div>
 				</div>
 				<div class="modal-footer">

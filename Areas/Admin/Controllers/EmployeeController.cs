@@ -13,7 +13,7 @@ using X.PagedList.Extensions;
 
 namespace FastFood.Areas.Admin.Controllers
 {
-    [Route("admin/employees")]
+    [Route("admin/employee")]
     [Authorize(AuthenticationSchemes = "EmployeeScheme")]
     public class EmployeeController : BaseEmployeeController
     {
@@ -89,12 +89,12 @@ namespace FastFood.Areas.Admin.Controllers
                     x.EmployeeAccount.Permission!
                     .Split(",", StringSplitOptions.RemoveEmptyEntries)
                     .Select(int.Parse)
-                    .ToArray() 
-                    ?? new int[] {}
+                    .ToArray()
+                    ?? new int[] { }
                 )
             });
             return CreateJsonResult(true, string.Empty, customEmployeesHasAccount);
-            
+
         }
 
         [HttpPost("employee/register-account")]
@@ -103,6 +103,12 @@ namespace FastFood.Areas.Admin.Controllers
         {
             (bool success, string message) = await this._employeeService.RegisterLoginAccount(employeeRegisterLoginAccountViewModel, selectedPermissions);
             return CreateJsonResult(success, message);
+        }
+        [HttpGet("employee/all")]
+        public async Task<IActionResult> GetEmployeesHasAccount()
+        {
+            var employeeAccounts = await this._employeeRepository.GetEmployeesWithAccountStatus(true);
+            return CreateJsonResult(true, string.Empty, employeeAccounts);
         }
 
     }

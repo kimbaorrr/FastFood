@@ -14,7 +14,7 @@ namespace FastFood.Services
         /// </summary>
         /// <param name="newArticleViewModel">Model chứa thông tin bài viết mới.</param>
         /// <returns>Kết quả thực hiện và thông báo.</returns>
-        Task<(bool, string)> NewArticle(NewArticleViewModel newArticleViewModel);
+        Task<(bool, string)> NewArticle(NewArticleViewModel newArticleViewModel, int employeeId);
 
         /// <summary>
         /// Lấy danh sách bài viết phân trang.

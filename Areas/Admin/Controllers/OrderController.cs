@@ -25,7 +25,7 @@ namespace FastFood.Areas.Admin.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<IActionResult> Get([FromQuery] int page = 1, [FromQuery] int size = 10)
+        public async Task<IActionResult> List([FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var orders = await this._orderService.GetOrdersPagedList(page, size);
             var orderCards = await this._orderService.GetOrdersStatusCard();

@@ -27,7 +27,7 @@ namespace FastFood.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                (bool success, string message) = await this._articleService.NewArticle(newArticleViewModel);
+                (bool success, string message) = await this._articleService.NewArticle(newArticleViewModel, this._employeeId);
 
                 return CreateJsonResult(success, message);
             }
@@ -40,10 +40,22 @@ namespace FastFood.Areas.Admin.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<IActionResult> Get([FromQuery] int page = 1, [FromQuery] int size = 10)
+        public async Task<IActionResult> List([FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             ViewBag.Title = "Tất cả bài viết";
             var articles = await this._articleService.GetArticlesPagedList(page, size);
+            ViewBag.Articles = articles;
+            ViewBag.CurrentPage = articles.PageNumber;
+            ViewBag.TotalPages = articles.PageCount;
+            return View();
+        }
+
+        [HttpGet("approve")]
+        public async Task<IActionResult> Approve([FromQuery] int page = 1, [FromQuery] int size = 10)
+        {
+            ViewBag.Title = "Bài viết chờ phê duyệt";
+            var articles = await this._articleService.GetArticlesByApproveStatusPagedList(false, page, size);
+
             ViewBag.Articles = articles;
             ViewBag.CurrentPage = articles.PageNumber;
             ViewBag.TotalPages = articles.PageCount;
@@ -86,7 +98,8 @@ namespace FastFood.Areas.Admin.Controllers
         public async Task<IActionResult> GetNotApprove()
         {
             var notApprovedArticles = await this._articleService.GetArticlesNotApprove();
-            return CreateJsonResult(true, string.Empty, notApprovedArticles);
+            var myArticlesNotApproved = notApprovedArticles.Where(x => x.AuthorId == this._employeeId);
+            return CreateJsonResult(true, string.Empty, myArticlesNotApproved);
         }
 
         [HttpPost("edit")]

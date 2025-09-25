@@ -1,7 +1,5 @@
-﻿@using FastFood.Models;
-@using FastFood.DB;
-@{
-    IEnumerable<Nhanvien>? dsNhanVien = ViewBag.NhanVien as IEnumerable<Nhanvien>;
+﻿@{
+    var employees = ViewBag.Employees as IPagedList<Employee>;
 }
 
 <!-- Start Container Fluid -->
@@ -16,7 +14,7 @@
                 </div>
                 <div>
                     <div class="table-responsive">
-                        <table class="table align-middle mb-0 table-hover table-centered">
+                        <table class="table-hover table-centered mb-0 table align-middle">
                             <thead class="bg-light-subtle">
                                 <tr>
                                     <th>ID</th>
@@ -29,18 +27,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (Nhanvien? nv in dsNhanVien!)
+                                @foreach (Employee? emp in employees!)
                                 {
                                     <tr>
-                                        <td>@nv.Manhanvien</td>
-                                        <td>@nv.Hodem @nv.Tennhanvien</td>
-                                        <td>@nv.Email</td>
-                                        <td> @nv.Sodienthoai </td>
-                                        <td>@nv.Diachi</td>
-                                        <td>@nv.Ngaytao</td>
+                                        <td>@emp.EmployeeId</td>
+                                        <td>@(emp.LastName + " " + emp.FirstName)</td>
+                                        <td>@emp.Email</td>
+                                        <td> @emp.Phone </td>
+                                        <td>@emp.Address</td>
+                                        <td>@emp.CreatedAt</td>
                                         <td>
                                             @{
-                                                if (nv.Nhanviendangnhap != null)
+                                                if (emp.EmployeeAccount != null)
                                                 {
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#09ee2e" fill-rule="evenodd" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20m10.742-26.33a1 1 0 1 0-1.483-1.34L21.28 29.567l-6.59-6.291a1 1 0 0 0-1.382 1.446l7.334 7l.743.71l.689-.762z" clip-rule="evenodd" /></svg>
                                                 }

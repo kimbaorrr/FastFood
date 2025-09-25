@@ -164,4 +164,17 @@ namespace FastFood.Models.ViewModels
         /// </summary>
         public string Email { get; set; } = string.Empty;
     }
+
+    public class EmployeeEditAccountViewModel : BaseEmployeeAccountViewModel
+    {
+        /// <summary>
+        /// Mã nhân viên.
+        /// </summary>
+        public int EmployeeId { get; set; } = -1;
+        /// <summary>
+        /// Vai trò của nhân viên.
+        /// </summary>
+        [Display(Name = "Vai trò")]
+        public bool Role { get; set; } = false;
+    }
 }

@@ -21,7 +21,7 @@ namespace FastFood.Areas.Admin.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<IActionResult> GetCategories([FromQuery] int page = 1, [FromQuery] int size = 10)
+        public async Task<IActionResult> List([FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var categories = await this._categoryService.GetCategoriesPagedList(page, size);
             var categoriesByProductCount = await this._categoryService.GetCategoriesOrderByProductCount(4);

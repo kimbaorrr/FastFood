@@ -1,7 +1,7 @@
 ﻿@using FastFood.DB;
 @{
     ViewBag.Title = "Phê duyệt sản phẩm";
-    IEnumerable<Sanpham>? dsSanPham = ViewBag.SanPham as IEnumerable<Sanpham>;
+    var products = ViewBag.Products as List<Product>;
 }
 
 @Html.AntiForgeryToken()
@@ -14,14 +14,14 @@
                 <div class="card-header d-flex justify-content-between align-items-center gap-1">
                     <h4 class="card-title flex-grow-1">@ViewBag.Title</h4>
 
-                    <div class="d-flex gap-2 mb-2">
-                        <button id="approve-selected" class="btn btn-success d-none btn-sm">Phê duyệt được chọn</button>
-                        <button id="reject-selected" class="btn btn-danger d-none btn-sm">Từ chối được chọn</button>
+                    <div class="d-flex mb-2 gap-2">
+                        <button id="approveProductSelected" class="btn btn-success d-none btn-sm">Phê duyệt được chọn</button>
+                        <button id="rejectProductSelected" class="btn btn-danger d-none btn-sm">Từ chối được chọn</button>
                     </div>
                 </div>
                 <div>
                     <div class="table-responsive">
-                        <table class="table align-middle mb-0 table-hover table-centered">
+                        <table class="table-hover table-centered mb-0 table align-middle">
                             <thead class="bg-light-subtle">
                                 <tr>
                                     <th style="width: 20px;">
@@ -39,50 +39,49 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (Sanpham sp in dsSanPham!)
+                                @foreach (var product in products!)
                                 {
-                                    string[] anhSplitted = sp.Hinhanh != null ? sp.Hinhanh.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) : Array.Empty<string>();
-                                    string imageUrl = (anhSplitted != null && anhSplitted.Length > 0) ? anhSplitted[0] : "#";
+                                    string[] images = product.Image?.Split(",") ?? new string[] { };
                                     <tr>
                                         <td>
    
                                                     <div class="form-check ms-1">
-                                                        <input type="checkbox" class="form-check-input product-checkbox" data-id="@sp.Masanpham">
+                                                        <input type="checkbox" class="form-check-input product-checkbox" data-product-id="@product.ProductId">
                                                         <label class="form-check-label">&nbsp;</label>
                                                     </div>
 
 </td>
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
-                                                <div class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                    <img src="@imageUrl" alt="" class="avatar-md">
+                                                <div class="bg-light avatar-md d-flex align-items-center justify-content-center rounded">
+                                                    <img src="@images[0]" alt="" class="avatar-md">
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <p class="text-dark fw-medium fs-15 mb-1">@sp.Tensanpham</p>
-                                                    <p class="text-secondary mb-0 product-description" data-full-description="@sp.Motangan">@sp.Motangan</p>
+                                                    <p class="text-dark fw-medium fs-15 mb-1">@product.ProductName</p>
+                                                    <p class="text-secondary product-description mb-0" data-full-description="@product.Summary">@product.Summary</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="text-center">
                                             <div class="d-flex flex-column align-items-center">
-                                                <p class="text-red mb-1 fw-bold">@sp.Giasaukhuyenmai đ</p>
-                                                @if (sp.Khuyenmai != 0)
+                                                <p class="text-red fw-bold mb-1">@product.FinalPrice đ</p>
+                                                @if (product.Discount != 0)
                                                 {
-                                                    <p class="mb-0 text-secondary text-muted text-decoration-line-through">@sp.Giagoc đ</p>
+                                                    <p class="text-secondary text-muted text-decoration-line-through mb-0">@product.OriginalPrice đ</p>
                                                 }
                                             </div>
                                         </td>
-                                        <td> @sp.MadanhmucNavigation!.Tendanhmuc</td>
+                                        <td> @product.Category.CategoryName</td>
                                         <td>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#e92241" fill-rule="evenodd" d="M44 24c0 11.046-8.954 20-20 20S4 35.046 4 24S12.954 4 24 4s20 8.954 20 20m-27.778 7.778a1 1 0 0 1 0-1.414L22.586 24l-6.364-6.364a1 1 0 0 1 1.414-1.414L24 22.586l6.364-6.364a1 1 0 0 1 1.414 1.414L25.414 24l6.364 6.364a1 1 0 0 1-1.414 1.414L24 25.414l-6.364 6.364a1 1 0 0 1-1.414 0" clip-rule="evenodd" /></svg>
                                         </td>
-                                        <td> @sp.Ngayduyet</td>
+                                        <td> @product.ApprovedAt</td>
                                         <td>
                                                     <div class="d-flex gap-2">
-                                                        <button type="button" class="btn btn-green btn-sm action-btn" data-id="@sp.Masanpham" data-action="accept">
+                                                        <button type="button" class="btn btn-green btn-sm action-btn" data-product-id="@product.ProductId" data-action="accept">
                                                             Phê duyệt
                                                         </button>
-                                                        <button type="button" class="btn btn-red btn-sm action-btn" data-id="@sp.Masanpham" data-action="refuse">
+                                                <button type="button" class="btn btn-red btn-sm action-btn" data-product-id="@product.ProductId" data-action="refuse">
                                                             Từ chối
                                                         </button>
                                                     </div>
@@ -163,7 +162,7 @@
         const token = $('input[name="__RequestVerificationToken"]').val();
 
         $('.action-btn').click(function () {
-            const productId = $(this).data('id');
+            const productId = $(this).data('product-id');
             const action = $(this).data('action');
             $.ajax({
                 url: '@Url.Action("Approve", "Product", new {area = "Admin"})',
@@ -199,10 +198,10 @@
 
         function toggleActionButtons() {
             const anyChecked = $('.product-checkbox:checked').length > 0;
-            $('#approve-selected, #reject-selected').toggleClass('d-none', !anyChecked);
+            $('#approveProductSelected, #rejectProductSelected').toggleClass('d-none', !anyChecked);
         }
 
-        $('#approve-selected').on('click', function () {
+        $('#approveProductSelected').on('click', function () {
             let selectedIds = [];
             $('.product-checkbox:checked').each(function () {
                 let row = $(this).closest('tr');
@@ -232,7 +231,7 @@
             }
         });
 
-        $('#reject-selected').on('click', function () {
+        $('#rejectProductSelected').on('click', function () {
             let selectedIds = [];
             $('.product-checkbox:checked').each(function () {
                 let row = $(this).closest('tr');

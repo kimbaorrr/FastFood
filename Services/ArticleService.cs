@@ -23,7 +23,7 @@ namespace FastFood.Services
             _articleVirtualPath = Path.Combine(this._articleVirtualPath, "admin_page/uploads/articles");
         }
 
-        public async Task<(bool, string)> NewArticle(NewArticleViewModel newArticleViewModel)
+        public async Task<(bool, string)> NewArticle(NewArticleViewModel newArticleViewModel, int employeeId)
         {
             var articles = await this._articleRepository.GetArticles();
 
@@ -42,7 +42,7 @@ namespace FastFood.Services
                     Summary = newArticleViewModel.Summary,
                     Content = newArticleViewModel.Content,
                     CoverImage = newFilePath,
-                    AuthorId = newArticleViewModel.AuthorId,
+                    AuthorId = employeeId,
                     CreatedAt = DateTime.Now,
                     IsApproved = false
                 };

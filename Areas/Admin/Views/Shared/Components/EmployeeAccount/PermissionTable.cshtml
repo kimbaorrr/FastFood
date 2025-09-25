@@ -1,5 +1,5 @@
 ﻿<style>
-    .quyen-han-key {
+    .permissionKey {
         cursor: pointer;
     }
 </style>
@@ -12,7 +12,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive" style="overflow-y: scroll;max-height: 50vh;">
-                    <table class="table table-bordered align-middle table-hover">
+                    <table class="table-bordered table-hover table align-middle">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -36,7 +36,7 @@
 <script>
     function loadTableData() {
         $.ajax({
-            url: '@Url.Action("GetList", "Employee", new { area = "Admin" })',
+            url: '@Url.Action("GetEmployeesHasAccount", "Employee", new { area = "Admin" })',
             type: 'GET',
             dataType: 'json',
             success: function(data) {
@@ -44,26 +44,26 @@
                 tableBody.empty();
 
                 $.each(data, function(index, item) {
-                    let quyenHanHtml = Object.entries(item.QuyenHan).map(function([key, value]) {
-                        return `<span class="quyen-han-key" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${value}">${key}</span>`;
+                    let permissionHtml = Object.entries(item.Permission).map(function([key, value]) {
+                        return `<span class="permissionKey" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${value}">${key}</span>`;
                     }).join(', ');
                     var row = $('<tr></tr>');
-                    row.append('<td>' + item.MaNhanVien + '</td>');
-                    row.append('<td>' + item.HoTen + '</td>');
-                    row.append('<td>' + item.TenDangNhap + '</td>');
-                    row.append('<td>' + quyenHanHtml + '</td>');
-                    row.append('<td>' + item.VaiTro + '</td>');
+                    row.append('<td>' + item.EmployeeId + '</td>');
+                    row.append('<td>' + item.LastName + " " + item.FirstName + '</td>');
+                    row.append('<td>' + item.UserName + '</td>');
+                    row.append('<td>' + permissionHtml + '</td>');
+                    row.append('<td>' + item.Role + '</td>');
                     row.append(`
                     <td>
                         <button class="btn btn-warning btn-sm editEmployeeLogin"
                                 data-bs-toggle="modal"
                                 data-bs-target="#editModal"
-                                data-employee-id="${item.MaNhanVien}"
-                                data-user-name="${item.TenDangNhap}"
+                                data-employee-id="${item.EmployeeId}"
+                                data-user-name="${item.UserName}"
                                 >
                             Sửa
                         </button>
-                        <button class="btn btn-danger btn-sm deleteEmployeeLogin" data-employee-id="${item.MaNhanVien}">Xóa</button>
+                        <button class="btn btn-danger btn-sm deleteEmployeeLogin" data-employee-id="${item.EmployeeId}">Xóa</button>
                     </td>`);
 
                     tableBody.append(row);

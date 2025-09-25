@@ -1,0 +1,87 @@
+﻿@model NewShippingInfo
+@{
+	var orderDetail = ViewBag.OrderDetail as CustomOrderDetailViewModel;
+}
+
+<div class="modal fade" id="shippingModal" tabindex="-1" aria-labelledby="shippingModalLabel" aria-hidden="false" data-bs-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="shippingModalLabel">Thêm thông tin vận chuyển</h5>
+			</div>
+			@using (Html.BeginForm("UpdateShippingInfo", "Order", FormMethod.Post, new { id = "shippinginfoForm" }))
+			{
+
+				@Html.AntiForgeryToken()
+				@Html.Hidden("OrderId", orderDetail!.OrderId)
+				<div class="modal-body">
+					<div class="form-group mb-3">
+						@Html.LabelFor(x => x.ShippingUnit, new { @class = "form-label" }) <span class="text-red"> *</span>
+						@Html.TextBoxFor(x => x.ShippingUnit, new { @class = "form-control", @required = "" })
+					</div>
+					<div class="mb-3">
+						@Html.LabelFor(x => x.ShippingId, new { @class = "form-label" }) <span class="text-red"> *</span>
+						@Html.TextBoxFor(x => x.ShippingId, new { @class = "form-control", @required = "" })
+					</div>
+					<div class="mb-3">
+						@Html.LabelFor(x => x.EstimateDay, new { @class = "form-label" }) <span class="text-red"> *</span>
+						@Html.TextBoxFor(x => x.EstimateDay, new { @class = "form-control", @type = "number", @required = "" })
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">Xác nhận</button>
+				</div>
+			}
+
+		</div>
+	</div>
+</div>
+
+<script>
+	function checkShippingInfo(orderId) {
+		$.ajax({
+			url: '@Url.Action("IsAddShippingInfo", "Order", new { area = "Admin" })',
+			type: 'POST',
+			dataType: 'json',
+			data: { orderId: orderId },
+			success: function (response) {
+				if (!response.success) {
+					$("#status-btn").prop("disabled", true);
+					$("#shippingModal").modal('show');
+				}
+			},
+			error: function () {
+				alert('Đã xảy ra lỗi khi kiểm tra thông tin giao hàng.');
+			}
+		});
+	}
+
+	function updateShippingInfo(formData) {
+		$.ajax({
+			url: '@Url.Action("UpdateShippingInfo", "Order", new { area = "Admin" })',
+			type: 'POST',
+			dataType: 'json',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function (response) {
+				alertMessage(response.message, response.type);
+				if (response.success) {
+					$("#shippingModal").modal("hide");
+					setTimeout(() => location.reload(), 1500);
+				}
+			},
+			error: function () {
+				alert('Đã xảy ra lỗi khi cập nhật thông tin giao hàng.');
+			}
+		});
+	}
+
+	$(document).ready(function () {
+		$('#shippinginfoForm').on('submit', function (e) {
+			e.preventDefault();
+			const formData = new FormData(this);
+			updateShippingInfo(formData);
+		});
+	});
+</script>

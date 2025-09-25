@@ -1,16 +1,14 @@
-﻿@    using FastFood.Models;
-    using FastFood.Models.ViewModels;
-@{
-    @model FastFood_SanPham_ChiTietSanPham
-    string[] dsHinhAnh = ViewBag.HinhAnh as string[] ?? Array.Empty<string>();
-    string maSanPham = ViewBag.MaSanPham as string ?? string.Empty;
+﻿@{
+    @model ProductDetailPostViewModel
+    var images = ViewBag.ProductImages as string[] ?? new string[] { };
+    var productId = ViewBag.ProductId as int?;
 }
 
 
 @using (Html.BeginForm("Detail", "Product", FormMethod.Post, new { area = "Admin", id = "productForm" }))
 {
     @Html.AntiForgeryToken()
-    @Html.TextBoxFor(m => m.MaSanPham, new { @hidden = "" })
+    @Html.TextBoxFor(m => m.ProductDetail.ProductId, new { @hidden = "" })
     <!-- Start Container Fluid -->
     <div class="container-xxl">
 
@@ -23,10 +21,10 @@
                             <div class="carousel-inner">
                                 @{
                                     bool isFirst = true;
-                                    foreach (var anh in dsHinhAnh!)
+                                    foreach (var image in images!)
                                     {
                                         <div class="carousel-item @(isFirst ? "active" : "")" data-bs-interval='5000'>
-                                            <img src="@anh" class="d-block w-100" alt="img">
+                                            <img src="@image" class="d-block w-100" alt="img">
                                         </div>
                                         isFirst = false;
                                     }
@@ -51,14 +49,15 @@
                     <div class="card-body">
                         <ul class="list-group">
                             @{
-                                foreach (string anh in ViewBag.HinhAnh)
+                                foreach (string image in images)
                                 {
-                                    if (!string.IsNullOrEmpty(anh)) {
+                                    if (!string.IsNullOrEmpty(image))
+                                    {
                                         <li class="list-group-item d-flex justify-content-between align-items-baseline" style="max-height: 12rem; overflow-y: auto;">
-                                            <a href="@anh" class="text-blue fw-bold">
-                                                @anh.Split("/").Last()
+                                            <a href="@image" class="text-blue fw-bold">
+                                                @image.Split("/").Last()
                                             </a>
-                                            <button type="button" class="remove-image-btn border-0 bg-white" data-image-url="@anh" data-product-id="@maSanPham">
+                                            <button type="button" class="remove-image-btn border-0 bg-white" data-image-url="@image data-product-id="@productId">
                                                 <iconify-icon icon="streamline:delete-1-solid" class="text-danger"></iconify-icon>
                                             </button>
                                         </li>
@@ -67,7 +66,7 @@
                                 }
                             }
                         </ul>
-                        @Html.TextBox("HinhAnh", null, new { @class = "form-control mt-2", @multiple = "", @type = "file", id = "HinhAnh", @accept = "image/*" })
+                        @Html.TextBoxFor(x=>x.ProductImages, new { @type = "file", @class = "form-control mt-3", @multiple = "multiple", @accept = "image/*" }))
                     </div>
 
                 </div>
@@ -79,21 +78,21 @@
                     <div class="card-header d-flex justify-content-start">
                         <h4 class="card-title mt-1">Thông tin sản phẩm</h4>
                         <h4 class="badge bg-success text-light fs-14 ms-2 px-2 py-1">
-                            @Html.DisplayTextFor(m => m.TrangThaiDuyet)
+                            @Html.DisplayTextFor(m => m.ProductDetail.ApprovedStatusText)
                         </h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    @Html.LabelFor(m => m.TenSanPham, new { @class = "form-label" })
-                                    @Html.TextBoxFor(m => m.TenSanPham, new { @class = "form-control" })
+                                    @Html.LabelFor(m => m.ProductDetail.ProductName, new { @class = "form-label" })
+                                    @Html.TextBoxFor(m => m.ProductDetail.ProductName, new { @class = "form-control" })
                                 </div>
 
                             </div>
                             <div class="col-lg-6">
-                                @Html.LabelFor(m => m.MaDanhMuc, new { @class = "form-label" })
-                                @Html.DropDownListFor(m => m.MaDanhMuc, Model.DanhMuc, "Chọn danh mục", new
+                                @Html.LabelFor(m => m.ProductDetail.Categories, new { @class = "form-label" })
+                                @Html.DropDownListFor(m => m.ProductDetail.CategoryId, Model.ProductDetail.Categories, "Chọn danh mục", new
                                 {
                                    @class = "form-control",
                                    @data_choices = "true",
@@ -106,54 +105,54 @@
                             <div class="col-lg-4">
 
                                 <div class="mb-3">
-                                    @Html.LabelFor(m => m.NgayTao, new { @class = "form-label" })
-                                    @Html.TextBoxFor(m => m.NgayTao, new { @class = "form-control", @readonly = "" })
+                                    @Html.LabelFor(m => m.ProductDetail.CreatedAt, new { @class = "form-label" })
+                                    @Html.TextBoxFor(m => m.ProductDetail.CreatedAt, new { @class = "form-control", @readonly = "" })
                                 </div>
 
                             </div>
                             <div class="col-lg-4">
 
                                 <div class="mb-3">
-                                    @Html.LabelFor(m => m.NgayCapNhat, new { @class = "form-label" })
-                                    @Html.TextBoxFor(m => m.NgayCapNhat, new { @class = "form-control", @readonly = "" })
+                                @Html.LabelFor(m => m.ProductDetail.UpdatedAt, new { @class = "form-label" })
+                                    @Html.TextBoxFor(m => m.ProductDetail.UpdatedAt, new { @class = "form-control", @readonly = "" })
                                 </div>
 
                             </div>
                             <div class="col-lg-4">
                                 <div class="mb-3">
-                                    @Html.LabelFor(m => m.NguoiTao, new { @class = "form-label" })
-                                    @Html.TextBoxFor(m => m.NguoiTao, new { @class = "form-control", @readonly = "" })
+                                    @Html.LabelFor(m => m.ProductDetail.CreatedBy, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.ProductDetail.CreatedBy, new { @class = "form-control", @readonly = "" })
                                 </div>
 
                             </div>
                             <div class="col-lg-4">
                                 <div class="mb-3">
-                                    @Html.LabelFor(m => m.TrangThaiDuyet, new { @class = "form-label" })
-                                    @Html.TextBoxFor(m => m.TrangThaiDuyet, new { @class = "form-control", @readonly = "", })
+                                    @Html.LabelFor(m => m.ProductDetail.ApprovedStatusText, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.ProductDetail.ApprovedStatusText, new { @class = "form-control", @readonly = "", })
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="mb-3">
-                                    @Html.LabelFor(m => m.NguoiDuyet, new { @class = "form-label" })
-                                    @Html.TextBoxFor(m => m.NguoiDuyet, new { @class = "form-control", @readonly = "" })
+                                    @Html.LabelFor(m => m.ProductDetail.ApprovedBy, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.ProductDetail.ApprovedBy, new { @class = "form-control", @readonly = "" })
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="mb-3">
-                                    @Html.LabelFor(m => m.NgayDuyet, new { @class = "form-label" })
-                                    @Html.TextBoxFor(m => m.NgayDuyet, new { @class = "form-control", @readonly = "" })
+                                @Html.LabelFor(m => m.ProductDetail.ApprovedAt, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.ProductDetail.ApprovedAt, new { @class = "form-control", @readonly = "" })
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="mb-3">
-                                    @Html.LabelFor(m => m.MoTaNgan, new { @class = "form-label" })
-                                    @Html.TextAreaFor(m => m.MoTaNgan, new { @class = "form-control bg-light-subtle", @rows = "7" })
+                                @Html.LabelFor(m => m.ProductDetail.Summary, new { @class = "form-label" })
+                                @Html.TextAreaFor(m => m.ProductDetail.Summary, new { @class = "form-control bg-light-subtle", @rows = "7" })
                                 </div>
                                 <div class="mb-3">
-                                    @Html.LabelFor(m => m.MoTaDai, new { @class = "form-label" })
-                                    @Html.TextAreaFor(m => m.MoTaDai, new { @class = "form-control bg-light-subtle", @rows = "7" })
+                                @Html.LabelFor(m => m.ProductDetail.Content, new { @class = "form-label" })
+                                @Html.TextAreaFor(m => m.ProductDetail.Content, new { @class = "form-control bg-light-subtle", @rows = "7" })
                                 </div>
                             </div>
                         </div>
@@ -185,29 +184,29 @@
                             <div class="row">
                                 <div class="col-lg-4">
 
-                                    @Html.LabelFor(m => m.GiaGoc, new { @class = "form-label" })
+                                    @Html.LabelFor(m => m.ProductDetail.OriginalPrice, new { @class = "form-label" })
 
                                     <div class="input-group mb-3">
                                         <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
-                                        @Html.TextBoxFor(m => m.GiaGoc, new { @class = "form-control", @type = "number" })
+                                    @Html.TextBoxFor(m => m.ProductDetail.OriginalPrice, new { @class = "form-control", @type = "number" })
                                     </div>
 
                                 </div>
                                 <div class="col-lg-4">
 
-                                    @Html.LabelFor(m => m.KhuyenMai, new { @class = "form-label" })
+                                @Html.LabelFor(m => m.ProductDetail.Discount, new { @class = "form-label" })
                                     <div class="input-group mb-3">
                                         <span class="input-group-text fs-20"><i class='bx bxs-discount'></i></span>
-                                        @Html.TextBoxFor(m => m.KhuyenMai, new { @class = "form-control", @type = "number" })
+                                    @Html.TextBoxFor(m => m.ProductDetail.Discount, new { @class = "form-control", @type = "number" })
                                     </div>
 
                                 </div>
                                 <div class="col-lg-4">
 
-                                    @Html.LabelFor(m => m.GiaSauKhuyenMai, new { @class = "form-label" })
+                                @Html.LabelFor(m => m.ProductDetail.FinalPrice, new { @class = "form-label" })
                                     <div class="input-group mb-3">
                                         <span class="input-group-text fs-20"><i class='bx bxs-file-txt'></i></span>
-                                        @Html.TextBoxFor(m => m.GiaSauKhuyenMai, new { @class = "form-control", @readonly = "true", @disabled = "true", @type = "number" })
+                                    @Html.TextBoxFor(m => m.ProductDetail.FinalPrice, new { @class = "form-control", @readonly = "true", @disabled = "true", @type = "number" })
                                     </div>
 
                                 </div>
@@ -220,7 +219,7 @@
                                 <a href="@ViewBag.ReturnURL" class="btn btn-outline-secondary w-100">Quay lại</a>
                             </div>
                             <div class="col-3">
-                                <button type="submit" id="luuThayDoi" class="btn btn-primary w-100">Lưu thay đổi</button>
+                                <button type="submit" id="saveChangeBtn" class="btn btn-primary w-100">Lưu thay đổi</button>
                             </div>
                         </div>
                     </div>
@@ -235,243 +234,166 @@
 }
 
 <script>
-    const donViTinhList = ["cái"];
-    const menuDropdownNguyenLieu = $('#ingredient-dropdown-menu');
-    const danhSachNguyenLieuDuocChon = $('#selected-ingredients-list');
-    const productId = $("#MaSanPham").val();
+        $(document).ready(() => {
+            const $ingredientDropdownMenu = $('#ingredient-dropdown-menu');
+            const $selectedIngredientsList = $('#selected-ingredients-list');
+            const unitList = ["cái"];
+            const $productForm = $('#productForm');
+            const productId = $('#ProductDetail_ProductId').val();
 
-    function layNguyenLieuSanPhamHienCo() {
-        $.ajax({
-            url: "@Url.Action("GetByProductID", "Ingredient", new { area = "Admin", productId = @maSanPham })",
-            method: 'GET',
-            dataType: 'json',
-            success: function (ingredients) {
-                console.log(ingredients);
-                $.each(ingredients, function (index, ingredient) {
-                    const itemDanhSach = $(`
-                        <li class="list-group-item d-flex justify-content-between align-items-center" id="ingredient-${ingredient.MaNguyenLieu}">
-                            <div>
-                                <h5 class="mb-1">${ingredient.TenNguyenLieu}</h5>
-                                <p class="mb-1">${ingredient.MoTa}</p>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <input type="text" class="form-control form-control-sm input-so-luong me-2" value="${ingredient.SoLuongCan}" placeholder="Số lượng">
-                                <select class="form-select form-select-sm don-vi-tinh me-2" aria-label="Đơn vị tính">
-                                    ${donViTinhList.map(donVi => `<option value="${donVi}" ${donVi === ingredient.DonViTinh ? 'selected' : ''}>${donVi}</option>`).join('')}
-                                </select>
-                                <button class="btn btn-outline-danger btn-sm btn-xoa">Xóa</button>
-                            </div>
-                        </li>
-                    `);
-                    danhSachNguyenLieuDuocChon.append(itemDanhSach);
-                    disableDropdownItem(ingredient.MaNguyenLieu);
+            function loadIngredients() {
+                $.ajax({
+                    url: "@Url.Action("Get", "Ingredient", new { area = "Admin" })",
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(ingredients) {
+                        $.each(ingredients, (_, ing) => {
+                            const item = $(`
+                                <li>
+                                    <a class="dropdown-item" href="#"
+                                       data-ingredient-id="${ing.IngredientId}"
+                                   data-ingredient-name="${ing.IngredientName}"
+                                       data-ingredient-description="${ing.Description}">
+                                    ${ing.IngredientName}
+                                    </a>
+                                </li>
+                            `);
+                            $ingredientDropdownMenu.append(item);
+                        });
+                        updateDropdownState();
+                    },
+                    error: function(err) { console.error('Error loading ingredients:', err); }
                 });
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error('Lỗi khi lấy nguyên liệu sản phẩm:', textStatus, errorThrown);
             }
-        });
-    }
 
-    function layNguyenLieu() {
-        $.ajax({
-            url: "@Url.Action("Get", "Ingredient", new { area = "Admin" })",
-            method: 'GET',
-            dataType: 'json',
-            success: function (nguyenLieuList) {
-                console.log(nguyenLieuList);
-                $.each(nguyenLieuList, function (index, nguyenLieu) {
-                    const itemDropdown = $('<li></li>').append(`
-                        <a class="dropdown-item" href="#" data-id="${nguyenLieu.MaNguyenLieu}" data-name="${nguyenLieu.TenNguyenLieu}" data-description="${nguyenLieu.MoTa}">
-                            ${nguyenLieu.TenNguyenLieu}
-                        </a>
-                    `);
-                    menuDropdownNguyenLieu.append(itemDropdown);
+            function loadProductIngredients() {
+                $.ajax({
+                    url: `@Url.Action("GetByProductID", "Ingredient", new { area = "Admin" })?productId=${productId}`,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(ingredients) {
+                        $.each(ingredients, (_, ing) => addIngredientItem(ing));
+                    },
+                    error: function(err) { console.error('Error loading product ingredients:', err); }
                 });
-                updateDropdownState();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error('Lỗi khi lấy nguyên liệu:', textStatus, errorThrown);
             }
-        });
-    }
 
-    function disableDropdownItem(maNguyenLieu) {
-        menuDropdownNguyenLieu.find(`a[data-id="${maNguyenLieu}"]`).addClass('disabled').css('pointer-events', 'none');
-    }
-
-    function enableDropdownItem(maNguyenLieu) {
-        menuDropdownNguyenLieu.find(`a[data-id="${maNguyenLieu}"]`).removeClass('disabled').css('pointer-events', 'auto');
-    }
-
-    function updateDropdownState() {
-        $('#selected-ingredients-list .list-group-item').each(function () {
-            const maNguyenLieuCode = $(this).attr('id').split('-')[1];
-            disableDropdownItem(maNguyenLieuCode);
-        });
-    }
-
-    function changeMode(mode) {
-        if (mode === "edit") {
-            $("input").removeAttr("readonly disabled");
-        }
-    }
-
-    $(document).ready(() => {
-        $("#GiaGoc, #KhuyenMai").on("change keyup", function () {
-            const giaGoc = parseInt($("#GiaGoc").val()) || 0;
-            const khuyenMai = parseInt($("#KhuyenMai").val()) || 0;
-            const discountAmount = (khuyenMai / 100) * giaGoc;
-            const giaSauKhuyenMai = giaGoc - discountAmount;
-            $("#GiaSauKhuyenMai").val(giaSauKhuyenMai);
-        });
-
-        layNguyenLieuSanPhamHienCo();
-        layNguyenLieu();
-
-        menuDropdownNguyenLieu.on('click', 'a', function (event) {
-            event.preventDefault();
-            const maNguyenLieu = $(this).data('id');
-            const tenNguyenLieu = $(this).data('name');
-            const moTaNguyenLieu = $(this).data('description');
-
-            if ($('#ingredient-' + maNguyenLieu).length === 0) {
-                const itemDanhSach = $(`
-                    <li class="list-group-item d-flex justify-content-between align-items-center" id="ingredient-${maNguyenLieu}">
+            function addIngredientItem(ing) {
+                if ($(`#ingredient-${ing.MaNguyenLieu}`).length) return;
+                const item = $(`
+                    <li class="list-group-item d-flex justify-content-between align-items-center" id="ingredient-${ing.MaNguyenLieu}">
                         <div>
-                            <h5 class="mb-1">${tenNguyenLieu}</h5>
-                            <p class="mb-1">${moTaNguyenLieu}</p>
+                            <h5 class="mb-1">${ing.TenNguyenLieu}</h5>
+                            <p class="mb-1">${ing.MoTa}</p>
                         </div>
                         <div class="d-flex align-items-center">
-                            <input type="text" class="form-control form-control-sm input-so-luong me-2" value="1" placeholder="Số lượng">
-                            <select class="form-select form-select-sm don-vi-tinh me-2" aria-label="Đơn vị tính">
-                                ${donViTinhList.map(donVi => `<option value="${donVi}">${donVi}</option>`).join('')}
-                            </select>
-                            <button class="btn btn-outline-danger btn-sm btn-xoa">Xóa</button>
+                            <input type="text" class="form-control form-control-sm quantity me-2" value="${ing.SoLuongCan || 1}" placeholder="Quantity">
+                            <select class="form-select form-select-sm unit me-2">${unitList.map(u => `<option value="${u}" ${u === ing.DonViTinh ? 'selected' : ''}>${u}</option>`).join('')}</select>
+                            <button class="btn btn-outline-danger btn-sm remove-btn">Remove</button>
                         </div>
                     </li>
                 `);
-                danhSachNguyenLieuDuocChon.append(itemDanhSach);
-                disableDropdownItem(maNguyenLieu);
-            } else {
-                alert("Nguyên liệu đã có trong danh sách.");
-            }
-        });
-
-        danhSachNguyenLieuDuocChon.on('change', '.don-vi-tinh', function () {
-            const selectedUnit = $(this).val();
-            $(this).closest('.list-group-item').data('donViTinh', selectedUnit);
-        });
-
-        danhSachNguyenLieuDuocChon.on('click', '.btn-xoa', function () {
-            const maNguyenLieuCode = $(this).closest('.list-group-item').attr('id').split('-')[1];
-            $(this).closest('.list-group-item').remove();
-            enableDropdownItem(maNguyenLieuCode);
-            updateDropdownState();
-        });
-
-        $('#productForm').on('submit', function (e) {
-            e.preventDefault();
-            const formData = new FormData();
-            const duLieuFormArray = $(this).serializeArray();
-
-            $.each(duLieuFormArray, function (index, item) {
-                formData.append(`SanPham.${item.name}`, item.value);
-            });
-
-            const antiForgeryToken = $('#productForm input[name="__RequestVerificationToken"]').val();
-            formData.append("__RequestVerificationToken", antiForgeryToken);
-
-            let index = 0;
-            $('#selected-ingredients-list .list-group-item').each(function () {
-                const maNguyenLieuCode = $(this).attr('id').split('-')[1];
-                let soLuong = parseInt($(this).find('.input-so-luong').val(), 10) || 0;
-                const donViTinh = $(this).find('.don-vi-tinh').val();
-
-                formData.append(`DanhSachNguyenLieu[${index}].MaNguyenLieu`, maNguyenLieuCode);
-                formData.append(`DanhSachNguyenLieu[${index}].SoLuong`, soLuong);
-                formData.append(`DanhSachNguyenLieu[${index}].DonViTinh`, donViTinh);
-                index++;
-            });
-
-            const hinhAnh = $('#HinhAnh')[0].files;
-            for (let i = 0; i < hinhAnh.length; i++) {
-                formData.append("HinhAnh", hinhAnh[i]);
+                $selectedIngredientsList.append(item);
+                disableDropdownItem(ing.MaNguyenLieu);
             }
 
-            for (let pair of formData.entries()) {
-                console.log(pair[0] + ': ' + pair[1]);
+            function disableDropdownItem(id) {
+                $ingredientDropdownMenu.find(`a[data-ingredient-id="${id}"]`).addClass('disabled').css('pointer-events','none');
             }
 
-            $.ajax({
-                url: '@Url.Action("Detail", "Product", new { area = "Admin" })',
-                method: 'POST',
-                data: formData,
-                dataType: 'json',
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    alertMessage(response.message, response.type);
-                    if (response.success) {
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1500);
-                    }
-                },
-                error: function (jqXHR) {
-                    alertMessage("Đã xảy ra lỗi khi gửi dữ liệu!", "red");
-                }
-            });
-        });
+            function enableDropdownItem(id) {
+                $ingredientDropdownMenu.find(`a[data-ingredient-id="${id}"]`).removeClass('disabled').css('pointer-events','auto');
+            }
 
-        $(".remove-image-btn").click(function () {
-            var imagePath = $(this).data("image-url");
-            var productId = $(this).data("product-id");
+            function updateDropdownState() {
+                $selectedIngredientsList.find('.list-group-item').each(function() {
+                    const id = $(this).attr('id').split('-')[1];
+                    disableDropdownItem(id);
+                });
+            }
 
-            $.ajax({
-                url: '@Url.Action("RemoveImage", "Product", new { area = "Admin" })',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    productId: productId,
-                    imagePath: imagePath
-                },
-                success: function (response) {
-                    alertMessage(response.type, response.message);
-                    location.reload();
-                },
-                error: function () {
-                    alert("Có lỗi xảy ra khi gửi yêu cầu.");
-                }
-            });
-        });
-
-        $('#HinhAnh').on('change', function () {
-            let files = this.files;
-            let carouselInner = $('.carousel-inner');
-
-            carouselInner.find('.carousel-item.active').removeClass('active');
-
-            for (let i = 0; i < files.length; i++) {
-                let reader = new FileReader();
-
-                reader.onload = function (e) {
-                    let carouselItem = $('<div>').addClass('carousel-item');
-                    let img = $('<img>').attr('src', e.target.result).addClass('d-block w-100').attr('alt', 'img');
-
-                    carouselItem.append(img);
-
-                    if (i === 0) {
-                        carouselItem.addClass('active');
-                    }
-
-                    carouselInner.append(carouselItem);
+            // Dropdown click
+            $ingredientDropdownMenu.on('click', 'a', function(e) {
+                e.preventDefault();
+                const ing = {
+                    MaNguyenLieu: $(this).data('ingredient-id'),
+                    TenNguyenLieu: $(this).data('ingredient-name'),
+                    MoTa: $(this).data('ingredient-description'),
+                    SoLuongCan: 1,
+                    DonViTinh: unitList[0]
                 };
+                addIngredientItem(ing);
+            });
 
-                reader.readAsDataURL(files[i]);
-            }
+            $selectedIngredientsList.on('click', '.remove-btn', function() {
+                const id = $(this).closest('.list-group-item').attr('id').split('-')[1];
+                $(this).closest('.list-group-item').remove();
+                enableDropdownItem(id);
+                updateDropdownState();
+            });
+
+            $productForm.on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+
+                $selectedIngredientsList.find('.list-group-item').each(function(i) {
+                    const id = $(this).attr('id').split('-')[1];
+                    const qty = parseInt($(this).find('.quantity').val()) || 0;
+                    const unit = $(this).find('.unit').val();
+                    formData.append(`Ingredients[${i}].Id`, id);
+                    formData.append(`Ingredients[${i}].Quantity`, qty);
+                    formData.append(`Ingredients[${i}].Unit`, unit);
+                });
+
+                const files = $('#ProductImages')[0].files;
+                for (let i = 0; i < files.length; i++) formData.append("ProductImages", files[i]);
+
+                $.ajax({
+                    url: '@Url.Action("Detail", "Product", new { area = "Admin" })',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(res) {
+                        alertMessage(res.message, res.type);
+                        if(res.success) setTimeout(()=> location.reload(), 1500);
+                    },
+                    error: function(err) {
+                        alertMessage("Error submitting data!", "red");
+                    }
+                });
+            });
+
+            $(document).on('click', '.remove-image-btn', function() {
+                const imageUrl = $(this).data('image-url');
+                const pid = $(this).data('product-id');
+                $.post('@Url.Action("RemoveImage", "Product", new { area = "Admin" })', { productId: pid, imagePath: imageUrl }, function(res) {
+                    alertMessage(res.type, res.message);
+                    location.reload();
+                }).fail(()=> alert("Error removing image"));
+            });
+
+            $('#ProductImages').on('change', function() {
+                const files = this.files;
+                const $carouselInner = $('.carousel-inner');
+                $carouselInner.empty();
+
+                for(let i=0;i<files.length;i++){
+                    const reader = new FileReader();
+                    reader.onload = function(e){
+                        const $item = $('<div>').addClass('carousel-item'+(i===0?' active':''));
+                        $('<img>').attr({src:e.target.result, alt:'img'}).addClass('d-block w-100').appendTo($item);
+                        $carouselInner.append($item);
+                    };
+                    reader.readAsDataURL(files[i]);
+                }
+            });
+
+            loadIngredients();
+            loadProductIngredients();
         });
-    });
+
 </script>
 
 

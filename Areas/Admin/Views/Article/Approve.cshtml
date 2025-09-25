@@ -1,7 +1,7 @@
-﻿@using FastFood.DB;
-@using FastFood.Models
-@{
-    IEnumerable<Baiviet>? dsBaiViet = ViewBag.BaiViet as IEnumerable<Baiviet>;
+﻿@{
+    var articles = ViewBag.Articles as IPagedList<Article>;
+    var currentPage = ViewBag.CurrentPage as int?;
+    var totalPages = ViewBag.TotalPages as int?;
 }
 
 @Html.AntiForgeryToken()
@@ -14,14 +14,14 @@
                 <div class="card-header d-flex justify-content-between align-items-center gap-1">
                     <h4 class="card-title flex-grow-1">@ViewBag.Title</h4>
 
-                    <div class="d-flex gap-2 mb-2">
-                        <button id="approve-selected" class="btn btn-success d-none btn-sm">Phê duyệt được chọn</button>
-                        <button id="reject-selected" class="btn btn-danger d-none btn-sm">Từ chối được chọn</button>
+                    <div class="d-flex mb-2 gap-2">
+                        <button id="articleApproveSelected" class="btn btn-success d-none btn-sm">Phê duyệt được chọn</button>
+                        <button id="articleRejectSelected" class="btn btn-danger d-none btn-sm">Từ chối được chọn</button>
                     </div>
                 </div>
                 <div>
                     <div class="table-responsive">
-                        <table class="table align-middle mb-0 table-hover table-centered">
+                        <table class="table-hover table-centered mb-0 table align-middle">
                             <thead class="bg-light-subtle">
                                 <tr>
                                     <th style="width: 20px;">
@@ -38,22 +38,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var bv in dsBaiViet!)
+                                @foreach (var article in articles!)
                                 {
-                                    string[] anhSplitted = FastFood_Tools.SplitAnh(bv.Hinhanh!);
                                     <tr>
                                         <td>
                                                     <div class="form-check ms-1">
-                                                        <input type="checkbox" class="form-check-input article-checkbox" data-id="@bv.Mabaiviet">
+                                                        <input type="checkbox" class="form-check-input article-checkbox" data-id="@article.ArticleId">
                                                         <label class="form-check-label">&nbsp;</label>
                                                     </div>
                                         </td>
-                                        <td>@bv.Tieude</td>
-                                        <td> @bv.Ngaytao</td>
-                                        <td> @bv.Ngaycapnhat</td>
+                                        <td>@article.Title</td>
+                                        <td> @article.CreatedAt</td>
+                                        <td> @article.UpdatedAt</td>
                                         <td>
                                             @{
-                                                if (bv.Daduyet)
+                                                if (article.IsApproved)
                                                 {
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48"><path fill="#09ee2e" fill-rule="evenodd" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20m10.742-26.33a1 1 0 1 0-1.483-1.34L21.28 29.567l-6.59-6.291a1 1 0 0 0-1.382 1.446l7.334 7l.743.71l.689-.762z" clip-rule="evenodd" /></svg>
                                                 }
@@ -65,10 +64,10 @@
                                         </td>
                                         <td>
                                                     <div class="d-flex gap-2">
-                                                        <button type="button" class="btn btn-green btn-sm action-btn" data-id="@bv.Mabaiviet" data-action="accept">
+                                                        <button type="button" class="btn btn-green btn-sm action-btn" data-id="@article.ArticleId" data-action="accept">
                                                             Phê duyệt
                                                         </button>
-                                                        <button type="button" class="btn btn-red btn-sm action-btn" data-id="@bv.Mabaiviet" data-action="refuse">
+                                                        <button type="button" class="btn btn-red btn-sm action-btn" data-id="@article.ArticleId" data-action="refuse">
                                                             Từ chối
                                                         </button>
                                                     </div>
@@ -184,10 +183,10 @@
 
         function toggleActionButtons() {
             const anyChecked = $('.article-checkbox:checked').length > 0;
-            $('#approve-selected, #reject-selected').toggleClass('d-none', !anyChecked);
+            $('#articleApproveSelected, #articleRejectSelected').toggleClass('d-none', !anyChecked);
         }
 
-        $('#approve-selected').on('click', function () {
+        $('#articleApproveSelected').on('click', function () {
             let selectedIds = [];
             $('.article-checkbox:checked').each(function () {
                 let row = $(this).closest('tr');
@@ -199,7 +198,7 @@
             if (selectedIds.length > 0) {
                 $.ajax({
                     type: 'POST',
-                    url: '@Url.Action("ApproveMultiple", "Article", new {area = "Admin"})',
+                    url: '@Url.Action("MultipleApprove", "Article", new { area = "Admin" })',
                     dataType: 'json',
                     data: { articleIds: selectedIds, action: 'accept', __RequestVerificationToken: token },
                     success: function (response) {
@@ -217,7 +216,7 @@
             }
         });
 
-        $('#reject-selected').on('click', function () {
+        $('#articleRejectSelected').on('click', function () {
             let selectedIds = [];
             $('.article-checkbox:checked').each(function () {
                 let row = $(this).closest('tr');
