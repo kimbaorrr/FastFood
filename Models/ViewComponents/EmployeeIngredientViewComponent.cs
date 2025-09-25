@@ -2,7 +2,7 @@
 
 namespace FastFood.Models.ViewComponents
 {
-    public class EmployeeAccountViewComponent : ViewComponent
+    public class EmployeeIngredientViewComponent : ViewComponent
     {
         public async Task<IViewComponentResult> InvokeAsync(string viewName, object? model)
         {

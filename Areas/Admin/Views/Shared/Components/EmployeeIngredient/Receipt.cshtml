@@ -3,7 +3,7 @@
 		<h3 class="card-title">Bảng nhập kho nguyên liệu</h3>
 	</div>
 	<div class="card-body">
-		<table class="table table-striped" id="receipt">
+		<table class="table-striped table" id="receipt">
 			<thead class="thead-dark">
 				<tr>
 					<th scope="col">ID</th>
@@ -25,17 +25,17 @@
 			url: '@Url.Action("GetListReceipt", "Ingredient", new { area = "Admin" })',
 			type: 'GET',
 			dataType: 'json',
-			success: function (data) {
+			success: function (response) {
 				var tableBody = $('#receipt tbody');
 				tableBody.empty();
 
-				$.each(data, function (index, item) {
+				$.each(response.data, function (index, item) {
 					var row = $('<tr></tr>');
-					row.append('<td>' + item.MaNhapKho + '</td>');
-					row.append('<td>' + item.TenNguyenLieu + '</td>');
-					row.append('<td>' + item.SoLuongNhap + '</td>');
-					row.append('<td>' + item.NguoiNhap + '</td>');
-					row.append('<td>' + item.NgayNhap + '</td>');
+					row.append('<td>' + item.InventoryId + '</td>');
+					row.append('<td>' + item.IngredientName + '</td>');
+					row.append('<td>' + item.Quantity + '</td>');
+					row.append('<td>' + item.CreatedBy + '</td>');
+					row.append('<td>' + item.CreatedAt + '</td>');
 					tableBody.append(row);
 				});
 			},

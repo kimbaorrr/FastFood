@@ -10,7 +10,7 @@
 	<div class="row mt-3">
 		<div class="col-12 col-lg-4">
 			<!-- Form tạo tài khoản nhân viên -->
-			@await Component.InvokeAsync("EmployeeAccount", new { viewName = "Create" })
+			@await Component.InvokeAsync("EmployeeAccount", new { viewName = "Create", model = new EmployeeRegisterLoginAccountViewModel() })
 
 		</div>
 		<div class="col-12 col-lg-8">
@@ -21,7 +21,7 @@
 	</div>
 
 	<!-- Edit Modal -->
-	@await Component.InvokeAsync("EmployeeAccount", new { viewName = "Edit" })
+	@await Component.InvokeAsync("EmployeeAccount", new { viewName = "Edit", model = new EmployeeEditAccountViewModel() })
 </div>
 
 <script>
