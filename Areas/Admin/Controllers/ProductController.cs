@@ -71,7 +71,7 @@ namespace FastFood.Areas.Admin.Controllers
             return CreateJsonResult(success, messsage);
         }
 
-        [HttpGet("detail/{id}")]
+        [HttpGet("detail/{productId}")]
         public async Task<IActionResult> Detail([FromQuery] int productId)
         {
             (bool success, string message, ProductDetailViewModel productDetailViewModel, string images) = await this._productService.GetProductDetailViewModel(productId, this._employeeId);
@@ -125,6 +125,14 @@ namespace FastFood.Areas.Admin.Controllers
         {
             (bool success, string message) = await this._productService.ApproveProducts(this._employeeId, productIds, action);
             return CreateJsonResult(success, message);
+        }
+
+        [HttpGet("list")]
+        public async Task<IActionResult> List([FromQuery] int page = 1, [FromQuery] int size = 10)
+        {
+            var products = await this._productService.GetProductsByApproveStatusPagedList(true, page, size);
+            ViewBag.Products = products;
+            return View();
         }
 
 

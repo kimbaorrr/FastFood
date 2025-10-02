@@ -14,11 +14,10 @@ namespace FastFood.Controllers
 {
     public abstract class BaseAppController : Controller
     {
-        protected IActionResult CreateJsonResult(
+        protected JsonResult CreateJsonResult(
             bool success = false,
             string message = "",
-            object? data = null,
-            int statusCode = 200)
+            object? data = null)
         {
             var json = new
             {
@@ -28,16 +27,7 @@ namespace FastFood.Controllers
                 data = data ?? new { }
             };
 
-
-            return statusCode switch
-            {
-                400 => BadRequest(json),
-                401 => Unauthorized(json),
-                403 => Forbid(),
-                404 => NotFound(json),
-                500 => StatusCode(500, json),
-                _ => Ok(json)
-            };
+            return Json(json);
         }
     }
 

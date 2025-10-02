@@ -84,7 +84,7 @@
                                         </td>
                                         <td> @product.ApprovedAt</td>
                                         <td>
-                                            <span class="badge bg-light text-dark fs-12 me-1 p-1"><i class="bx bxs-star fs-14 text-warning me-1 align-text-top"></i>@product.ProductReviews.Select(x=>x.StarRating)</span> @product.ProductReviews.Count đánh giá
+                                            <span class="badge bg-light text-dark fs-12 me-1 p-1"><i class="bx bxs-star fs-14 text-warning me-1 align-text-top"></i>@product.ProductReviews.Select(x=>x.StarRating).Average()</span> @product.ProductReviews.Count đánh giá
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2">
